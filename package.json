@@ -1,25 +1,20 @@
 {
-    "version": "1.0.0",
-    "name": "cordova-plugin-fcm",
-    "cordova_name": "Cordova FCM Push Plugin",
-    "description": "Google Firebase Cloud Messaging Cordova Push Plugin",
-    "license": "Apache 2.0",
-    "repo": "",
-    "issue": "",
-    "keywords": [
-        "cordova",
-        "push",
-		"fcm"
-    ],
-    "platforms": [
-        "android",
-        "ios"
-    ],
-    "engines": [],
-    "englishdoc": "",
-    "keywords": [
-    	"ecosystem:cordova",
-    	"cordova-android",
-    	"cordova-ios"
-    ]
+  "version": "1.0.1",
+  "name": "cordova-plugin-fcm",
+  "cordova_name": "Cordova FCM Push Plugin",
+  "description": "Google Firebase Cloud Messaging Cordova Push Plugin",
+  "license": "Apache 2.0",
+  "repo": "",
+  "issue": "",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "engines": [],
+  "englishdoc": ""
 }
