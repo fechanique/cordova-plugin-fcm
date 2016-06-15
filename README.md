@@ -6,7 +6,7 @@
 
 ##Installation
 ```Bash
-cordova plugin add cordova-fcm-plugin
+cordova plugin add cordova-plugin-fcm
 
 ```
 
