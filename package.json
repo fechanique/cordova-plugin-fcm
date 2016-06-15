@@ -6,6 +6,14 @@
   "license": "Apache 2.0",
   "repo": "",
   "issue": "",
+  "author": {
+    "name": "Felipe Echanique Torres"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fechanique/cordova-plugin-fcm"
+  },
   "keywords": [
     "ecosystem:cordova",
     "cordova-android",
