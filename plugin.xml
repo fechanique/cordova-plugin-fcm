@@ -35,44 +35,44 @@
 		<engine name="cordova-android" version=">=4.0.0" />
     </engines>
 	
-	<!-- ANDROID CONFIGURATION -->
+    <!-- ANDROID CONFIGURATION -->
     <platform name="android">
-		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
-				<intent-filter>   
-					<action android:name="FCM_PLUGIN_ACTIVITY" />  
-					<category android:name="android.intent.category.DEFAULT" />
-				</intent-filter>			
-			</activity>
-			<service android:name="com.gae.scaffolder.plugin.MyFirebaseMessagingService">
-				<intent-filter>
-					<action android:name="com.google.firebase.MESSAGING_EVENT"/>
-				</intent-filter>
-			</service>
-			<service android:name="com.gae.scaffolder.plugin.MyFirebaseInstanceIDService">
-				<intent-filter>
-					<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-				</intent-filter>
-			</service>
-		</config-file>
+	<config-file target="AndroidManifest.xml" parent="/manifest/application">
+	  <activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
+	    <intent-filter>   
+		action android:name="FCM_PLUGIN_ACTIVITY" />  
+		<category android:name="android.intent.category.DEFAULT" />
+	    </intent-filter>			
+	  </activity>
+	  <service android:name="com.gae.scaffolder.plugin.MyFirebaseMessagingService">
+	    <intent-filter>
+		<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+	    </intent-filter>
+	  </service>
+	  <service android:name="com.gae.scaffolder.plugin.MyFirebaseInstanceIDService">
+	    <intent-filter>
+		<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+	   </intent-filter>
+  	  </service>
+	</config-file>
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="FCMPlugin" >
-                <param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
-                <param name="onload" value="true" />
-            </feature>
+           	<feature name="FCMPlugin" >
+                	<param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
+                	<param name="onload" value="true" />
+            	</feature>
         </config-file>
 		
-		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
+	<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 		
         <source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
+	<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
+	<source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
+	<source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
 
     </platform>
 	
-	<!-- IOS CONFIGURATION -->
-	<platform name="ios">
+    <!-- IOS CONFIGURATION -->
+    <platform name="ios">
         <config-file target="config.xml" parent="/*">
             <feature name="FCMPlugin">
                 <param name="ios-package" value="FCMPlugin"/>
@@ -81,26 +81,26 @@
 		
         <header-file src="src/ios/FCMPlugin.h" />
         <source-file src="src/ios/FCMPlugin.m" />
-		<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
-		<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
+	<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
+	<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
 		
-		<!-- FIREBASE LIBS -->
-		<header-file src="src/ios/firebase/Firebase.h" />
-		<framework src="src/ios/firebase/FirebaseAnalytics.framework" custom="true" />
-		<framework src="src/ios/firebase/FirebaseInstanceID.framework" custom="true" />
-		<framework src="src/ios/firebase/FirebaseMessaging.framework" custom="true" />
-		<framework src="src/ios/firebase/GoogleInterchangeUtilities.framework" custom="true" />
-		<framework src="src/ios/firebase/GoogleIPhoneUtilities.framework" custom="true" />
-		<framework src="src/ios/firebase/GoogleSymbolUtilities.framework" custom="true" />
-		<framework src="src/ios/firebase/GoogleUtilities.framework" custom="true" />
+	<!-- FIREBASE LIBS -->
+	<header-file src="src/ios/firebase/Firebase.h" />
+	<framework src="src/ios/firebase/FirebaseAnalytics.framework" custom="true" />
+	<framework src="src/ios/firebase/FirebaseInstanceID.framework" custom="true" />
+	<framework src="src/ios/firebase/FirebaseMessaging.framework" custom="true" />
+	<framework src="src/ios/firebase/GoogleInterchangeUtilities.framework" custom="true" />
+	<framework src="src/ios/firebase/GoogleIPhoneUtilities.framework" custom="true" />
+	<framework src="src/ios/firebase/GoogleSymbolUtilities.framework" custom="true" />
+	<framework src="src/ios/firebase/GoogleUtilities.framework" custom="true" />
 		
-		<!-- OTHER NEEDED LIBS -->
-		<framework src="libc++.tbd" />
-		<framework src="libz.tbd" />
+	<!-- OTHER NEEDED LIBS -->
+	<framework src="libc++.tbd" />
+	<framework src="libz.tbd" />
         <framework src="AddressBook.framework" />
-		<framework src="libsqlite3.0.tbd" />
-		<framework src="libz.tbd" />
-		<framework src="Security.framework" />
+	<framework src="libsqlite3.0.tbd" />
+	<framework src="libz.tbd" />
+	<framework src="Security.framework" />
     </platform>
 	
 </plugin>
