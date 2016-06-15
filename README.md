@@ -41,6 +41,7 @@ cordova platform add ios@3.9.2
 ####Subscribe To Topic
 
 ```javascript
+//All users are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
 FCMPlugin.subscribeToTopic('topicExample', successCallback, errorCallback);
 ```
 
