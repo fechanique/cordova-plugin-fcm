@@ -13,8 +13,13 @@
     ],
     "platforms": [
         "android",
-        "ios",
+        "ios"
     ],
     "engines": [],
-    "englishdoc": ""
+    "englishdoc": "",
+    "keywords": [
+    	"ecosystem:cordova",
+    	"cordova-android",
+    	"cordova-ios"
+    ]
 }
