@@ -2,7 +2,7 @@
     "version": "1.0",
     "name": "cordova-plugin-fcm",
     "cordova_name": "Cordova FCM Push Plugin",
-    "description": "Cordova FCM Push Plugin",
+    "description": "Google Firebase Cloud Messaging Cordova Push Plugin",
     "license": "Apache 2.0",
     "repo": "",
     "issue": "",
