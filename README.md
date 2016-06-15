@@ -3,13 +3,16 @@
 #### Version 1.0
 - Android SDK 4.2.0 
 - iOS SDK 4.1.0
-- Available sdk functions: setSubscriberKey and notification capture.
+- Available sdk functions: subscribeToTopic, unsubscribeFromTopic and notification capture.
 
 ##Installation
 ```Bash
 cordova plugin add cordova-fcm-plugin
 
 ```
+
+#### Firebase configuration
+See docs: https://firebase.google.com/docs/
 
 #### Android compilation details
 Put your generated file google-services.json in the project root folder.
