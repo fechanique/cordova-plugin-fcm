@@ -1,8 +1,7 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 
 #### Version 1.0
-- Android SDK 4.2.0 
-- iOS SDK 4.1.0
+- Android and iOS capable.
 - Available sdk functions: subscribeToTopic, unsubscribeFromTopic and notification capture.
 
 ##Installation
@@ -74,7 +73,7 @@ FCMPlugin.onNotification(
     "icon":"fcm_push_icon"
   },
   "data":{
-    "param1":"value1",  //Any data to be retreived in the notification callback
+    "param1":"value1",  //Any data to be retrieved in the notification callback
     "param2":"value2"
   },
     "to":"/topics/topicExample",
