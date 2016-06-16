@@ -1,6 +1,6 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 
-#### Version 1.0.3
+#### Version 1.0.4
 - Android and iOS compatible.
 - Available sdk functions: subscribeToTopic, unsubscribeFromTopic and notification capture.
 
@@ -65,18 +65,29 @@ FCMPlugin.onNotification(
 ###Payload example
 
 ```javascript
+//https://fcm.googleapis.com/fcm/send
+//Content-Type: application/json
+//Authorization: key=AIzaSy*******************
 {
   "notification":{
     "title":"Notification title",  //Any value
     "body":"Notification body",  //Any value
-    "click_action":"FCM_PLUGIN_ACTIVITY",
-    "icon":"fcm_push_icon"
+    "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
+    "icon":"fcm_push_icon"  //White icon Android resource
   },
   "data":{
     "param1":"value1",  //Any data to be retrieved in the notification callback
     "param2":"value2"
   },
-    "to":"/topics/topicExample",
+    "to":"/topics/topicExample", //Topic or single device
     "restricted_package_name":"" //Set for application filtering
 }
 ```
+##How it works
+- 1. You send a push notification to a single device or topic.
+- 1.a Application is in foreground.
+ - The user receives the notification data in the JavaScript callback wihtout notification bar message (this is the normal behaviour of mobile push notifications).
+- 1.b Application is in background.
+ - The user receives the notification message in it's device notification bar.
+ - The user taps the notification and the application is opened.
+ - The user receives the notification data in the JavaScript callback .
