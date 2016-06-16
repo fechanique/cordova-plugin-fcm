@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "name": "cordova-plugin-fcm",
   "cordova_name": "Cordova FCM Push Plugin",
   "description": "Google Firebase Cloud Messaging Cordova Push Plugin",
@@ -17,13 +17,13 @@
     "ecosystem:cordova",
     "cordova-android",
     "cordova-ios",
-	  "notifications",
-	  "push",
-	  "firebase",
-	  "fcm",
-	  "ios",
-	  "android",
-	  "cordova"
+    "notifications",
+    "push",
+    "firebase",
+    "fcm",
+    "ios",
+    "android",
+    "cordova"
   ],
   "platforms": [
     "android",
