@@ -3,7 +3,7 @@
 
 #### Version 1.0.4
 - Android and iOS compatible.
-- Available sdk functions: subscribeToTopic, unsubscribeFromTopic and notification capture.
+- Available sdk functions: subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 
 ##Installation
 ```Bash
@@ -38,7 +38,7 @@ cordova platform add ios@3.9.2
 
 ##Usage
 
-####Subscribe To Topic
+####Subscribe to topic
 
 ```javascript
 //All users are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
@@ -46,13 +46,13 @@ cordova platform add ios@3.9.2
 FCMPlugin.subscribeToTopic('topicExample', successCallback, errorCallback);
 ```
 
-####Unsubscribe From Topic
+####Unsubscribe from topic
 
 ```javascript
 FCMPlugin.unsubscribeFromTopic('topicExample', successCallback, errorCallback);
 ```
 
-####Capture Push Notification Data
+####Receiving push notification data
 
 ```javascript
 FCMPlugin.onNotification(
