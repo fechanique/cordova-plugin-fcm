@@ -75,6 +75,7 @@ FCMPlugin.onNotification(
   "notification":{
     "title":"Notification title",  //Any value
     "body":"Notification body",  //Any value
+    "sound":"default", //If you want notification sound
     "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
     "icon":"fcm_push_icon"  //White icon Android resource
   },
