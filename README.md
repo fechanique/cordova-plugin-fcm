@@ -98,7 +98,7 @@ FCMPlugin.onNotification(
 ```
 The MIT License
 
-Copyright (c) 2016 Felipe Echanique Torres
+Copyright (c) 2016 Felipe Echanique Torres (felipe.echanique in the gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
