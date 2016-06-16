@@ -64,7 +64,7 @@ FCMPlugin.onNotification(
 );
 ```
 
-###Payload example
+####Payload example
 
 ```javascript
 //https://fcm.googleapis.com/fcm/send
