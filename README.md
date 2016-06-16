@@ -55,6 +55,7 @@ FCMPlugin.unsubscribeFromTopic('topicExample', successCallback, errorCallback);
 ####Receiving push notification data
 
 ```javascript
+//Here you define your application behaviour based on the notification data.
 FCMPlugin.onNotification(
   function(data){
     alert(data.key);
@@ -92,7 +93,7 @@ FCMPlugin.onNotification(
 - 1.b Application is in background.
  - The user receives the notification message in it's device notification bar.
  - The user taps the notification and the application is opened.
- - The user receives the notification data in the JavaScript callback .
+ - The user receives the notification data in the JavaScript callback.
 
 ##License
 ```
