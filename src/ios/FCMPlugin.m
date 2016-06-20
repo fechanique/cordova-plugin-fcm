@@ -12,8 +12,8 @@
 
 @implementation FCMPlugin
 
-static BOOL *notificatorReceptorReady = NO;
-static BOOL *appInForeground = YES;
+static BOOL notificatorReceptorReady = NO;
+static BOOL appInForeground = YES;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static FCMPlugin *fcmPluginInstance;
@@ -85,7 +85,11 @@ static FCMPlugin *fcmPluginInstance;
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
     
-    [self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
+    if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
+        [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
+    } else {
+        [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
+    }
 }
 
 -(void) appEnterBackground

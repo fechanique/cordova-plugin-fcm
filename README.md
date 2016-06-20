@@ -30,11 +30,6 @@ If you do not set this resource, then the SDK will use the default icon for your
 #### iOS compilation details
 Put your generated file GoogleService-Info.plist in the project root folder.
 
-:warning: The plugin will throw an xCode error on Cordova-iOS 4.0.0. Install previous cordova version:
-```Bash
-cordova platform remove ios
-cordova platform add ios@3.9.2 
-```
 
 ##Usage
 
@@ -60,7 +55,7 @@ FCMPlugin.onNotification(
   function(data){
     alert(data.key);
   },
-  successCallback, 
+  successCallback,
   errorCallback
 );
 ```
