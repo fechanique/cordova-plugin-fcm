@@ -1,7 +1,7 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
-#### Version 1.0.6
+#### Version 1.0.7
 - Android and iOS compatible.
 - Available sdk functions: subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 
