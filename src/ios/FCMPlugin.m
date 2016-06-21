@@ -42,7 +42,7 @@ static FCMPlugin *fcmPluginInstance;
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"subscribe To Topic %@", topic);
     [self.commandDelegate runInBackground:^{
-        if(topic != nil)[[FIRMessaging messaging] subscribeToTopic:@"/topics/ios"];
+        if(topic != nil)[[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/%@", topic]];
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -55,7 +55,7 @@ static FCMPlugin *fcmPluginInstance;
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"subscribe To Topic %@", topic);
     [self.commandDelegate runInBackground:^{
-        if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:@"/topics/ios"];
+        if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:[NSString stringWithFormat:@"/topics/%@", topic]];
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
