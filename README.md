@@ -2,7 +2,7 @@
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
 #### Version 1.1.0
-- Added getToken method to Access the device registration token.
+- Added getToken method to access the device registration token.
 
 #### Version 1.0.7
 - Android and iOS compatible.
