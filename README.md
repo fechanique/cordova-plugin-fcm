@@ -1,6 +1,9 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
+#### Version 1.1.0
+- Added getToken method to Access the device registration token.
+
 #### Version 1.0.7
 - Android and iOS compatible.
 - Available sdk functions: subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
@@ -32,6 +35,18 @@ Put your generated file GoogleService-Info.plist in the project root folder.
 
 
 ##Usage
+
+####Get token
+
+```javascript
+//FCMPlugin.getToken(successCallback, errorCallback);
+FCMPlugin.getToken(
+  function(token){
+	  alert(token);
+	},
+	errorCallback
+)
+```
 
 ####Subscribe to topic
 
