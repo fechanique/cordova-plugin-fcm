@@ -96,7 +96,7 @@ FCMPlugin.onNotification(
 );
 ```
 
-####Send payload example (REST API)
+####Send notification. Payload example (REST API)
 
 ```javascript
 //https://fcm.googleapis.com/fcm/send
