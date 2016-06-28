@@ -3,6 +3,7 @@
 
 #### Version 1.1.0
 - Added getToken method to access the device registration token.
+- Added data parameter to check whether the user tapped on the notification or was received in foreground.
 
 #### Version 1.0.7
 - Android and iOS compatible.
@@ -68,7 +69,13 @@ FCMPlugin.unsubscribeFromTopic('topicExample', successCallback, errorCallback);
 //Here you define your application behaviour based on the notification data.
 FCMPlugin.onNotification(
   function(data){
-    alert(data.key);
+    if(data.wasTapped){
+      //Notification was received in tray and tapped by the user.
+      alert( JSON.stringify(data) );
+    }else{
+      //Notification received in foreground. User needs to be notified.
+      alert( JSON.stringify(data) );
+    }
   },
   successCallback,
   errorCallback
