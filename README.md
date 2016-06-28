@@ -99,9 +99,9 @@ FCMPlugin.onNotification(
 ####Send notification. Payload example (REST API)
 
 ```javascript
-//https://fcm.googleapis.com/fcm/send
-//Content-Type: application/json
-//Authorization: key=AIzaSy*******************
+//POST: https://fcm.googleapis.com/fcm/send
+//HEADER: Content-Type: application/json
+//HEADER: Authorization: key=AIzaSy*******************
 {
   "notification":{
     "title":"Notification title",  //Any value
