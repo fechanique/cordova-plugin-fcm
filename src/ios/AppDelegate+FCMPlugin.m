@@ -68,14 +68,23 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     // Pring full message.
     NSLog(@"%@", userInfo);
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
-                                                       options:0
-                                                         error:&error];
+    
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+    
+	//USER NOT TAPPED NOTIFICATION
     if (application.applicationState == UIApplicationStateActive) {
+        [userInfoMutable setValue:@"false" forKey:@"wasTapped"];
         NSLog(@"app active");
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                           options:0
+                                                             error:&error];
         [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-        // app is in background or in stand by
+    // app is in background or in stand by (NOTIFICATION WILL BE TAPPED)
     }else{
+        [userInfoMutable setValue:@"true" forKey:@"wasTapped"];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                           options:0
+                                                             error:&error];
         NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
         lastPush = jsonData;
     }

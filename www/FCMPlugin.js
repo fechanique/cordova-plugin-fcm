@@ -9,8 +9,8 @@ function FCMPlugin() {
 
 
 // GET TOKEN //
-FCMPlugin.prototype.getToken = function( error ){
-	return exec(function( token ){ return token; }, error, "FCMPlugin", 'getToken', []);
+FCMPlugin.prototype.getToken = function( success, error ){
+	exec(success, error, "FCMPlugin", 'getToken', []);
 }
 // SUBSCRIBE TO TOPIC //
 FCMPlugin.prototype.subscribeToTopic = function( topic, success, error ){

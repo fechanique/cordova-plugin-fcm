@@ -51,9 +51,11 @@ public class FCMPlugin extends CordovaPlugin {
 				cordova.getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						try{
+							String token = FirebaseInstanceId.getInstance().getToken();
 							callbackContext.success( FirebaseInstanceId.getInstance().getToken() );
+							Log.d(TAG,"\tToken: "+ token);
 						}catch(Exception e){
-							callbackContext.error(e.getMessage());
+							Log.d(TAG,"\tError retrieving token");
 						}
 					}
 				});

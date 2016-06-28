@@ -39,8 +39,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			Log.d(TAG, "\tNotification Message: " + remoteMessage.getNotification().getBody());
 		}
 		
-		Log.d(TAG, "\tNotification Data: " + remoteMessage.getData().toString());
-        FCMPlugin.sendPushPayload( remoteMessage.getData() );
+		Map<String,String> data = remoteMessage.getData();
+		data.put("wasTapped", "false");
+		
+		Log.d(TAG, "\tNotification Data: " + data.toString());
+        FCMPlugin.sendPushPayload( data );
         //sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getData());
     }
     // [END receive_message]
