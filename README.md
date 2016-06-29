@@ -16,9 +16,7 @@ cordova plugin add cordova-plugin-fcm
 ```
 
 #### Firebase configuration
-See docs: https://firebase.google.com/docs/
-
-You will need the 2 generated files in the Firebase configuration process.
+You will need 2 generated files in the Firebase configuration process (See docs: https://firebase.google.com/docs/).
 
 #### Android compilation details
 Put your generated file 'google-services.json' in the project root folder.
