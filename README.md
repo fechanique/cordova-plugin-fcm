@@ -1,7 +1,7 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
-#### Version 1.1.0 (29/06/2016)
+#### Version 1.1.1 (29/06/2016)
 - Added getToken method to access the device registration token.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
 
