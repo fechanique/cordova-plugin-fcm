@@ -95,7 +95,7 @@ FCMPlugin.onNotification(
 ```
 
 ####Send notification. Payload example (REST API)
-
+Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref
 ```javascript
 //POST: https://fcm.googleapis.com/fcm/send
 //HEADER: Content-Type: application/json
