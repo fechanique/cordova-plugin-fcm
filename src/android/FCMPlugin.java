@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.os.Bundle;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Map;
 
@@ -45,6 +46,20 @@ public class FCMPlugin extends CordovaPlugin {
 				//
 				callbackContext.success();
 			}
+			// GET TOKEN //
+			else if (action.equals("getToken")) {
+				cordova.getActivity().runOnUiThread(new Runnable() {
+					public void run() {
+						try{
+							String token = FirebaseInstanceId.getInstance().getToken();
+							callbackContext.success( FirebaseInstanceId.getInstance().getToken() );
+							Log.d(TAG,"\tToken: "+ token);
+						}catch(Exception e){
+							Log.d(TAG,"\tError retrieving token");
+						}
+					}
+				});
+			}
 			// NOTIFICATION CALLBACK REGISTER //
 			else if (action.equals("registerNotification")) {
 				notificationCallBackReady = true;
@@ -58,7 +73,7 @@ public class FCMPlugin extends CordovaPlugin {
 			}
 			// UN/SUBSCRIBE TOPICS //
 			else if (action.equals("subscribeToTopic")) {
-				cordova.getActivity().runOnUiThread(new Runnable() {
+				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
 							FirebaseMessaging.getInstance().subscribeToTopic( args.getString(0) );
@@ -70,7 +85,7 @@ public class FCMPlugin extends CordovaPlugin {
 				});
 			}
 			else if (action.equals("unsubscribeFromTopic")) {
-				cordova.getActivity().runOnUiThread(new Runnable() {
+				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
 							FirebaseMessaging.getInstance().unsubscribeFromTopic( args.getString(0) );

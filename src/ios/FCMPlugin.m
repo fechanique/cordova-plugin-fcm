@@ -36,6 +36,18 @@ static FCMPlugin *fcmPluginInstance;
     
 }
 
+// GET TOKEN //
+- (void) getToken:(CDVInvokedUrlCommand *)command 
+{
+    NSLog(@"get Token");
+    [self.commandDelegate runInBackground:^{
+        NSString* token = [[FIRInstanceID instanceID] token];
+        CDVPluginResult* pluginResult = nil;
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:token];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 // UN/SUBSCRIBE TOPIC //
 - (void) subscribeToTopic:(CDVInvokedUrlCommand *)command 
 {
@@ -47,7 +59,6 @@ static FCMPlugin *fcmPluginInstance;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-    
 }
 
 - (void) unsubscribeFromTopic:(CDVInvokedUrlCommand *)command 
@@ -60,7 +71,6 @@ static FCMPlugin *fcmPluginInstance;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-    
 }
 
 - (void) registerNotification:(CDVInvokedUrlCommand *)command
@@ -76,7 +86,6 @@ static FCMPlugin *fcmPluginInstance;
     CDVPluginResult* pluginResult = nil;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    
 }
 
 -(void) notifyOfMessage:(NSData *)payload

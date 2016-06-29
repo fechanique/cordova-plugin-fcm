@@ -1,7 +1,11 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
-#### Version 1.0.7
+#### Version 1.1.0 (29/06/2016)
+- Added getToken method to access the device registration token.
+- Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
+
+#### Version 1.0.7 (21/06/2016)
 - Android and iOS compatible.
 - Available sdk functions: subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 
@@ -12,10 +16,10 @@ cordova plugin add cordova-plugin-fcm
 ```
 
 #### Firebase configuration
-See docs: https://firebase.google.com/docs/
+You will need 2 generated files in the Firebase configuration process (see docs: https://firebase.google.com/docs/).
 
 #### Android compilation details
-Put your generated file google-services.json in the project root folder.
+Put your generated file 'google-services.json' in the project root folder.
 
 You will need to ensure that you have installed the following items through the Android SDK Manager:
 
@@ -28,44 +32,74 @@ You will need to ensure that you have installed the following items through the 
 If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android 5.0.
 
 #### iOS compilation details
-Put your generated file GoogleService-Info.plist in the project root folder.
+Put your generated file 'GoogleService-Info.plist' in the project root folder.
 
 
 ##Usage
 
+:warning: It's highly recommended (maybe mandatory) to use the REST API to send push notifications because Firebase console does not have all the functionalities. Pay attention to the payload example in order to use the plugin properly.
+
+####Get token
+
+```javascript
+//FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+//Keep in mind the function will return null if the token has not been established yet.
+FCMPlugin.getToken(
+  function(token){
+    alert(token);
+  },
+  function(err){
+    console.log('error retrieving token: ' + err);
+  }
+)
+```
+
 ####Subscribe to topic
 
 ```javascript
+//FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
 //All devices are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
 //Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
-FCMPlugin.subscribeToTopic('topicExample', successCallback, errorCallback);
+FCMPlugin.subscribeToTopic('topicExample');
 ```
 
 ####Unsubscribe from topic
 
 ```javascript
-FCMPlugin.unsubscribeFromTopic('topicExample', successCallback, errorCallback);
+//FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
+FCMPlugin.unsubscribeFromTopic('topicExample');
 ```
 
 ####Receiving push notification data
 
 ```javascript
+//FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
 //Here you define your application behaviour based on the notification data.
 FCMPlugin.onNotification(
   function(data){
-    alert(data.key);
+    if(data.wasTapped == 'true'){
+      //Notification was received on device tray and tapped by the user.
+      alert( JSON.stringify(data) );
+    }else{
+      //Notification was received in foreground. Maybe the user needs to be notified.
+      alert( JSON.stringify(data) );
+    }
   },
-  successCallback,
-  errorCallback
+  function(msg){
+    console.log('onNotification callback successfully registered: ' + msg);
+  },
+  function(err){
+    console.log('Error registering onNotification callback: ' + err);
+  }
 );
 ```
 
-####Send payload example
-
+####Send notification. Payload example (REST API)
+Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref
 ```javascript
-//https://fcm.googleapis.com/fcm/send
-//Content-Type: application/json
-//Authorization: key=AIzaSy*******************
+//POST: https://fcm.googleapis.com/fcm/send
+//HEADER: Content-Type: application/json
+//HEADER: Authorization: key=AIzaSy*******************
 {
   "notification":{
     "title":"Notification title",  //Any value
@@ -79,7 +113,8 @@ FCMPlugin.onNotification(
     "param2":"value2"
   },
     "to":"/topics/topicExample", //Topic or single device
-    "restricted_package_name":"" //Set for application filtering
+    "priority":"high", //If not set, notification won't be delivered on completely closed iOS app
+    "restricted_package_name":"" //Optional. Set for application filtering
 }
 ```
 ##How it works
@@ -89,7 +124,7 @@ Send a push notification to a single device or topic.
 - 1.b Application is in background:
  - The user receives the notification message in its device notification bar.
  - The user taps the notification and the application is opened.
- - The user receives the notification data in the JavaScript callback.
+ - The user receives the notification data in the JavaScript callback'.
 
 ##License
 ```
