@@ -3,7 +3,7 @@
 
 #### Version 1.1.0 (29/06/2016)
 - Added getToken method to access the device registration token.
-- Added data parameter to check whether the user tapped on the notification or was received in foreground.
+- Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
 
 #### Version 1.0.7 (21/06/2016)
 - Android and iOS compatible.
