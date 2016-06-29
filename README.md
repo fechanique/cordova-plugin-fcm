@@ -113,7 +113,8 @@ Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server
     "param2":"value2"
   },
     "to":"/topics/topicExample", //Topic or single device
-    "restricted_package_name":"" //Set for application filtering
+    "priority":"high", //If not set notification won't be delivered on completely closed iOS app
+    "restricted_package_name":"" //Optional. Set for application filtering
 }
 ```
 ##How it works
