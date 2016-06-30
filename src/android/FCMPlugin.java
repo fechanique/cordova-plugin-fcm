@@ -24,7 +24,7 @@ public class FCMPlugin extends CordovaPlugin {
 	public static CordovaWebView gWebView;
 	public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
 	public static Boolean notificationCallBackReady = false;
-	public static Map<String, String> lastPush = null;
+	public static Map<String, Object> lastPush = null;
 	 
 	public FCMPlugin() {}
 	
@@ -120,7 +120,7 @@ public class FCMPlugin extends CordovaPlugin {
 		return true;
 	}
 	
-	public static void sendPushPayload(Map<String, String> payload) {
+	public static void sendPushPayload(Map<String, Object> payload) {
 		Log.d(TAG, "==> FCMPlugin sendPushPayload");
 		Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);
 		Log.d(TAG, "\tgWebView: " + gWebView);

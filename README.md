@@ -1,7 +1,7 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
-#### Version 1.1.0 (29/06/2016)
+#### Version 1.1.1 (29/06/2016)
 - Added getToken method to access the device registration token.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
 
@@ -28,7 +28,7 @@ You will need to ensure that you have installed the following items through the 
 - Google Play Services version 27 or greater
 - Google Repository version 22 or greater
 
-:warning: For Android >5.0 status bar icon, you must to include transparent solid color icon with name 'fcm_push_icon.png' in the 'res' folder in the same way you add the other application icons.
+:warning: For Android >5.0 status bar icon, you must include transparent solid color icon with name 'fcm_push_icon.png' in the 'res' folder in the same way you add the other application icons.
 If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android 5.0.
 
 #### iOS compilation details
@@ -77,7 +77,7 @@ FCMPlugin.unsubscribeFromTopic('topicExample');
 //Here you define your application behaviour based on the notification data.
 FCMPlugin.onNotification(
   function(data){
-    if(data.wasTapped == 'true'){
+    if(data.wasTapped){
       //Notification was received on device tray and tapped by the user.
       alert( JSON.stringify(data) );
     }else{

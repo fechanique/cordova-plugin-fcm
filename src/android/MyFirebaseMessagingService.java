@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -39,8 +40,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			Log.d(TAG, "\tNotification Message: " + remoteMessage.getNotification().getBody());
 		}
 		
-		Map<String,String> data = remoteMessage.getData();
-		data.put("wasTapped", "false");
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("wasTapped", false);
+		for (String key : remoteMessage.getData().keySet()) {
+                Object value = remoteMessage.getData().get(key);
+                Log.d(TAG, "\tKey: " + key + " Value: " + value);
+				data.put(key, value);
+        }
 		
 		Log.d(TAG, "\tNotification Data: " + data.toString());
         FCMPlugin.sendPushPayload( data );
@@ -53,11 +59,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String title, String messageBody, Map<String, String> data) {
+    private void sendNotification(String title, String messageBody, Map<String, Object> data) {
         Intent intent = new Intent(this, FCMPluginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		for (String key : data.keySet()) {
-			intent.putExtra(key, data.get(key));
+			intent.putExtra(key, data.get(key).toString());
 		}
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
