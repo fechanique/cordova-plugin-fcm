@@ -37,7 +37,7 @@ Put your generated file 'GoogleService-Info.plist' in the project root folder.
 
 ##Usage
 
-:warning: It's highly recommended (maybe mandatory) to use the REST API to send push notifications because Firebase console does not have all the functionalities. Pay attention to the payload example in order to use the plugin properly.
+:warning: It's highly recommended (maybe mandatory) to use the REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.
 
 ####Get token
 
