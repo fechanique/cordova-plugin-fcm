@@ -1,13 +1,10 @@
 # Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications and FCM.
 
-#### Version 1.1.1 (29/06/2016)
-- Added getToken method to access the device registration token.
+#### Version 1.1.2 (13/07/2016)
+- Android and iOS tested.
+- Available sdk functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
-
-#### Version 1.0.7 (21/06/2016)
-- Android and iOS compatible.
-- Available sdk functions: subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 
 ##Installation
 ```Bash
@@ -37,7 +34,7 @@ Put your generated file 'GoogleService-Info.plist' in the project root folder.
 
 ##Usage
 
-:warning: It's highly recommended (maybe mandatory) to use the REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.
+:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.
 
 ####Get token
 
