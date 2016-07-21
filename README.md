@@ -7,6 +7,7 @@
 - Android and iOS tested.
 - Available sdk functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
+- Use the test server available for free! http://cordova-plugin-fcm.appspot.com/
 
 ##Installation
 ```Bash
