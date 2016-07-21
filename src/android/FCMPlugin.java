@@ -1,4 +1,5 @@
 package com.gae.scaffolder.plugin;
+import android.content.Context;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
