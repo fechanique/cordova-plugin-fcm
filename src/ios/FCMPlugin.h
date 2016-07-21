@@ -15,5 +15,8 @@
 - (void)notifyOfMessage:(NSData*) payload;
 - (void)appEnterBackground;
 - (void)appEnterForeground;
+- (void)logEvent:(CDVInvokedUrlCommand*)command;
+- (void)setUserId:(CDVInvokedUrlCommand *)command;
+- (void)setUserProperty:(CDVInvokedUrlCommand *)command;
 
 @end

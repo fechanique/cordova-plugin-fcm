@@ -6,6 +6,17 @@ function FCMPlugin() {
 
 
 
+FCMPlugin.prototype.logEvent = function( key, value, success, error ){
+    exec(success, error, "FCMPlugin", 'logEvent', [key,value]);
+}
+
+FCMPlugin.prototype.setUserId = function( userId, success, error ){
+    exec(success, error, "FCMPlugin", 'setUserId', [userId]);
+}
+
+FCMPlugin.prototype.setUserProperty = function( propertyString,propertyName, success, error ){
+    exec(success, error, "FCMPlugin", 'setUserProperty', [propertyString,propertyName]);
+}
 
 
 // GET TOKEN //

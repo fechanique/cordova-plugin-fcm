@@ -7,6 +7,12 @@
 #import "FCMPlugin.h"
 #import "Firebase.h"
 
+@import FirebaseInstanceID;
+@import FirebaseMessaging;
+@import FirebaseAnalytics;
+
+
+
 @interface FCMPlugin () {}
 @end
 
@@ -35,6 +41,46 @@ static FCMPlugin *fcmPluginInstance;
     }];
     
 }
+
+//Analytics
+- (void)logEvent:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSString* key = [command.arguments objectAtIndex:0];
+        NSString* value = [command.arguments objectAtIndex:1];
+        
+        [FIRAnalytics logEventWithName:kFIREventSelectContent parameters:@{
+                                                                           kFIRParameterContentType:key,
+                                                                           kFIRParameterItemID:value
+                                                                           }];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+-(void)setUserId:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSString *userId = [command.arguments objectAtIndex:0];
+        
+        [FIRAnalytics setUserID:userId];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)setUserProperty:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSString* propertyString = [command.arguments objectAtIndex:0];
+        NSString* propertyName = [command.arguments objectAtIndex:1];
+        
+        [FIRAnalytics setUserPropertyString:propertyString forName:propertyName];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 
 // GET TOKEN //
 - (void) getToken:(CDVInvokedUrlCommand *)command 
