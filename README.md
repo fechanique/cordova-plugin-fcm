@@ -7,7 +7,7 @@
 - Android and iOS tested.
 - Available sdk functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
-- Use the test server available for free! <a href="https://cordova-plugin-fcm.appspot.com" target="_blank">Open Test Server</a>
+- **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
 ##Installation
 ```Bash
@@ -37,7 +37,8 @@ Put your generated file 'GoogleService-Info.plist' in the project root folder.
 
 ##Usage
 
-:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.
+:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
+You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
 ####Get token
 
@@ -95,7 +96,8 @@ FCMPlugin.onNotification(
 ```
 
 ####Send notification. Payload example (REST API)
-Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref
+Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
+Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
 //POST: https://fcm.googleapis.com/fcm/send
 //HEADER: Content-Type: application/json
