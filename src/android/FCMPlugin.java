@@ -13,12 +13,16 @@ import org.json.JSONObject;
 import android.os.Bundle;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Map;
 
 public class FCMPlugin extends CordovaPlugin {
  
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 	private static final String TAG = "FCMPlugin";
 	
 	public static CordovaWebView gWebView;
@@ -30,8 +34,10 @@ public class FCMPlugin extends CordovaPlugin {
 	
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
+		final Context context = this.cordova.getActivity().getApplicationContext();
 		gWebView = webView;
 		Log.d(TAG, "==> FCMPlugin initialize");
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 		FirebaseMessaging.getInstance().subscribeToTopic("android");
 		FirebaseMessaging.getInstance().subscribeToTopic("all");
 	}
@@ -96,6 +102,52 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
+            else if (action.equals("logEvent")) {
+                final Bundle params = new Bundle();
+                
+                params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, args.getString(0));
+                params.putString(FirebaseAnalytics.Param.ITEM_ID, args.getString(1));
+
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try{
+                            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
+                            callbackContext.success();
+                        }catch(Exception e){
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            }
+            
+            else if (action.equals("setUserId")) {
+
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try{
+                            mFirebaseAnalytics.setUserId(args.getString(0));
+                            callbackContext.success();
+                        }catch(Exception e){
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            }
+            
+            else if (action.equals("setUserProperty")) {
+
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try{
+                            mFirebaseAnalytics.setUserProperty(args.getString(0),args.getString(1));
+                            callbackContext.success();
+                        }catch(Exception e){
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            }
+
 			else{
 				callbackContext.error("Method not found");
 				return false;
