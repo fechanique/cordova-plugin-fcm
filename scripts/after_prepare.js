@@ -36,7 +36,7 @@ var name = getValue(config, "name")
 if(fileExists("GoogleService-Info.plist") && directoryExists("platforms/ios/")){
   try {
   	var contents = fs.readFileSync("GoogleService-Info.plist").toString();
-      fs.writeFileSync("platforms/ios/" + name + "/Resources/GoogleService-Info.plist", contents)
+      fs.writeFileSync("platforms/ios/GoogleService-Info.plist", contents)
   } catch(err) {
     process.stdout.write(err);
   }
