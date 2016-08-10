@@ -16,6 +16,15 @@ import android.os.Bundle;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import android.support.annotation.NonNull;
+
+
+
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Map;
@@ -23,6 +32,7 @@ import java.util.Map;
 public class FCMPlugin extends CordovaPlugin {
  
     private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseRemoteConfig firebaseRemoteConfig;
 
 	private static final String TAG = "FCMPlugin";
 	
@@ -148,7 +158,55 @@ public class FCMPlugin extends CordovaPlugin {
                     }
                 });
             }
-
+            // REMOTE CONFIGURATION //
+            else if (action.equals("getStringValueForKey")) {
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        try{
+                            
+                            String configValue = firebaseRemoteConfig.getString(args.getString(0));
+                            callbackContext.success(configValue);
+                            
+                        }catch(Exception e){
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            }
+            else if (action.equals("initializeRemoteConfig")) {
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        try{
+                            
+                            firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+                            FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                            .setDeveloperModeEnabled(true)
+                            .build();
+                            
+                            firebaseRemoteConfig.fetch(600)
+                            .addOnSuccessListener(
+                                                  new OnSuccessListener<Void>() {
+                                                      @Override
+                                                      public void onSuccess(Void aVoid) {
+                                                          firebaseRemoteConfig.activateFetched();
+                                                      }
+                                                  }
+                                                  )
+                            .addOnFailureListener(
+                                                  new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    callbackContext.error(e.getMessage());
+                                }
+                            }
+                                                  );
+                            
+                        }catch(Exception e){
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            }
 			else{
 				callbackContext.error("Method not found");
 				return false;

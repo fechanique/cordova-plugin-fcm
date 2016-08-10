@@ -6,6 +6,7 @@ function FCMPlugin() {
 
 
 
+
 FCMPlugin.prototype.logEvent = function( key, value, success, error ){
     exec(success, error, "FCMPlugin", 'logEvent', [key,value]);
 }
@@ -40,6 +41,15 @@ FCMPlugin.prototype.onNotification = function( callback, success, error ){
 FCMPlugin.prototype.onNotificationReceived = function(payload){
 	console.log("Received push notification")
 	console.log(payload)
+}
+
+// REMOTE CONFIGURATION //
+FCMPlugin.prototype.initializeRemoteConfig = function(success, error ){
+    exec(success, error, "FCMPlugin", 'initializeRemoteConfig', []);
+}
+
+FCMPlugin.prototype.getStringValueForKey = function( configKey, success, error ){
+    exec(success, error, "FCMPlugin", 'getStringValueForKey', [configKey]);
 }
 // FIRE READY //
 exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);

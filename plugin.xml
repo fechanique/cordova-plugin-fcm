@@ -87,6 +87,7 @@
 	<!-- FIREBASE LIBS -->
 	<header-file src="src/ios/firebase/Firebase.h" />
 	<framework src="src/ios/firebase/FirebaseAnalytics.framework" custom="true" />
+    <framework src="src/ios/firebase/FirebaseRemoteConfig.framework" custom="true" />
 	<framework src="src/ios/firebase/FirebaseInstanceID.framework" custom="true" />
 	<framework src="src/ios/firebase/FirebaseMessaging.framework" custom="true" />
 	<framework src="src/ios/firebase/GoogleInterchangeUtilities.framework" custom="true" />
