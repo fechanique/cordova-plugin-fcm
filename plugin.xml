@@ -63,7 +63,7 @@
         </config-file>
 		
 	<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
-	<resource-file src="../../google-services.json" target="google-services.json" />
+	<resource-file src="../../google-services.json" target="./google-services.json" />
 		
         <source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
 	<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
