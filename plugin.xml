@@ -65,7 +65,6 @@
 
         <framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
-        <source-file src="src/android/google-services.json" target-dir="." />
         <source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin"/>
         <source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin"/>
         <source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin"/>
@@ -84,7 +83,7 @@
         <source-file src="src/ios/FCMPlugin.m"/>
         <header-file src="src/ios/AppDelegate+FCMPlugin.h"/>
         <source-file src="src/ios/AppDelegate+FCMPlugin.m"/>
-        <resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
+        <resource-file src="../../GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
 
         <!-- FIREBASE LIBS -->
         <header-file src="src/ios/firebase/Firebase.h"/>
