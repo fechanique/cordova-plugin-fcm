@@ -93,7 +93,7 @@
         <framework src="src/ios/firebase/GoogleInterchangeUtilities.framework" custom="true"/>
         <framework src="src/ios/firebase/GoogleIPhoneUtilities.framework" custom="true"/>
         <framework src="src/ios/firebase/GoogleSymbolUtilities.framework" custom="true"/>
-        <framework custom="true" src="src/ios/Firebase/Crash/FirebaseCrash.framework" />
+        <!-- <framework custom="true" src="src/ios/Firebase/Crash/FirebaseCrash.framework" /> -->
         <framework src="src/ios/firebase/GoogleUtilities.framework" custom="true"/>
 
         <!-- OTHER NEEDED LIBS -->
