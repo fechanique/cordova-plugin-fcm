@@ -24,9 +24,9 @@
     <description>Cordova FCM Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova, fcm, push, plugin</keywords>
-    
+
     <info>Cordova FCM plugin</info>
-	
+
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
 	<clobbers target="FCMPlugin" />
     </js-module>
@@ -34,15 +34,15 @@
     <engines>
 	<engine name="cordova-android" version=">=4.0.0" />
     </engines>
-	
+
     <!-- ANDROID CONFIGURATION -->
     <platform name="android">
 	<config-file target="AndroidManifest.xml" parent="/manifest/application">
 	  <activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
-	    <intent-filter>   
-		<action android:name="FCM_PLUGIN_ACTIVITY" />  
+	    <intent-filter>
+		<action android:name="FCM_PLUGIN_ACTIVITY" />
 		<category android:name="android.intent.category.DEFAULT" />
-	    </intent-filter>			
+	    </intent-filter>
 	  </activity>
 	  <service android:name="com.gae.scaffolder.plugin.MyFirebaseMessagingService">
 	    <intent-filter>
@@ -61,16 +61,16 @@
                 	<param name="onload" value="true" />
             	</feature>
         </config-file>
-		
+
 	<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
-		
+
         <source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
 	<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
 	<source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
 	<source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
 
     </platform>
-	
+
     <!-- IOS CONFIGURATION -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
@@ -78,12 +78,14 @@
                 <param name="ios-package" value="FCMPlugin"/>
             </feature>
         </config-file>
-		
+
+        <resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
+
         <header-file src="src/ios/FCMPlugin.h" />
         <source-file src="src/ios/FCMPlugin.m" />
 	<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
 	<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
-		
+
 	<!-- FIREBASE LIBS -->
 	<header-file src="src/ios/firebase/Firebase.h" />
 	<framework src="src/ios/firebase/FirebaseAnalytics.framework" custom="true" />
@@ -93,7 +95,7 @@
 	<framework src="src/ios/firebase/GoogleIPhoneUtilities.framework" custom="true" />
 	<framework src="src/ios/firebase/GoogleSymbolUtilities.framework" custom="true" />
 	<framework src="src/ios/firebase/GoogleUtilities.framework" custom="true" />
-		
+
 	<!-- OTHER NEEDED LIBS -->
 	<framework src="libc++.tbd" />
 	<framework src="libz.tbd" />
@@ -102,5 +104,5 @@
 	<framework src="libz.tbd" />
 	<framework src="Security.framework" />
     </platform>
-	
+    <hook src="scripts/after_prepare.js" type="after_prepare" />
 </plugin>
