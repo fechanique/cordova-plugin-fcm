@@ -123,6 +123,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     }];
 }
 // [END connect_to_fcm]
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+    
+    
+    [[FIRInstanceID instanceID] setAPNSToken:deviceToken type:FIRInstanceIDAPNSTokenTypeSandbox];
+    
+}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
