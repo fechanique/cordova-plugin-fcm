@@ -54,6 +54,26 @@ static NSData *lastPush;
     return YES;
 }
 
+// [START receive_message in background]
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
+    
+    NSError *error;
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+    
+    if (application.applicationState != UIApplicationStateActive) {
+        NSLog(@"New method with push callback: %@", userInfo);
+        
+        [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                           options:0
+                                                             error:&error];
+        NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+        lastPush = jsonData;
+    }
+}
+// [END receive_message in background]
+
 // [START receive_message]
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
