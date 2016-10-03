@@ -1,44 +1,20 @@
-# Google Firebase Cloud Messaging Cordova Push Plugin
-> Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
+# Google Firebase Cloud Messaging and Analytics for Cordova
 
->[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
-
-#### Version 1.1.4 (22/07/2016)
 - Android and iOS tested.
-- Available sdk functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
+- Available SDK functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
-- **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
 ##Installation
+1. Configure your app with the correct bundle name in Firebase Console.
+2. For iOS - upload the APNS certificates to Firebase. For Android - add the SHA1 Fingerprint for both release and debug.
+3. Generate the config file(s): for Android 'google-services.json'. For iOS 'GoogleService-Info.plist'. Move them to the project root folder (e.g. the location of cordova config.xml, www etc)
+4. Install the plugin:
 ```Bash
-cordova plugin add cordova-plugin-fcm
+cordova plugin add https://github.com/guyromb/cordova-plugin-fcm-plus --save
 
 ```
 
-#### Firebase configuration
-You will need 2 generated files in the Firebase configuration process (see docs: https://firebase.google.com/docs/).
-
-#### Android compilation details
-Put your generated file 'google-services.json' in the project root folder.
-
-You will need to ensure that you have installed the following items through the Android SDK Manager:
-
-- Android Support Library version 23 or greater
-- Android Support Repository version 20 or greater
-- Google Play Services version 27 or greater
-- Google Repository version 22 or greater
-
-:warning: For Android >5.0 status bar icon, you must include transparent solid color icon with name 'fcm_push_icon.png' in the 'res' folder in the same way you add the other application icons.
-If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android 5.0.
-
-#### iOS compilation details
-Put your generated file 'GoogleService-Info.plist' in the project root folder.
-
-
 ##Usage
-
-:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
-You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
 ####Get token
 
@@ -97,7 +73,6 @@ FCMPlugin.onNotification(
 
 ####Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
-Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
 //POST: https://fcm.googleapis.com/fcm/send
 //HEADER: Content-Type: application/json
@@ -128,11 +103,15 @@ Send a push notification to a single device or topic.
  - The user taps the notification and the application is opened.
  - The user receives the notification data in the JavaScript callback'.
 
+##Test
+You can use Firebase console to trigger a notification without your own server.
+
 ##License
 ```
 The MIT License
 
-Copyright (c) 2016 Felipe Echanique Torres (felipe.echanique in the gmail.com)
+Copyright (c) 2016
+Refactored by Guy Rombaut based on Felipe Echanique Torres code.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
