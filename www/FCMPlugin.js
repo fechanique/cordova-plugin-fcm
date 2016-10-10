@@ -30,6 +30,12 @@ FCMPlugin.prototype.onNotificationReceived = function(payload){
 	console.log("Received push notification")
 	console.log(payload)
 }
+
+// SET BADGE NUMBER //
+FCMPlugin.prototype.setBadgeNumber = function(number, success, error){
+	exec(success, error, "FCMPlugin", 'setBadgeNumber',[number]);
+	
+}
 // FIRE READY //
 exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
 
