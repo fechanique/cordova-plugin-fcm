@@ -5,7 +5,12 @@
 
 #import <Cordova/CDV.h>
 #import "FCMPlugin.h"
-#import "Firebase.h"
+
+@import FirebaseInstanceID;
+@import FirebaseMessaging;
+@import FirebaseAnalytics;
+
+
 
 @interface FCMPlugin () {}
 @end
@@ -23,6 +28,52 @@ static FCMPlugin *fcmPluginInstance;
     return fcmPluginInstance;
 }
 
+
+- (void)initializeRemoteConfig:(CDVInvokedUrlCommand *)command
+{
+    [self.commandDelegate runInBackground:^{
+        
+        self.config = [FIRRemoteConfig remoteConfig];
+        
+        FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] initWithDeveloperModeEnabled:YES];
+        self.config.configSettings = remoteConfigSettings;
+        
+        [self.config fetchWithExpirationDuration:600 completionHandler:^(FIRRemoteConfigFetchStatus status, NSError * _Nullable error) {
+            [self.config activateFetched];
+        }];
+        CDVPluginResult* pluginResult = nil;
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+-(void)getStringValueForKey:(CDVInvokedUrlCommand *)command
+{
+    NSLog(@"Cordova view ready");
+    fcmPluginInstance = self;
+    [self.commandDelegate runInBackground:^{
+        
+        NSString* propertyString = [command.arguments objectAtIndex:0];
+        
+        FIRRemoteConfigValue *value = self.config[propertyString];
+        if(value != nil)
+        {
+            NSString *b = value.stringValue;
+            NSLog(@"remote config val = %@",b);
+            CDVPluginResult* pluginResult = nil;
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithString:b]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+        else
+        {
+            CDVPluginResult* pluginResult = nil;
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }];
+}
+
+
 - (void) ready:(CDVInvokedUrlCommand *)command
 {
     NSLog(@"Cordova view ready");
@@ -35,6 +86,46 @@ static FCMPlugin *fcmPluginInstance;
     }];
     
 }
+
+//Analytics
+- (void)logEvent:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSString* key = [command.arguments objectAtIndex:0];
+        NSString* value = [command.arguments objectAtIndex:1];
+        
+        [FIRAnalytics logEventWithName:kFIREventSelectContent parameters:@{
+                                                                           kFIRParameterContentType:key,
+                                                                           kFIRParameterItemID:value
+                                                                           }];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+-(void)setUserId:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSString *userId = [command.arguments objectAtIndex:0];
+        
+        [FIRAnalytics setUserID:userId];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)setUserProperty:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSString* propertyString = [command.arguments objectAtIndex:0];
+        NSString* propertyName = [command.arguments objectAtIndex:1];
+        
+        [FIRAnalytics setUserPropertyString:propertyString forName:propertyName];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 
 // GET TOKEN //
 - (void) getToken:(CDVInvokedUrlCommand *)command 
