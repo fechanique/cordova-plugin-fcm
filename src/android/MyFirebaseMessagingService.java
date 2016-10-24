@@ -76,7 +76,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        int resID = getResources().getIdentifier("notificationIcon" , "drawable", getPackageName());
+        int resID = getResources().getIdentifier("notificationicon" , "drawable", getPackageName());
         if(resID != 0){
             notificationBuilder.setSmallIcon(resID);
         }
