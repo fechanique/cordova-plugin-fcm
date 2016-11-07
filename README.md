@@ -20,11 +20,13 @@ cordova plugin add cordova-plugin-fcm
 You will need 2 generated files in the Firebase configuration process (see docs: https://firebase.google.com/docs/).
 
 #### Android compilation details
-Put your generated file 'google-services.json' in the project root folder.
+Put your generated file 'google-services.json' in the project root folder (`platforms/android`).
+
+You don't have to edit Gradle project configuration, the plugin is doing that for you!
 
 You will need to ensure that you have installed the following items through the Android SDK Manager:
 
-- Android Support Library version 23 or greater
+- Android Support Library version 23 or greater (marked as obsolete, should not be required anymore)
 - Android Support Repository version 20 or greater
 - Google Play Services version 27 or greater
 - Google Repository version 22 or greater
@@ -33,7 +35,7 @@ You will need to ensure that you have installed the following items through the 
 If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android 5.0.
 
 #### iOS compilation details
-Put your generated file 'GoogleService-Info.plist' in the project root folder.
+Put your generated file 'GoogleService-Info.plist' in the project root folder (`platforms/ios`).
 
 
 ##Usage
@@ -99,6 +101,9 @@ FCMPlugin.onNotification(
 ####Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 Free testing server: https://cordova-plugin-fcm.appspot.com
+
+:warning: Your key is available in the firebase console. To find it, log in your project, click on the Cog icon to go in the project settings, then Cloud Messaging and you will see the Server Key there.
+
 ```javascript
 //POST: https://fcm.googleapis.com/fcm/send
 //HEADER: Content-Type: application/json
