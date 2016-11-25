@@ -143,4 +143,10 @@ public class FCMPlugin extends CordovaPlugin {
 			lastPush = payload;
 		}
 	}
+	
+	@Override
+	public void onDestroy() {
+		gWebView = null;
+		notificationCallBackReady = false;
+	}
 } 
