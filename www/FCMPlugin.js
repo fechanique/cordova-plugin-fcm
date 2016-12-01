@@ -1,47 +1,46 @@
+
+cordova.define("cordova-plugin-fcm.FCMPlugin", function(require, exports, module) {
 var exec = require('cordova/exec');
 
-function FCMPlugin() { 
-	console.log("FCMPlugin.js: is created");
-}
+exports.subscribeToTopic = function(success, error) {
+    exec(success, error, "FCMPlugin", "subscribeToTopic", []);
+};
+
+exports.getToken = function(success, error) {
+    exec(success, error, "FCMPlugin", "getToken", []);
+};
+
+exports.setBadgeNumber = function(number, success, error) {
+    exec(success, error, "FCMPlugin", "setBadgeNumber", [number]);
+};
+
+exports.getBadgeNumber = function(success, error) {
+    exec(success, error, "FCMPlugin", "getBadgeNumber", []);
+};
 
 
-
-
-
-// GET TOKEN //
-FCMPlugin.prototype.getToken = function( success, error ){
-	exec(success, error, "FCMPlugin", 'getToken', []);
-}
-// SUBSCRIBE TO TOPIC //
-FCMPlugin.prototype.subscribeToTopic = function( topic, success, error ){
-	exec(success, error, "FCMPlugin", 'subscribeToTopic', [topic]);
-}
-// UNSUBSCRIBE FROM TOPIC //
-FCMPlugin.prototype.unsubscribeFromTopic = function( topic, success, error ){
+exports.unsubscribeFromTopic = function( topic, success, error ){
 	exec(success, error, "FCMPlugin", 'unsubscribeFromTopic', [topic]);
 }
+
+
 // NOTIFICATION CALLBACK //
-FCMPlugin.prototype.onNotification = function( callback, success, error ){
-	FCMPlugin.prototype.onNotificationReceived = callback;
+exports.onNotification = function( callback, success, error ){
+	FCMPlugin.onNotificationReceived = callback;
 	exec(success, error, "FCMPlugin", 'registerNotification',[]);
 }
 // DEFAULT NOTIFICATION CALLBACK //
-FCMPlugin.prototype.onNotificationReceived = function(payload){
+exports.onNotificationReceived = function(payload){
 	console.log("Received push notification")
 	console.log(payload)
 }
 
 // SET BADGE NUMBER //
-FCMPlugin.prototype.setBadgeNumber = function(number, success, error){
+exports.setBadgeNumber = function(number, success, error){
 	exec(success, error, "FCMPlugin", 'setBadgeNumber',[number]);
 	
 }
-// FIRE READY //
-exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
 
 
+});
 
-
-
-var fcmPlugin = new FCMPlugin();
-module.exports = fcmPlugin;
