@@ -105,4 +105,6 @@
 	<framework src="Security.framework" />
     </platform>
 
+    <hook src="scripts/after_prepare.js" type="after_prepare" />
+
 </plugin>
