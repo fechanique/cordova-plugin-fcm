@@ -47,3 +47,17 @@ Temporary Items
 .apdisk
 
 npm-debug.log
+
+.idea/cordova-plugin-fcm.iml
+
+.idea/encodings.xml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/sbt.xml
+
+.idea/vcs.xml
+
+.idea/workspace.xml

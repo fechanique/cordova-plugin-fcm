@@ -54,6 +54,12 @@
 		<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
 	   </intent-filter>
   	  </service>
+		<meta-data
+				android:name="com.google.firebase.messaging.default_notification_icon"
+				android:resource="@drawable/fcm_push_icon" />
+		<meta-data
+				android:name="com.google.firebase.messaging.default_notification_color"
+				android:resource="@color/#3498db" />
 	</config-file>
         <config-file target="res/xml/config.xml" parent="/*">
            	<feature name="FCMPlugin" >
