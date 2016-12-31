@@ -19,7 +19,7 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm"
-      version="1.1.5">
+      version="1.1.6">
     <name>FCMPlugin</name>
     <description>Cordova FCM Plugin</description>
     <license>Apache 2.0</license>
@@ -62,7 +62,9 @@
             	</feature>
         </config-file>
 		
-	<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
+        <framework src="com.google.gms:google-services:+" />
+        <framework src="com.google.firebase:firebase-core:+" />
+        <framework src="com.google.firebase:firebase-messaging:+" />
 		
         <source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
 	<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
