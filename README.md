@@ -1,13 +1,14 @@
-# Firebase Cloud Messaging Cordova Push Plugin
-> Extremely easy plug&play push notification plugin for Cordova applications and FCM.
+# Google Firebase Cloud Messaging Cordova Push Plugin
+> Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
-#### Version 1.1.1 (29/06/2016)
-- Added getToken method to access the device registration token.
+>[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
+
+#### Version 1.1.5 (10/10/2016)
+- iOS10 ready
+- Android and iOS tested.
+- Available sdk functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
-
-#### Version 1.0.7 (21/06/2016)
-- Android and iOS compatible.
-- Available sdk functions: subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
+- **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
 ##Installation
 ```Bash
@@ -37,7 +38,8 @@ Put your generated file 'GoogleService-Info.plist' in the project root folder.
 
 ##Usage
 
-:warning: It's highly recommended (maybe mandatory) to use the REST API to send push notifications because Firebase console does not have all the functionalities. Pay attention to the payload example in order to use the plugin properly.
+:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
+You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
 ####Get token
 
@@ -95,7 +97,8 @@ FCMPlugin.onNotification(
 ```
 
 ####Send notification. Payload example (REST API)
-Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref
+Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
+Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
 //POST: https://fcm.googleapis.com/fcm/send
 //HEADER: Content-Type: application/json

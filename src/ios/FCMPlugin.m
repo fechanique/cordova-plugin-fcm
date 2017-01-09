@@ -64,7 +64,7 @@ static FCMPlugin *fcmPluginInstance;
 - (void) unsubscribeFromTopic:(CDVInvokedUrlCommand *)command 
 {
     NSString* topic = [command.arguments objectAtIndex:0];
-    NSLog(@"subscribe To Topic %@", topic);
+    NSLog(@"unsubscribe From Topic %@", topic);
     [self.commandDelegate runInBackground:^{
         if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:[NSString stringWithFormat:@"/topics/%@", topic]];
         CDVPluginResult* pluginResult = nil;
