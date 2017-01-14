@@ -4,19 +4,10 @@ buildscript {
 			mavenLocal()
         }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.android.tools.build:gradle:+'
+        classpath 'com.google.gms:google-services:+'
     }
 }
-repositories {
-            jcenter()
-			mavenLocal()
-        }
-dependencies {
-	compile 'com.google.firebase:firebase-core:9.2.0'
-	compile 'com.google.firebase:firebase-messaging:9.2.0'
-}
-
 // apply plugin: 'com.google.gms.google-services'
 // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
 apply plugin: com.google.gms.googleservices.GoogleServicesPlugin

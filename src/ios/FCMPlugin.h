@@ -13,6 +13,7 @@
 - (void)unsubscribeFromTopic:(CDVInvokedUrlCommand*)command;
 - (void)registerNotification:(CDVInvokedUrlCommand*)command;
 - (void)notifyOfMessage:(NSData*) payload;
+- (void)notifyOfTokenRefresh:(NSString*) token;
 - (void)appEnterBackground;
 - (void)appEnterForeground;
 

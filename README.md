@@ -3,57 +3,48 @@
 
 >[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
 
-#### Version 1.1.5 (10/10/2016)
-- iOS10 ready
-- Android and iOS tested.
-- Available sdk functions: getToken, subscribeToTopic, unsubscribeFromTopic and JavaScript notification data reception.
-- Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
+#### Version 2.0.0 (14/01/2017)
+- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
+- Available sdk functions: onTokenRefresh, subscribeToTopic, unsubscribeFromTopic and onNotification
+- 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
+- Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
 - **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
 ##Installation
+Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
 ```Bash
 cordova plugin add cordova-plugin-fcm
 
 ```
 
-#### Firebase configuration
-You will need 2 generated files in the Firebase configuration process (see docs: https://firebase.google.com/docs/).
+#### Firebase configuration files
+Get the needed configuration files for Android or iOS from the Firebase Console (see docs: https://firebase.google.com/docs/).
 
 #### Android compilation details
-Put your generated file 'google-services.json' in the project root folder.
+Put the downloaded file 'google-services.json' in the Cordova project root folder.
 
-You will need to ensure that you have installed the following items through the Android SDK Manager:
+You will need to ensure that you have installed the appropiate Android SDK libraries.
 
-- Android Support Library version 23 or greater
-- Android Support Repository version 20 or greater
-- Google Play Services version 27 or greater
-- Google Repository version 22 or greater
 
 :warning: For Android >5.0 status bar icon, you must include transparent solid color icon with name 'fcm_push_icon.png' in the 'res' folder in the same way you add the other application icons.
-If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android 5.0.
+If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android >5.0.
 
 #### iOS compilation details
-Put your generated file 'GoogleService-Info.plist' in the project root folder.
-
+Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root folder.
 
 ##Usage
 
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
 You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
-####Get token
+####Receiving Token Refresh
 
 ```javascript
-//FCMPlugin.getToken( successCallback(token), errorCallback(err) );
-//Keep in mind the function will return null if the token has not been established yet.
-FCMPlugin.getToken(
-  function(token){
-    alert(token);
-  },
-  function(err){
-    console.log('error retrieving token: ' + err);
-  }
-)
+//FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
+// Note that this callback will be fired everytime a new token is generated, including the first time.
+FCMPlugin.onTokenRefresh(function(token){
+    alert( token )
+  });
 ```
 
 ####Subscribe to topic
@@ -77,8 +68,7 @@ FCMPlugin.unsubscribeFromTopic('topicExample');
 ```javascript
 //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
 //Here you define your application behaviour based on the notification data.
-FCMPlugin.onNotification(
-  function(data){
+FCMPlugin.onNotification(function(data){
     if(data.wasTapped){
       //Notification was received on device tray and tapped by the user.
       alert( JSON.stringify(data) );
@@ -86,14 +76,7 @@ FCMPlugin.onNotification(
       //Notification was received in foreground. Maybe the user needs to be notified.
       alert( JSON.stringify(data) );
     }
-  },
-  function(msg){
-    console.log('onNotification callback successfully registered: ' + msg);
-  },
-  function(err){
-    console.log('Error registering onNotification callback: ' + err);
-  }
-);
+});
 ```
 
 ####Send notification. Payload example (REST API)
@@ -115,7 +98,7 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
     "param1":"value1",  //Any data to be retrieved in the notification callback
     "param2":"value2"
   },
-    "to":"/topics/topicExample", //Topic or single device
+    "to":"/topics/topicExample", //Topic or device token
     "priority":"high", //If not set, notification won't be delivered on completely closed iOS app
     "restricted_package_name":"" //Optional. Set for application filtering
 }
@@ -123,17 +106,18 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 ##How it works
 Send a push notification to a single device or topic.
 - 1.a Application is in foreground:
- - The user receives the notification data in the JavaScript callback without notification alert message (this is the normal behaviour of mobile push notifications).
-- 1.b Application is in background:
- - The user receives the notification message in its device notification bar.
- - The user taps the notification and the application is opened.
- - The user receives the notification data in the JavaScript callback'.
+ - The notification data is received in the JavaScript callback without notification bar message (this is the normal behaviour of mobile push notifications).
+- 1.b Application is in background or closed:
+ - The device displays the notification message in the device notification bar.
+ - If the user taps the notification, the application comes to foregroud and the notification data is received in the JavaScript callback.
+ - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
+
 
 ##License
 ```
 The MIT License
 
-Copyright (c) 2016 Felipe Echanique Torres (felipe.echanique in the gmail.com)
+Copyright (c) 2017 Felipe Echanique Torres (felipe.echanique in the gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
