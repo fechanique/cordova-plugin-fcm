@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "cordova-plugin-fcm",
   "cordova_name": "Cordova FCM Push Plugin",
   "description": "Google Firebase Cloud Messaging Cordova Push Plugin",
@@ -8,7 +8,7 @@
   "issue": "",
   "author": {
     "name": "Felipe Echanique Torres",
-	"email" : "felipe.echanique@gmail.com"
+    "email": "felipe.echanique@gmail.com"
   },
   "repository": {
     "type": "git",
