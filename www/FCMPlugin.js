@@ -7,11 +7,6 @@ function FCMPlugin() {
 
 
 
-
-// GET TOKEN //
-FCMPlugin.prototype.getToken = function( success, error ){
-	exec(success, error, "FCMPlugin", 'getToken', []);
-}
 // SUBSCRIBE TO TOPIC //
 FCMPlugin.prototype.subscribeToTopic = function( topic, success, error ){
 	exec(success, error, "FCMPlugin", 'subscribeToTopic', [topic]);
@@ -29,6 +24,15 @@ FCMPlugin.prototype.onNotification = function( callback, success, error ){
 FCMPlugin.prototype.onNotificationReceived = function(payload){
 	console.log("Received push notification")
 	console.log(payload)
+}
+// TOKEN REFRESH CALLBACK //
+FCMPlugin.prototype.onTokenRefresh = function( callback ){
+	FCMPlugin.prototype.onTokenRefreshReceived = callback;
+}
+// DEFAULT TOKEN REFRESH CALLBACK //
+FCMPlugin.prototype.onTokenRefreshReceived = function(token){
+	console.log("Received token refresh")
+	console.log(token)
 }
 // FIRE READY //
 exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
