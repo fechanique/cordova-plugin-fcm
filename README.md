@@ -41,7 +41,7 @@ You can also test your notifications with the free testing server: https://cordo
 
 ```javascript
 //FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
-// Note that this callback will be fired everytime a new token is generated, including the first time.
+//Note that this callback will be fired everytime a new token is generated, including the first time.
 FCMPlugin.onTokenRefresh(function(token){
     alert( token )
   });
