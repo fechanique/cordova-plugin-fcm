@@ -43,7 +43,7 @@ You can also test your notifications with the free testing server: https://cordo
 //FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
 //Note that this callback will be fired everytime a new token is generated, including the first time.
 FCMPlugin.onTokenRefresh(function(token){
-    alert( token )
+    alert( token );
   });
 ```
 
@@ -88,20 +88,27 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 //HEADER: Authorization: key=AIzaSy*******************
 {
   "notification":{
-    "title":"Notification title",  //Any value
-    "body":"Notification body",  //Any value
-    "sound":"default", //If you want notification sound
-    "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-    "icon":"fcm_push_icon"  //White icon Android resource
+    "title":"Notification title",
+    "body":"Notification body",
+    "sound":"default",
+    "click_action":"FCM_PLUGIN_ACTIVITY",
+    "icon":"fcm_push_icon"
   },
   "data":{
-    "param1":"value1",  //Any data to be retrieved in the notification callback
+    "param1":"value1",
     "param2":"value2"
   },
-    "to":"/topics/topicExample", //Topic or device token
-    "priority":"high", //If not set, notification won't be delivered on completely closed iOS app
-    "restricted_package_name":"" //Optional. Set for application filtering
+    "to":"/topics/topicExample",
+    "priority":"high",
+    "restricted_package_name":""
 }
+//sound: optional field if you want sound with the notification
+//click_action: must be present with the specified value for Android
+//icon: white icon resource name for Android >5.0
+//data: put any "param":"value" and retreive them in the JavaScript notification callback
+//to: device token or /topic/topicExample
+//priority: must be set to "high" for delivering notifications on closed iOS apps
+//restricted_package_name: optional field if you want to send only to a restricted app package (i.e: com.myapp.test)
 ```
 ##How it works
 Send a push notification to a single device or topic.
