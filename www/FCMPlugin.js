@@ -4,9 +4,6 @@ function FCMPlugin() {
 	console.log("FCMPlugin.js: is created");
 }
 
-
-
-
 // SUBSCRIBE TO TOPIC //
 FCMPlugin.prototype.subscribeToTopic = function( topic, success, error ){
 	exec(success, error, "FCMPlugin", 'subscribeToTopic', [topic]);
@@ -20,14 +17,19 @@ FCMPlugin.prototype.onNotification = function( callback, success, error ){
 	FCMPlugin.prototype.onNotificationReceived = callback;
 	exec(success, error, "FCMPlugin", 'registerNotification',[]);
 }
+// TOKEN REFRESH CALLBACK //
+FCMPlugin.prototype.onTokenRefresh = function( callback ){
+	FCMPlugin.prototype.onTokenRefreshReceived = callback;
+}
+// GET TOKEN //
+FCMPlugin.prototype.getToken = function( success, error ){
+	exec(success, error, "FCMPlugin", 'getToken', []);
+}
+
 // DEFAULT NOTIFICATION CALLBACK //
 FCMPlugin.prototype.onNotificationReceived = function(payload){
 	console.log("Received push notification")
 	console.log(payload)
-}
-// TOKEN REFRESH CALLBACK //
-FCMPlugin.prototype.onTokenRefresh = function( callback ){
-	FCMPlugin.prototype.onTokenRefreshReceived = callback;
 }
 // DEFAULT TOKEN REFRESH CALLBACK //
 FCMPlugin.prototype.onTokenRefreshReceived = function(token){
