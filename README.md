@@ -3,9 +3,9 @@
 
 >[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
 
-#### Version 2.0.0 (14/01/2017)
+#### Version 2.1.0 (14/01/2017)
 - Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
-- Available sdk functions: onTokenRefresh, subscribeToTopic, unsubscribeFromTopic and onNotification
+- Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
 - **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
@@ -44,7 +44,17 @@ You can also test your notifications with the free testing server: https://cordo
 //Note that this callback will be fired everytime a new token is generated, including the first time.
 FCMPlugin.onTokenRefresh(function(token){
     alert( token );
-  });
+});
+```
+
+####Get token
+
+```javascript
+//FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+//Keep in mind the function will return null if the token has not been established yet.
+FCMPlugin.getToken(function(token){
+    alert(token);
+});
 ```
 
 ####Subscribe to topic
