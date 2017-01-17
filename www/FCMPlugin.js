@@ -6,7 +6,10 @@ function FCMPlugin() {
 
 
 
-
+// GET TOKEN //
+FCMPlugin.prototype.getToken = function( success, error ){
+	exec(success, error, "FCMPlugin", 'getToken', []);
+}
 // SUBSCRIBE TO TOPIC //
 FCMPlugin.prototype.subscribeToTopic = function( topic, success, error ){
 	exec(success, error, "FCMPlugin", 'subscribeToTopic', [topic]);
