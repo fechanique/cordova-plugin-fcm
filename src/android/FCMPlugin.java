@@ -23,6 +23,7 @@ public class FCMPlugin extends CordovaPlugin {
 	
 	public static CordovaWebView gWebView;
 	public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
+	public static String tokenRefreshCallBack = "FCMPlugin.onTokenRefreshReceived";
 	public static Boolean notificationCallBackReady = false;
 	public static Map<String, Object> lastPush = null;
 	 
@@ -143,8 +144,18 @@ public class FCMPlugin extends CordovaPlugin {
 			lastPush = payload;
 		}
 	}
-	
-	@Override
+
+	public static void sendTokenRefresh(String token) {
+		Log.d(TAG, "==> FCMPlugin sendRefreshToken");
+	  try {
+			String callBack = "javascript:" + tokenRefreshCallBack + "('" + token + "')";
+			gWebView.sendJavascript(callBack);
+		} catch (Exception e) {
+			Log.d(TAG, "\tERROR sendRefreshToken: " + e.getMessage());
+		}
+	}
+  
+  @Override
 	public void onDestroy() {
 		gWebView = null;
 		notificationCallBackReady = false;
