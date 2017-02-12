@@ -116,10 +116,10 @@ public class FCMPlugin extends CordovaPlugin {
 
                             FirebaseMessaging fm = FirebaseMessaging.getInstance();
                             fm.send(new RemoteMessage.Builder("78391781623@gcm.googleapis.com")
-                                .setMessageId(nextMessageId())
+                                .setMessageId(map.get("eventId"))
                                 .setData(map)
                                 .build());
-                            callbackContext.success("Successefully Sent");
+                            callbackContext.success("Successfully Sent");
                         }catch(Exception e){
                             callbackContext.error(e.getMessage());
                         }
