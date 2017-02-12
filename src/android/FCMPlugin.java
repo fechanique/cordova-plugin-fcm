@@ -150,10 +150,6 @@ public class FCMPlugin extends CordovaPlugin {
         return true;
     }
 
-    private synchronized static String nextMessageId() {
-        return String.format("reg-%s", UUID.randomUUID().toString());
-    }
-
     public static void sendPushPayload(Map<String, Object> payload) {
         Log.d(TAG, "==> FCMPlugin sendPushPayload");
         Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);
