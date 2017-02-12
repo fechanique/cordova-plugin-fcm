@@ -118,6 +118,7 @@ public class FCMPlugin extends CordovaPlugin {
 							fm.send(new RemoteMessage.Builder("78391781623@gcm.googleapis.com")
 								.setMessageId(nextMessageId())
 								.setData(map)
+								.setTtl(900)
 								.build());
 							callbackContext.success("Successefully Sent");
 						}catch(Exception e){
