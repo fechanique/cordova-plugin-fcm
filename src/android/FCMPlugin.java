@@ -14,8 +14,12 @@ import android.os.Bundle;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
 
 public class FCMPlugin extends CordovaPlugin {
  
@@ -96,6 +100,32 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
+			else if (action.equals("upstream")) {
+				cordova.getThreadPool().execute(new Runnable() {
+					public void run() {
+						try{
+							HashMap<String, String> map = new HashMap<String, String>();
+							JSONObject jObject = args.getJSONObject(0);
+							Iterator<?> keys = jObject.keys();
+
+							while( keys.hasNext() ){
+								String key = (String)keys.next();
+								String value = jObject.getString(key); 
+								map.put(key, value);
+							}
+
+							FirebaseMessaging fm = FirebaseMessaging.getInstance();
+							fm.send(new RemoteMessage.Builder("78391781623@gcm.googleapis.com")
+								.setMessageId(nextMessageId())
+								.setData(map)
+								.build());
+							callbackContext.success("Successefully Sent");
+						}catch(Exception e){
+							callbackContext.error(e.getMessage());
+						}
+					}
+				});
+			}
 			else{
 				callbackContext.error("Method not found");
 				return false;
@@ -120,6 +150,10 @@ public class FCMPlugin extends CordovaPlugin {
 		return true;
 	}
 	
+	private synchronized static String nextMessageId() {
+        return String.format("reg-%s", UUID.randomUUID().toString());
+    }
+
 	public static void sendPushPayload(Map<String, Object> payload) {
 		Log.d(TAG, "==> FCMPlugin sendPushPayload");
 		Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);

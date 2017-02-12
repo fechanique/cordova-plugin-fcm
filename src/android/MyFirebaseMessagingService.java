@@ -21,6 +21,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FCMPlugin";
 
+    @Override
+    public void onMessageSent(String msgId) {
+      super.onMessageSent(msgId);
+      Log.d(TAG, "Message sent +++++++++++++++++: " + msgId);
+    }
+
+    @Override
+    public void onSendError(String msgId, Exception e) {
+      super.onSendError(msgId, e);
+      Log.e(TAG, "Error sending upstream message -----------------: " + e);
+    }
+
     /**
      * Called when message is received.
      *
