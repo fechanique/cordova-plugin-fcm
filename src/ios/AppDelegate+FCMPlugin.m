@@ -158,7 +158,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     
     completionHandler();
 }
-#else
+#endif
 // [START receive_message in background iOS < 10]
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
@@ -210,7 +210,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
-#endif
 // [END message_handling]
 
 
