@@ -33,11 +33,10 @@ function directoryExists(path) {
 }
 
 function decodeEntities(encoded) {
-  var decoded = encoded;
   for (var entity in entities) {
-    decoded = decoded.replace(entity, entities[entity]);
+    encoded = encoded.replace(entity, entities[entity]);
   }
-  return decoded;
+  return encoded;
 }
 
 var config = fs.readFileSync("config.xml").toString()
