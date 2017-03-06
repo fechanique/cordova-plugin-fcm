@@ -158,7 +158,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     
     completionHandler();
 }
-#else
+#endif
 // [START receive_message in background iOS < 10]
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
@@ -207,10 +207,19 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     // app is in background or in stand by (NOTIFICATION WILL BE TAPPED)
     }
 
+	if (application.applicationState == UIApplicationStateInactive) {
+		[userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
+		NSLog(@"app inactive - enable wasTapped");
+		NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+														   options:0
+															 error:&error];
+		[FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
+		// app is in background or in stand by (NOTIFICATION WILL BE TAPPED)
+	}
+
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
-#endif
 // [END message_handling]
 
 
