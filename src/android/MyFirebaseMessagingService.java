@@ -14,6 +14,8 @@ import java.util.HashMap;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import me.leolin.shortcutbadger.ShortcutBadgeException;
+import me.leolin.shortcutbadger.ShortcutBadger;
 /**
  * Created by Felipe Echanique on 08/06/2016.
  */
@@ -35,6 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
         Log.d(TAG, "==> MyFirebaseMessagingService onMessageReceived");
 		
+        setBadgeCount(remoteMessage);
 		if( remoteMessage.getNotification() != null){
 			Log.d(TAG, "\tNotification Title: " + remoteMessage.getNotification().getTitle());
 			Log.d(TAG, "\tNotification Message: " + remoteMessage.getNotification().getBody());
@@ -54,6 +57,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
     // [END receive_message]
 
+    private void setBadgeCount(RemoteMessage remoteMessage){
+        try {
+            int badgeCount = Integer.parseInt(remoteMessage.getData().get("badge"));
+            ShortcutBadger.applyCountOrThrow(getApplicationContext(), badgeCount);
+            Log.d(TAG, "showBadge worked!");
+        } catch (ShortcutBadgeException e) {
+            Log.e(TAG, "showBadge failed: " + e.getMessage());
+        }
+    }
     /**
      * Create and show a simple notification containing the received FCM message.
      *

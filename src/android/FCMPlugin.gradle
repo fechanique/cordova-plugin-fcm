@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:+'
         classpath 'com.google.gms:google-services:+'
+        compile 'me.leolin:ShortcutBadger:1.1.11@aar'
     }
 }
 // apply plugin: 'com.google.gms.google-services'
