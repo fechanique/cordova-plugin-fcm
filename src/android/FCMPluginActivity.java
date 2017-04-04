@@ -38,7 +38,8 @@ public class FCMPluginActivity extends Activity {
 				data.put(key, value);
             }
         }
-		
+        
+		BadgeHelper.setBadgeCount((String) data.get(BadgeHelper.CONST_BADGE_KEY), getApplicationContext());
 		FCMPlugin.sendPushPayload(data);
 
         finish();
