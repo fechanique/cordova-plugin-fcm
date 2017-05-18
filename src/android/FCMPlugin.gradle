@@ -1,11 +1,11 @@
 buildscript {
 	repositories {
-            jcenter()
-			mavenLocal()
-        }
+        jcenter()
+		mavenLocal()
+    }
     dependencies {
-        classpath 'com.android.tools.build:gradle:+'
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.android.tools.build:gradle:2.3.+'
+        classpath 'com.google.gms:google-services:3.1.+'
     }
 }
 // apply plugin: 'com.google.gms.google-services'
