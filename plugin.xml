@@ -25,11 +25,6 @@
     <license>Apache 2.0</license>
     <keywords>cordova, fcm, push, plugin</keywords>
 
-    <info>
-		Cordova FCM plugin v2.1.2 installed
-		For more details visit https://github.com/fechanique/cordova-plugin-fcm
-	</info>
-
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
 	<clobbers target="FCMPlugin" />
     </js-module>
