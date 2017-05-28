@@ -20,10 +20,10 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm"
       version="2.1.2">
-    <name>FCMPlugin</name>
-    <description>Cordova FCM Plugin</description>
+    <name>Cordova FCM Push Plugin</name>
+    <description>Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated</description>
     <license>Apache 2.0</license>
-    <keywords>cordova, fcm, push, plugin</keywords>
+    <keywords>notifications, push, firebase, fcm, ios, android, cordova, plugin</keywords>
 
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
 	<clobbers target="FCMPlugin" />
