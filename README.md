@@ -1,7 +1,7 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
-# Disclaimer
+## Disclaimer
 This is a simple fork from https://github.com/fechanique/cordova-plugin-fcm.
 
 This fork has it's dependencies versions defined, which is necessary to avoid cordova build errors.
