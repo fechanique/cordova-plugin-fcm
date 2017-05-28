@@ -16,7 +16,7 @@ This fork has it's dependencies versions defined, which is necessary to avoid co
 ## Installation
 Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
 ```Bash
-cordova plugin add cordova-plugin-fcm
+cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 ```
 
 #### Firebase configuration files
