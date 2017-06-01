@@ -1,5 +1,5 @@
 {
-  "version": "2.1.4",
+  "version": "2.2.0",
   "name": "cordova-plugin-fcm-with-dependecy-updated",
   "cordova_name": "Cordova FCM Push Plugin",
   "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
@@ -9,7 +9,7 @@
   "author": "André Augusto Tissot",
   "repository": {
     "type": "git",
-    "url": "https://github.com/andrehtissot/cordova-plugin-fcm"
+    "url": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
   },
   "keywords": [
     "ecosystem:cordova",
