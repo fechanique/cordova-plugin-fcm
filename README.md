@@ -10,7 +10,7 @@
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
 - **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
-##Installation
+## Installation
 Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
 ```Bash
 cordova plugin add cordova-plugin-fcm
@@ -32,12 +32,12 @@ If you do not set this resource, then the SDK will use the default icon for your
 #### iOS compilation details
 Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root folder.
 
-##Usage
+## Usage
 
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
 You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
-####Receiving Token Refresh
+#### Receiving Token Refresh
 
 ```javascript
 //FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
@@ -47,7 +47,7 @@ FCMPlugin.onTokenRefresh(function(token){
 });
 ```
 
-####Get token
+#### Get token
 
 ```javascript
 //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
@@ -57,7 +57,7 @@ FCMPlugin.getToken(function(token){
 });
 ```
 
-####Subscribe to topic
+#### Subscribe to topic
 
 ```javascript
 //FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
@@ -66,14 +66,14 @@ FCMPlugin.getToken(function(token){
 FCMPlugin.subscribeToTopic('topicExample');
 ```
 
-####Unsubscribe from topic
+#### Unsubscribe from topic
 
 ```javascript
 //FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
 FCMPlugin.unsubscribeFromTopic('topicExample');
 ```
 
-####Receiving push notification data
+#### Receiving push notification data
 
 ```javascript
 //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
@@ -89,7 +89,7 @@ FCMPlugin.onNotification(function(data){
 });
 ```
 
-####Send notification. Payload example (REST API)
+#### Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
@@ -120,7 +120,7 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 //priority: must be set to "high" for delivering notifications on closed iOS apps
 //restricted_package_name: optional field if you want to send only to a restricted app package (i.e: com.myapp.test)
 ```
-##How it works
+## How it works
 Send a push notification to a single device or topic.
 - 1.a Application is in foreground:
  - The notification data is received in the JavaScript callback without notification bar message (this is the normal behaviour of mobile push notifications).
@@ -130,7 +130,7 @@ Send a push notification to a single device or topic.
  - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
 
 
-##License
+## License
 ```
 The MIT License
 
