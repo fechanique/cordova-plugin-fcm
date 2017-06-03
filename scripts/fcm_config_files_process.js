@@ -34,7 +34,7 @@ var config = fs.readFileSync("config.xml").toString()
 var name = getValue(config, "name")
 
 if (directoryExists("platforms/ios")) {
-	var path = "GoogleService-Info.plist";
+	var path = "../../../GoogleService-Info.plist";
 
     if (fileExists( path )) {
       try {
@@ -50,7 +50,7 @@ if (directoryExists("platforms/ios")) {
 }
 
 if (directoryExists("platforms/android")) {
-	var path = "google-services.json";
+	var path = "../../../google-services.json";
 
     if (fileExists( path )) {
       try {
