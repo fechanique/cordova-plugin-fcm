@@ -3,6 +3,8 @@
 
 var fs = require('fs');
 
+var entities = require('./entities.json');
+
 var getValue = function(config, name) {
     var value = config.match(new RegExp('<' + name + '>(.*?)</' + name + '>', "i"))
     if(value && value[1]) {
@@ -30,11 +32,18 @@ function directoryExists(path) {
   }
 }
 
+function decodeEntities(encoded) {
+  for (var entity in entities) {
+    encoded = encoded.replace(entity, entities[entity]);
+  }
+  return encoded;
+}
+
 var config = fs.readFileSync("config.xml").toString()
-var name = getValue(config, "name")
+var name = decodeEntities(getValue(config, "name"))
 
 if (directoryExists("platforms/ios")) {
-	var path = "GoogleService-Info.plist";
+  var path = "GoogleService-Info.plist";
 
     if (fileExists( path )) {
       try {
@@ -45,12 +54,12 @@ if (directoryExists("platforms/ios")) {
       }
 
     } else {
-		throw new Error("cordova-plugin-fcm: You have installed platform ios but file 'GoogleService-Info.plist' was not found in your Cordova project root folder.")
-	}
+    throw new Error("cordova-plugin-fcm: You have installed platform ios but file 'GoogleService-Info.plist' was not found in your Cordova project root folder.")
+  }
 }
 
 if (directoryExists("platforms/android")) {
-	var path = "google-services.json";
+  var path = "google-services.json";
 
     if (fileExists( path )) {
       try {
@@ -81,6 +90,6 @@ if (directoryExists("platforms/android")) {
       }
 
     } else {
-		throw new Error("cordova-plugin-fcm: You have installed platform android but file 'google-services.json' was not found in your Cordova project root folder.")
-	}
+    throw new Error("cordova-plugin-fcm: You have installed platform android but file 'google-services.json' was not found in your Cordova project root folder.")
+  }
 }
