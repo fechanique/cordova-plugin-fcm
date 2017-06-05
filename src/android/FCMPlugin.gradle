@@ -6,7 +6,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:+'
         classpath 'com.google.gms:google-services:+'
-        
     }
 }
 // apply plugin: 'com.google.gms.google-services'
