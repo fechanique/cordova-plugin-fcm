@@ -92,7 +92,7 @@
 			<string>production</string>
 		</config-file>
 		
-		<resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
+		<resource-file src="src/ios/GoogleService-Info.plist" target="GoogleService-Info.plist" />
 		
         <header-file src="src/ios/FCMPlugin.h" />
         <source-file src="src/ios/FCMPlugin.m" />
