@@ -78,10 +78,19 @@
 
     <!-- IOS CONFIGURATION -->
     <platform name="ios">
-        <config-file target="*-Info.plist" parent="/*">
+        <config-file target="config.xml" parent="/*">
             <feature name="FCMPlugin">
                 <param name="ios-package" value="FCMPlugin"/>
             </feature>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+            <array>
+                <dict>
+                    <key>PackageName</key>
+                    <string>FCMPlugin</string>
+                </dict>
+            </array>
         </config-file>
 
 		<!-- ENABLE PUSH CAPABILITY -->
