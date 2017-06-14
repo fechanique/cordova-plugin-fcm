@@ -1,17 +1,40 @@
+/*
+ * Copyright 2017 Google
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #import <Foundation/Foundation.h>
+
+#if TARGET_OS_IOS
+// TODO: Remove UIKit import on next breaking change release
 #import <UIKit/UIKit.h>
+#endif
+
+#import "FIRCoreSwiftNameSupport.h"
 
 @class FIROptions;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FIRAppVoidBoolCallback)(BOOL success);
+/** A block that takes a BOOL and has no return value. */
+typedef void (^FIRAppVoidBoolCallback)(BOOL success) FIR_SWIFT_NAME(FirebaseAppVoidBoolCallback);
 
 /**
  * The entry point of Firebase SDKs.
  *
- * Initialize and configure FIRApp using [FIRApp configure];
- * Or other customized ways as shown below.
+ * Initialize and configure FIRApp using +[FIRApp configure]
+ * or other customized ways as shown below.
  *
  * The logging system has two modes: default mode and debug mode. In default mode, only logs with
  * log level Notice, Warning and Error will be sent to device. In debug mode, all logs will be sent
@@ -21,7 +44,11 @@ typedef void (^FIRAppVoidBoolCallback)(BOOL success);
  * argument in the application's Xcode scheme. When debug mode is enabled via -FIRDebugEnabled,
  * further executions of the application will also be in debug mode. In order to return to default
  * mode, you must explicitly disable the debug mode with the application argument -FIRDebugDisabled.
+ *
+ * It is also possible to change the default logging level in code by calling setLoggerLevel: on
+ * the FIRConfiguration interface.
  */
+FIR_SWIFT_NAME(FirebaseApp)
 @interface FIRApp : NSObject
 
 /**
@@ -38,7 +65,7 @@ typedef void (^FIRAppVoidBoolCallback)(BOOL success);
  *
  * @param options The Firebase application options used to configure the service.
  */
-+ (void)configureWithOptions:(FIROptions *)options;
++ (void)configureWithOptions:(FIROptions *)options FIR_SWIFT_NAME(configure(options:));
 
 /**
  * Configures a Firebase app with the given name and options. Raises an exception if any
@@ -48,36 +75,45 @@ typedef void (^FIRAppVoidBoolCallback)(BOOL success);
                Letters, Numbers and Underscore.
  * @param options The Firebase application options used to configure the services.
  */
-+ (void)configureWithName:(NSString *)name options:(FIROptions *)options;
++ (void)configureWithName:(NSString *)name options:(FIROptions *)options
+    FIR_SWIFT_NAME(configure(name:options:));
 
 /**
  * Returns the default app, or nil if the default app does not exist.
  */
-+ (nullable FIRApp *)defaultApp NS_SWIFT_NAME(defaultApp());
++ (nullable FIRApp *)defaultApp FIR_SWIFT_NAME(app());
 
 /**
  * Returns a previously created FIRApp instance with the given name, or nil if no such app exists.
  * This method is thread safe.
  */
-+ (nullable FIRApp *)appNamed:(NSString *)name;
++ (nullable FIRApp *)appNamed:(NSString *)name FIR_SWIFT_NAME(app(name:));
 
+#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 /**
- * Returns the set of all extant FIRApp instances, or nil if there is no FIRApp instance. This
+ * Returns the set of all extant FIRApp instances, or nil if there are no FIRApp instances. This
  * method is thread safe.
  */
-+ (nullable NSDictionary *)allApps;
+@property(class, readonly, nullable) NSDictionary <NSString *, FIRApp *> *allApps;
+#else
+/**
+ * Returns the set of all extant FIRApp instances, or nil if there are no FIRApp instances. This
+ * method is thread safe.
+ */
++ (nullable NSDictionary <NSString *, FIRApp *> *)allApps FIR_SWIFT_NAME(allApps());
+#endif  // defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 /**
  * Cleans up the current FIRApp, freeing associated data and returning its name to the pool for
- * future use. This method is thread safe in class level.
+ * future use. This method is thread safe.
  */
 - (void)deleteApp:(FIRAppVoidBoolCallback)completion;
 
 /**
- * FIRFirebaseApp instances should not be initialized directly. Call |FIRApp configure|, or
- * |FIRApp configureWithOptions:|, or |FIRApp configureWithNames:options| directly.
+ * FIRApp instances should not be initialized directly. Call +[FIRApp configure],
+ * +[FIRApp configureWithOptions:], or +[FIRApp configureWithNames:options:] directly.
  */
-- (nullable instancetype)init NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  * Gets the name of this app.
@@ -85,9 +121,9 @@ typedef void (^FIRAppVoidBoolCallback)(BOOL success);
 @property(nonatomic, copy, readonly) NSString *name;
 
 /**
- * Gets the options for this app.
+ * Gets a copy of the options for this app. These are non-modifiable.
  */
-@property(nonatomic, readonly) FIROptions *options;
+@property(nonatomic, copy, readonly) FIROptions *options;
 
 @end
 
