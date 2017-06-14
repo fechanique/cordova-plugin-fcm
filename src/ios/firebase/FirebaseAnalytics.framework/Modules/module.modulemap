@@ -1,7 +1,4 @@
 framework module FirebaseAnalytics {
-
-  export *
-
   umbrella header "FirebaseAnalytics.h"
 
   header "FIRAnalytics+AppDelegate.h"
@@ -17,7 +14,9 @@ framework module FirebaseAnalytics {
   link framework "AddressBook"
   link framework "StoreKit"
 
-  link "c++"
+  export *
+  module * { export *}
   link "sqlite3"
   link "z"
+  link framework "UIKit"
 }
