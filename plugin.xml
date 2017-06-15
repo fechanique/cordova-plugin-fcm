@@ -101,7 +101,7 @@
 			<string>production</string>
 		</config-file>
 
-		<resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
+		<resource-file src="src/ios/GoogleService-Info.plist" target="GoogleService-Info.plist" />
 
         <header-file src="src/ios/FCMPlugin.h" />
         <source-file src="src/ios/FCMPlugin.m" />
@@ -113,7 +113,17 @@
 		<!-- <framework src="Firebase/Messaging" type="podspec" spec="~> 0"/> -->
 
 		<!-- FIREBASE LIBS -->
-		<header-file src="src/ios/firebase/Firebase.h" />
+        <header-file src="src/Firebase/Firebase.h" />
+        <framework src="src/Firebase/Analytics/FirebaseAnalytics.framework" custom="true" />
+        <framework src="src/Firebase/Analytics/FirebaseCore.framework" custom="true" />
+        <framework src="src/Firebase/Analytics/FirebaseCoreDiagnostics.framework" custom="true" />
+        <framework src="src/Firebase/Analytics/FirebaseInstanceID.framework" custom="true" />
+        <framework src="src/Firebase/Analytics/FirebaseNanoPB.framework" custom="true" />
+        <framework src="src/Firebase/Analytics/GoogleToolboxForMac.framework" custom="true" />
+        <framework src="src/Firebase/Messaging/FirebaseMessaging.framework" custom="true" />
+        <framework src="src/Firebase/Messaging/Protobuf.framework" custom="true" />
+
+		<!-- <header-file src="src/ios/firebase/Firebase.h" />
 		<framework src="src/ios/firebase/FirebaseAnalytics.framework" custom="true" />
 		<framework src="src/ios/firebase/FirebaseCore.framework" custom="true" />
 		<framework src="src/ios/firebase/FirebaseInstanceID.framework" custom="true" />
@@ -121,7 +131,7 @@
 		<framework src="src/ios/firebase/GoogleInterchangeUtilities.framework" custom="true" />
 		<framework src="src/ios/firebase/GoogleIPhoneUtilities.framework" custom="true" />
 		<framework src="src/ios/firebase/GoogleSymbolUtilities.framework" custom="true" />
-		<framework src="src/ios/firebase/GoogleUtilities.framework" custom="true" />
+		<framework src="src/ios/firebase/GoogleUtilities.framework" custom="true" /> -->
 
 		<!-- OTHER NEEDED LIBS -->
 		<framework src="libc++.tbd" />
