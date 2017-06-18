@@ -87,6 +87,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             [UNUserNotificationCenter currentNotificationCenter].delegate = self;
             // For iOS 10 data message (sent via FCM)
             [FIRMessaging messaging].delegate = self;
+            
 #endif
         }
 
