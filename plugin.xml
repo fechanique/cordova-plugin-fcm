@@ -84,15 +84,6 @@
             </feature>
         </config-file>
 
-        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
-            <array>
-                <dict>
-                    <key>PackageName</key>
-                    <string>FCMPlugin</string>
-                </dict>
-            </array>
-        </config-file>
-
 		<!-- ENABLE PUSH CAPABILITY -->
 		<config-file parent="aps-environment" target="*/Entitlements-Debug.plist">
 		    <string>development</string>
