@@ -8,6 +8,11 @@ buildscript {
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
+
 // apply plugin: 'com.google.gms.google-services'
 // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
-apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+
+ext.postBuildExtras = {
+    apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+}
+
