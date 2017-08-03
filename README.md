@@ -3,14 +3,14 @@
 
 >[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
 
-#### Version 2.0.0 (14/01/2017)
+#### Version 2.1.2 (03/06/2017)
 - Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
-- Available sdk functions: onTokenRefresh, subscribeToTopic, unsubscribeFromTopic and onNotification
+- Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
 - **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
-##Installation
+## Installation
 Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
 ```Bash
 cordova plugin add cordova-plugin-fcm
@@ -32,22 +32,32 @@ If you do not set this resource, then the SDK will use the default icon for your
 #### iOS compilation details
 Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root folder.
 
-##Usage
+## Usage
 
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
 You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
-####Receiving Token Refresh
+#### Receiving Token Refresh
 
 ```javascript
 //FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
 //Note that this callback will be fired everytime a new token is generated, including the first time.
 FCMPlugin.onTokenRefresh(function(token){
-    alert( token )
-  });
+    alert( token );
+});
 ```
 
-####Subscribe to topic
+#### Get token
+
+```javascript
+//FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+//Keep in mind the function will return null if the token has not been established yet.
+FCMPlugin.getToken(function(token){
+    alert(token);
+});
+```
+
+#### Subscribe to topic
 
 ```javascript
 //FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
@@ -56,14 +66,14 @@ FCMPlugin.onTokenRefresh(function(token){
 FCMPlugin.subscribeToTopic('topicExample');
 ```
 
-####Unsubscribe from topic
+#### Unsubscribe from topic
 
 ```javascript
 //FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
 FCMPlugin.unsubscribeFromTopic('topicExample');
 ```
 
-####Receiving push notification data
+#### Receiving push notification data
 
 ```javascript
 //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
@@ -79,7 +89,7 @@ FCMPlugin.onNotification(function(data){
 });
 ```
 
-####Send notification. Payload example (REST API)
+#### Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
@@ -88,22 +98,29 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 //HEADER: Authorization: key=AIzaSy*******************
 {
   "notification":{
-    "title":"Notification title",  //Any value
-    "body":"Notification body",  //Any value
-    "sound":"default", //If you want notification sound
-    "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-    "icon":"fcm_push_icon"  //White icon Android resource
+    "title":"Notification title",
+    "body":"Notification body",
+    "sound":"default",
+    "click_action":"FCM_PLUGIN_ACTIVITY",
+    "icon":"fcm_push_icon"
   },
   "data":{
-    "param1":"value1",  //Any data to be retrieved in the notification callback
+    "param1":"value1",
     "param2":"value2"
   },
-    "to":"/topics/topicExample", //Topic or device token
-    "priority":"high", //If not set, notification won't be delivered on completely closed iOS app
-    "restricted_package_name":"" //Optional. Set for application filtering
+    "to":"/topics/topicExample",
+    "priority":"high",
+    "restricted_package_name":""
 }
+//sound: optional field if you want sound with the notification
+//click_action: must be present with the specified value for Android
+//icon: white icon resource name for Android >5.0
+//data: put any "param":"value" and retreive them in the JavaScript notification callback
+//to: device token or /topic/topicExample
+//priority: must be set to "high" for delivering notifications on closed iOS apps
+//restricted_package_name: optional field if you want to send only to a restricted app package (i.e: com.myapp.test)
 ```
-##How it works
+## How it works
 Send a push notification to a single device or topic.
 - 1.a Application is in foreground:
  - The notification data is received in the JavaScript callback without notification bar message (this is the normal behaviour of mobile push notifications).
@@ -113,7 +130,7 @@ Send a push notification to a single device or topic.
  - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
 
 
-##License
+## License
 ```
 The MIT License
 
