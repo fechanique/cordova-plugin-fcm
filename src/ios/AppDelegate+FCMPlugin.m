@@ -199,42 +199,48 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    NSError *error;
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                       options:0
+                                                         error:&error];
+    
     // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
     if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
-        return;
+        // check if message is a silent message
+        NSString* JSONString = [[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding];
+        
+        if ([JSONString rangeOfString:@"FCM_PLUGIN_ACTIVITY"].location != NSNotFound)
+            return;
     }
-
+    
     // If you are receiving a notification message while your app is in the background,
     // this callback will not be fired till the user taps on the notification launching the application.
     // TODO: Handle data of notification
-
+    
     // Print message ID.
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
-
+    
     // Pring full message.
     NSLog(@"%@", userInfo);
-    NSError *error;
-
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-
+    
+    
     // Has user tapped the notificaiton?
     // UIApplicationStateActive   - app is currently active
     // UIApplicationStateInactive - app is transitioning from background to
     //                              foreground (user taps notification)
-
+    
     UIApplicationState state = application.applicationState;
     if (application.applicationState == UIApplicationStateActive
         || application.applicationState == UIApplicationStateInactive) {
         [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
         NSLog(@"app active");
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                           options:0
-                                                             error:&error];
+        
         [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-
-    // app is in background
+        
+        // app is in background
     }
-
+    
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
