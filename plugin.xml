@@ -111,6 +111,7 @@
         <framework src="src/ios/Firebase/Analytics/FirebaseInstanceID.framework" custom="true" />
         <framework src="src/ios/Firebase/Analytics/FirebaseNanoPB.framework" custom="true" />
         <framework src="src/ios/Firebase/Analytics/GoogleToolboxForMac.framework" custom="true" />
+        <framework src="src/ios/Firebase/Analytics/nanopb.framework" custom="true" />
         <framework src="src/ios/Firebase/Messaging/FirebaseMessaging.framework" custom="true" />
         <framework src="src/ios/Firebase/Messaging/Protobuf.framework" custom="true" />
 
