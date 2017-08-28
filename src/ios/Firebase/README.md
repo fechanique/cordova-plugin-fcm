@@ -74,6 +74,7 @@ should make sure to include all of the frameworks from X when including the SDK.
   - FirebaseNanoPB.framework
   - FirebaseInstanceID.framework
   - GoogleToolboxForMac.framework
+  - nanopb.framework
 ## AdMob (~> Analytics)
   - GoogleMobileAds.framework
 ## Auth (~> Analytics)
@@ -84,6 +85,7 @@ should make sure to include all of the frameworks from X when including the SDK.
   - Protobuf.framework
 ## Database (~> Analytics)
   - FirebaseDatabase.framework
+  - leveldb-library.framework
 ## DynamicLinks (~> Analytics)
   - FirebaseDynamicLinks.framework
 ## Invites (~> Analytics)
@@ -129,24 +131,26 @@ CocoaPods.
 
            CocoaPod           | Version
 ----------------------------- | -------
-Firebase                      | 4.0.2
-FirebaseAnalytics             | 4.0.1
-FirebaseAuth                  | 4.0.0
-FirebaseCore                  | 4.0.2
-FirebaseCrash                 | 2.0.0
-FirebaseDatabase              | 4.0.0
-FirebaseDynamicLinks          | 2.0.0
-FirebaseInstanceID            | 2.0.0
-FirebaseInvites               | 2.0.0
-FirebaseMessaging             | 2.0.0
-FirebasePerformance           | 1.0.2
-FirebaseRemoteConfig          | 2.0.0
-FirebaseStorage               | 2.0.0
+Firebase                      | 4.1.0
+FirebaseAnalytics             | 4.0.3
+FirebaseAuth                  | 4.1.0
+FirebaseCore                  | 4.0.5
+FirebaseCrash                 | 2.0.1
+FirebaseDatabase              | 4.0.1
+FirebaseDynamicLinks          | 2.1.0
+FirebaseInstanceID            | 2.0.1
+FirebaseInvites               | 2.0.1
+FirebaseMessaging             | 2.0.1
+FirebasePerformance           | 1.0.3
+FirebaseRemoteConfig          | 2.0.2
+FirebaseStorage               | 2.0.1
 GTMOAuth2                     | 1.1.4
-GTMSessionFetcher             | 1.1.10
-Google-Mobile-Ads-SDK         | 7.20.0
+GTMSessionFetcher             | 1.1.11
+Google-Mobile-Ads-SDK         | 7.22.0
 GoogleAPIClientForREST        | 1.3.0
 GoogleSignIn                  | 4.0.2
 GoogleToolboxForMac           | 2.1.1
 Protobuf                      | 3.3.0
+leveldb-library               | 1.18.3
+nanopb                        | 0.3.8
 
