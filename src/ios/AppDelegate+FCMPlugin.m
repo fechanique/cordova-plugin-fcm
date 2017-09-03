@@ -73,7 +73,6 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             UIUserNotificationSettings *settings =
             [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
             [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-
         } else {
             // iOS 10 or later
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -87,7 +86,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             // For iOS 10 display notification (sent via APNS)
             [UNUserNotificationCenter currentNotificationCenter].delegate = self;
             // For iOS 10 data message (sent via FCM)
-            [FIRMessaging messaging].delegate = self;
+            [FIRMessaging messaging].remoteMessageDelegate = self;
 #endif
         }
 
@@ -106,7 +105,11 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
 // [START message_handling]
 // Receive displayed notifications for iOS 10 devices.
+
+// Note on the pragma: When compiling with iOS 10 SDK, include methods that
+//                     handle notifications using notification center.
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
 // Handle incoming notification messages while app is in the foreground.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
@@ -147,21 +150,33 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
 
 
-    NSLog(@"New method with push callback: %@", userInfo);
+        NSLog(@"New method with push callback: %@", userInfo);
 
-    [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                       options:0
-                                                         error:&error];
-    NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
-    lastPush = jsonData;
+        [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                           options:0
+                                                             error:&error];
+        NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+        lastPush = jsonData;
 
 
     completionHandler();
 }
 #endif
+
 // [START receive_message in background iOS < 10]
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+
+// Include the iOS < 10 methods for handling notifications for when running on iOS < 10.
+// As in, even if you compile with iOS 10 SDK, when running on iOS 9 the only way to get
+// notifications is the didReceiveRemoteNotification.
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
+    if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
+        return;
+    }
+
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
 
     NSError *error;
@@ -184,6 +199,21 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    NSError *error;
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                       options:0
+                                                         error:&error];
+
+    // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
+    if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
+        // check if message is a silent message
+        NSString* JSONString = [[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding];
+
+        if ([JSONString rangeOfString:@"FCM_PLUGIN_ACTIVITY"].location != NSNotFound)
+            return;
+    }
+
     // If you are receiving a notification message while your app is in the background,
     // this callback will not be fired till the user taps on the notification launching the application.
     // TODO: Handle data of notification
@@ -193,29 +223,22 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 
     // Pring full message.
     NSLog(@"%@", userInfo);
-    NSError *error;
 
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
 
-    //USER NOT TAPPED NOTIFICATION
-    if (application.applicationState == UIApplicationStateActive) {
+    // Has user tapped the notificaiton?
+    // UIApplicationStateActive   - app is currently active
+    // UIApplicationStateInactive - app is transitioning from background to
+    //                              foreground (user taps notification)
+
+    UIApplicationState state = application.applicationState;
+    if (application.applicationState == UIApplicationStateActive
+        || application.applicationState == UIApplicationStateInactive) {
         [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
         NSLog(@"app active");
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                           options:0
-                                                             error:&error];
-        [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-        // app is in background or in stand by (NOTIFICATION WILL BE TAPPED)
-    }
 
-    if (application.applicationState == UIApplicationStateInactive) {
-        [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-        NSLog(@"app inactive - enable wasTapped");
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                           options:0
-                                                             error:&error];
         [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-        // app is in background or in stand by (NOTIFICATION WILL BE TAPPED)
+
+        // app is in background
     }
 
     completionHandler(UIBackgroundFetchResultNoData);
@@ -263,14 +286,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     }];
 }
 // [END connect_to_fcm]
-
-#pragma mark - FIRMessagingDelegate
-- (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken {
-    // Note that this callback will be fired everytime a new token is generated, including the first
-    // time. So if you need to retrieve the token as soon as it is available this is where that
-    // should be done.
-    NSLog(@"FCM registration token: %@", fcmToken);
-}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
