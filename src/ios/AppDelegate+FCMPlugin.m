@@ -171,11 +171,29 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 // notifications is the didReceiveRemoteNotification.
 
 - (void)messaging:(nonnull FIRMessaging *)messaging
-    didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage;
+    didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage
+    {
+      // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
+      if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
+          return;
+      }
 
-- (void)applicationReceivedRemoteMessage:
-        (nonnull FIRMessagingRemoteMessage *)remoteMessage;
+      NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
 
+      NSError *error;
+      NSDictionary *userInfoMutable = [userInfo mutableCopy];
+
+      if (application.applicationState != UIApplicationStateActive) {
+          NSLog(@"New method with push callback: %@", userInfo);
+
+          [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                             options:0
+                                                               error:&error];
+          NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+          lastPush = jsonData;
+      }
+    }
 
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
