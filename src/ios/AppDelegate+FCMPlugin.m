@@ -170,6 +170,14 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 // As in, even if you compile with iOS 10 SDK, when running on iOS 9 the only way to get
 // notifications is the didReceiveRemoteNotification.
 
+- (void)messaging:(nonnull FIRMessaging *)messaging
+    didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage;
+
+- (void)applicationReceivedRemoteMessage:
+        (nonnull FIRMessagingRemoteMessage *)remoteMessage;
+
+
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
