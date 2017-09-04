@@ -169,33 +169,6 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 // Include the iOS < 10 methods for handling notifications for when running on iOS < 10.
 // As in, even if you compile with iOS 10 SDK, when running on iOS 9 the only way to get
 // notifications is the didReceiveRemoteNotification.
-
-- (void)messaging:(nonnull FIRMessaging *)messaging
-    didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage
-    {
-      // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
-      if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
-          return;
-      }
-
-      NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
-
-      NSError *error;
-      NSDictionary *userInfoMutable = [userInfo mutableCopy];
-
-      if (application.applicationState != UIApplicationStateActive) {
-          NSLog(@"New method with push callback: %@", userInfo);
-
-          [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                             options:0
-                                                               error:&error];
-          NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
-          lastPush = jsonData;
-      }
-    }
-
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
