@@ -84,13 +84,18 @@ static NSData* lastNotification;
 }
 
 //////////////////////////////////////////////////////
-////////////////////////ALL IOS///////////////////////
+/////////////////////////IOS 9////////////////////////
 //////////////////////////////////////////////////////
+
+// COMMENT: Its hard to tell from the FCM documentation whether didReceiveRemoteNotification will be fired on iOS 10 
+// as well as willPresentNotification
+// If it does then we need to put the 'short circuit' code back in didReceiveRemoteNotification
+// to stop the notification being recognized twice by the plugin
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"application:didReceiveRemoteNotification:fetchCompletionHandler:");
-    //FORGROUND => NOTIF + DATA                         [ios 10 && ios 9]
-    //BACKGROUND.content_available=1 => NOTIF + DATA    [ios 10 && ios 9]
+    //FORGROUND => NOTIF + DATA                         [ios 9]
+    //BACKGROUND.content_available=1 => NOTIF + DATA    [ios 9]
     //BACKGROUND.TAPPED => NOTIF + DATA                 [ios 9]
     //FOREGROUND => DATA                                [ios 9]
     
@@ -113,17 +118,36 @@ static NSData* lastNotification;
 /////////////////////////IOS 10///////////////////////
 //////////////////////////////////////////////////////
 
+// COMMENT: It would seem that in iOS 10, content-available=1 messages don't work anymore. 
+// It is hard to know whether this is true
+
+#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+  NSLog(@"userNotificationCenter:willPresentNotification:withCompletionHandler:");
+  //FOREGROUND => NOTIF + DATA                        [ios 10]
+  //BACKGROUND.content_available=1 => NOTIF + DATA    [ios 10] [DOESN'T WORK] https://forums.developer.apple.com/thread/64943
+  [self notifyOfMessage:notification.request.content.userInfo withTapInfo:false];
+
+  completionHandler(UNNotificationPresentationOptionNone);
+}
+
+// COMMENT: Might be a problem here if applicationDidBecomeActive is called before didReceiveNotificationResponse
+// This would result in the notification not being recognised by the plugin because of the newly implemented
+// [self notifyOfMessage] function which stores the data instead of sending it to javascript IF wasTapped = true
+// Just not sure if iOS calls it before the app goes into the foreground OR when it goes into the foreground
+
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     NSLog(@"userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:");
-    //BACKGROUND.TAPPED => NOTIF + DATA         [ios 10]
+    //BACKGROUND.TAPPED => NOTIF + DATA                [ios 10]
     [self notifyOfMessage:response.notification.request.content.userInfo withTapInfo:true];
 }
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage {
     NSLog(@"messaging:didReceiveMessage:remoteMessage:");
-    //FOREGROUND => DATA                        [ios 10]
+    //FOREGROUND => DATA                               [ios 10]
     [self notifyOfMessage:remoteMessage.appData withTapInfo:false];
 }
+#endif
 
 //////////////////////////////////////////////////////
 ////////////////////REFRESH TOKENS////////////////////
