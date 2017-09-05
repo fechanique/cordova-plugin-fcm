@@ -164,6 +164,7 @@ static NSData* lastNotification;
     if(wasTapped) {
         NSLog(@"notifyOfMessage:withTapInfo: => wasTapped = true... therefore going to store the data and send when app returns to the foreground");
         lastNotification = jsonData;
+        return;
     }
     [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
 }
