@@ -86,6 +86,7 @@ static FCMPlugin *fcmPluginInstance;
 
 -(void) notifyOfMessage:(NSData *)payload
 {
+    NSLog(@"notifyOfMessage: => executing javascript callback");
     NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);

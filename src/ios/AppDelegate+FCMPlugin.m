@@ -21,8 +21,11 @@
 // devices running iOS 10 and above.
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 @interface AppDelegate () <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
+
 @end
 #endif
+
+static NSData* lastNotification;
 
 // Copied from Apple's header in case it is missing in some cases (e.g. pre-Xcode 8 builds).
 #ifndef NSFoundationVersionNumber_iOS_9_x_Max
@@ -85,6 +88,7 @@
 //////////////////////////////////////////////////////
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"application:didReceiveRemoteNotification:fetchCompletionHandler:");
     //FORGROUND => NOTIF + DATA                         [ios 10 && ios 9]
     //BACKGROUND.content_available=1 => NOTIF + DATA    [ios 10 && ios 9]
     //BACKGROUND.TAPPED => NOTIF + DATA                 [ios 9]
@@ -110,11 +114,13 @@
 //////////////////////////////////////////////////////
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    NSLog(@"userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:");
     //BACKGROUND.TAPPED => NOTIF + DATA         [ios 10]
     [self notifyOfMessage:response.notification.request.content.userInfo withTapInfo:true];
 }
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage {
+    NSLog(@"messaging:didReceiveMessage:remoteMessage:");
     //FOREGROUND => DATA                        [ios 10]
     [self notifyOfMessage:remoteMessage.appData withTapInfo:false];
 }
@@ -124,6 +130,7 @@
 //////////////////////////////////////////////////////
 - (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken
 {
+    NSLog(@"messaging:didRefreshRegistrationToken:");
     [FCMPlugin.fcmPlugin notifyOfTokenRefresh:fcmToken];
 }
 
@@ -134,12 +141,16 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    NSLog(@"app become active");
+    NSLog(@"applicationDidBecomeActive:");
+    if(lastNotification) {
+        [FCMPlugin.fcmPlugin notifyOfMessage:lastNotification];
+        lastNotification = NULL;
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    NSLog(@"app entered background");
+    NSLog(@"applicationDidEnterBackground:");
 }
 
 //////////////////////////////////////////////////////
@@ -150,11 +161,15 @@
     NSData *jsonData = [self packageMessage:notification withTapInfo:wasTapped];
     [self logMessage:jsonData];
     
+    if(wasTapped) {
+        NSLog(@"notifyOfMessage:withTapInfo: => wasTapped = true... therefore going to store the data and send when app returns to the foreground");
+        lastNotification = jsonData;
+    }
     [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
 }
 
 -(void) logMessage: (NSData*) messageData {
-    NSLog(@"FCMPlugin: %@", messageData);
+    NSLog(@"Notification Data: %@", messageData);
 }
 
 -(NSData*) packageMessage: (NSDictionary*) notification withTapInfo:(BOOL)wasTapped {
