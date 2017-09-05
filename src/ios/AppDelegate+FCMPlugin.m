@@ -31,9 +31,6 @@
 
 @implementation AppDelegate (FCMPlugin)
 
-static NSData *lastPush;
-NSString *const kGCMMessageIDKey = @"gcm.message_id";
-
 //////////////////////////////////////////////////////
 ///////////////////INITIALIZATION/////////////////////
 //////////////////////////////////////////////////////
@@ -70,7 +67,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
                 [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
                 }];
 
-                // For iOS 10 display notification (sent via APNS)
+                 // For iOS 10 display notification (sent via APNS)
                 [UNUserNotificationCenter currentNotificationCenter].delegate = self;
                 //For iOS 10 data message (sent direct from FCM)
                 [FIRMessaging messaging].delegate = self;
