@@ -59,19 +59,19 @@
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     } else {
         // iOS 10 or later
-        #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-                UNAuthorizationOptions authOptions =
-                UNAuthorizationOptionAlert
-                | UNAuthorizationOptionSound
-                | UNAuthorizationOptionBadge;
-                [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                }];
-
-                 // For iOS 10 display notification (sent via APNS)
-                [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-                //For iOS 10 data message (sent direct from FCM)
-                [FIRMessaging messaging].delegate = self;
-        #endif
+#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+        UNAuthorizationOptions authOptions =
+        UNAuthorizationOptionAlert
+        | UNAuthorizationOptionSound
+        | UNAuthorizationOptionBadge;
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        }];
+        
+        // For iOS 10 display notification (sent via APNS)
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+        //For iOS 10 data message (sent direct from FCM)
+        [FIRMessaging messaging].delegate = self;
+#endif
     }
     
     [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -90,7 +90,16 @@
     //BACKGROUND.TAPPED => NOTIF + DATA                 [ios 9]
     //FOREGROUND => DATA                                [ios 9]
     
-    [self notifyOfMessage:userInfo];
+    // Has user tapped the notification?
+    // UIApplicationStateActive   - app is currently active
+    // UIApplicationStateInactive - app is transitioning from background to foreground (user taps notification)
+    
+    UIApplicationState state = application.applicationState;
+    if (state == UIApplicationStateInactive) {
+        [self notifyOfMessage:userInfo withTapInfo:true];
+    } else {
+        [self notifyOfMessage:userInfo withTapInfo:false];
+    }
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
@@ -102,12 +111,12 @@
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     //BACKGROUND.TAPPED => NOTIF + DATA         [ios 10]
-    [self notifyOfMessage:response.notification.request.content.userInfo];
+    [self notifyOfMessage:response.notification.request.content.userInfo withTapInfo:true];
 }
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage {
     //FOREGROUND => DATA                        [ios 10]
-    [self notifyOfMessage:remoteMessage.appData];
+    [self notifyOfMessage:remoteMessage.appData withTapInfo:false];
 }
 
 //////////////////////////////////////////////////////
@@ -137,8 +146,8 @@
 ///////////////////MESSAGE HANDLING///////////////////
 //////////////////////////////////////////////////////
 
--(void) notifyOfMessage: (NSDictionary*) notification {
-    NSData *jsonData = [self packageMessage:notification];
+-(void) notifyOfMessage: (NSDictionary*) notification withTapInfo:(BOOL)wasTapped {
+    NSData *jsonData = [self packageMessage:notification withTapInfo:wasTapped];
     [self logMessage:jsonData];
     
     [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
@@ -148,9 +157,10 @@
     NSLog(@"FCMPlugin: %@", messageData);
 }
 
--(NSData*) packageMessage: (NSDictionary*) notification {
+-(NSData*) packageMessage: (NSDictionary*) notification withTapInfo:(BOOL)wasTapped {
     NSError *error;
     NSDictionary *notificationMut = [notification mutableCopy];
+    [notificationMut setValue:@(wasTapped) forKey:@"wasTapped"];
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:notificationMut
                                                        options:0
