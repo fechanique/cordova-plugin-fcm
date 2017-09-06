@@ -13,7 +13,6 @@
 @implementation FCMPlugin
 
 static BOOL notificatorReceptorReady = NO;
-static BOOL appInForeground = YES;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
@@ -42,7 +41,7 @@ static FCMPlugin *fcmPluginInstance;
 {
     NSLog(@"get Token");
     [self.commandDelegate runInBackground:^{
-        NSString* token = [[FIRInstanceID instanceID] token];
+        NSString* token = [FIRMessaging messaging].FCMToken;
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:token];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -79,10 +78,6 @@ static FCMPlugin *fcmPluginInstance;
     NSLog(@"view registered for notifications");
     
     notificatorReceptorReady = YES;
-    NSData* lastPush = [AppDelegate getLastPush];
-    if (lastPush != nil) {
-        [FCMPlugin.fcmPlugin notifyOfMessage:lastPush];
-    }
     
     CDVPluginResult* pluginResult = nil;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -91,6 +86,7 @@ static FCMPlugin *fcmPluginInstance;
 
 -(void) notifyOfMessage:(NSData *)payload
 {
+    NSLog(@"notifyOfMessage: => executing javascript callback");
     NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
@@ -112,22 +108,6 @@ static FCMPlugin *fcmPluginInstance;
     } else {
         [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
     }
-}
-
--(void) appEnterBackground
-{
-    NSLog(@"Set state background");
-    appInForeground = NO;
-}
-
--(void) appEnterForeground
-{
-    NSLog(@"Set state foreground");
-    NSData* lastPush = [AppDelegate getLastPush];
-    if (lastPush != nil) {
-        [FCMPlugin.fcmPlugin notifyOfMessage:lastPush];
-    }
-    appInForeground = YES;
 }
 
 @end
