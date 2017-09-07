@@ -131,26 +131,26 @@ CocoaPods.
 
            CocoaPod           | Version
 ----------------------------- | -------
-Firebase                      | 4.1.0
+Firebase                      | 4.1.1
 FirebaseAnalytics             | 4.0.3
-FirebaseAuth                  | 4.1.0
-FirebaseCore                  | 4.0.5
+FirebaseAuth                  | 4.1.1
+FirebaseCore                  | 4.0.6
 FirebaseCrash                 | 2.0.1
-FirebaseDatabase              | 4.0.1
+FirebaseDatabase              | 4.0.2
 FirebaseDynamicLinks          | 2.1.0
-FirebaseInstanceID            | 2.0.1
+FirebaseInstanceID            | 2.0.2
 FirebaseInvites               | 2.0.1
-FirebaseMessaging             | 2.0.1
-FirebasePerformance           | 1.0.3
+FirebaseMessaging             | 2.0.2
+FirebasePerformance           | 1.0.4
 FirebaseRemoteConfig          | 2.0.2
 FirebaseStorage               | 2.0.1
 GTMOAuth2                     | 1.1.4
 GTMSessionFetcher             | 1.1.11
-Google-Mobile-Ads-SDK         | 7.22.0
+Google-Mobile-Ads-SDK         | 7.23.0
 GoogleAPIClientForREST        | 1.3.0
-GoogleSignIn                  | 4.0.2
+GoogleSignIn                  | 4.1.0
 GoogleToolboxForMac           | 2.1.1
-Protobuf                      | 3.3.0
+Protobuf                      | 3.4.0
 leveldb-library               | 1.18.3
 nanopb                        | 0.3.8
 
