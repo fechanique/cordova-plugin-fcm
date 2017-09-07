@@ -129,6 +129,7 @@ Send a push notification to a single device or topic.
  - If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
  - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
 
+ :warning: Silent notifications (ie. content-available=1) don't work on iOS 10.0 with Firebase.
 
 ## License
 ```
