@@ -63,6 +63,9 @@ static NSData* lastNotification;
     
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     [FIRMessaging messaging].shouldEstablishDirectChannel = YES;
+
+    [[FIRMessaging messaging] subscribeToTopic:@"ios"];
+    [[FIRMessaging messaging] subscribeToTopic:@"all"];
     
     return YES;
 }

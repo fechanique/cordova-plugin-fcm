@@ -3,11 +3,12 @@
 
 >[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
 
-#### Version 2.1.2 (03/06/2017)
-- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
+#### Version 3.0.0 (11/09/2017)
+- Tested on Android and iOS using Cordova cli 7.0.1, Cordova android 6.2.3 and Cordova ios 4.4.0
 - Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
+- Supports iOS 9.0 and up. For lower versions see the original project: https://github.com/fechanique/cordova-plugin-fcm
 - **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
 ## Installation
