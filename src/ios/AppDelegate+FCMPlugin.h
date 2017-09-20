@@ -23,6 +23,11 @@
 @interface AppDelegate (FCMPlugin) <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
 
 @end
+#else
+
+@interface AppDelegate (FCMPlugin) <FIRMessagingDelegate>
+
+@end
 #endif
 
 

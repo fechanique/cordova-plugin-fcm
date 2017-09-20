@@ -56,13 +56,14 @@ static NSData* lastNotification;
         
         // For iOS 10 display notification (sent via APNS)
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-        //For iOS 10 data message (sent direct from FCM)
-        [FIRMessaging messaging].delegate = self;
 #endif
     }
     
+    [FIRMessaging messaging].delegate = self;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     [FIRMessaging messaging].shouldEstablishDirectChannel = YES;
+    
+    
     
     return YES;
 }
@@ -99,11 +100,11 @@ static NSData* lastNotification;
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-  NSLog(@"userNotificationCenter:willPresentNotification:withCompletionHandler:");
-  //FOREGROUND => NOTIF + DATA                                  [ios 10]
-  [self notifyOfMessage:notification.request.content.userInfo withTapInfo:false];
-
-  completionHandler(UNNotificationPresentationOptionNone);
+    NSLog(@"userNotificationCenter:willPresentNotification:withCompletionHandler:");
+    //FOREGROUND => NOTIF + DATA                                  [ios 10]
+    [self notifyOfMessage:notification.request.content.userInfo withTapInfo:false];
+    
+    completionHandler(UNNotificationPresentationOptionNone);
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
@@ -111,7 +112,7 @@ static NSData* lastNotification;
     //BACKGROUND.TAPPED => NOTIF + DATA                         [ios 10]
     //BACKGROUND.content_available=1.TAPPED => NOTIF + DATA     [ios 10] content_available=1 doesn't do anything, notification is treated like a normal bg notification
     [self notifyOfMessage:response.notification.request.content.userInfo withTapInfo:true];
-
+    
     completionHandler();
 }
 
