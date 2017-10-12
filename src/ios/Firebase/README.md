@@ -88,6 +88,21 @@ should make sure to include all of the frameworks from X when including the SDK.
   - leveldb-library.framework
 ## DynamicLinks (~> Analytics)
   - FirebaseDynamicLinks.framework
+## Firestore (~> Analytics)
+  - BoringSSL.framework
+  - FirebaseAuth.framework
+  - FirebaseFirestore.framework
+  - GTMSessionFetcher.framework
+  - Protobuf.framework
+  - gRPC.framework
+  - gRPC-Core.framework
+  - gRPC-ProtoRPC.framework
+  - gRPC-RxLibrary.framework
+  - leveldb-library.framework
+
+  You'll also need to add the resources in the
+  Resources directory into your target's main
+  bundle.
 ## Invites (~> Analytics)
   - FirebaseDynamicLinks.framework
   - FirebaseInvites.framework
@@ -131,26 +146,32 @@ CocoaPods.
 
            CocoaPod           | Version
 ----------------------------- | -------
-Firebase                      | 4.2.0
-FirebaseAnalytics             | 4.0.3
-FirebaseAuth                  | 4.2.0
-FirebaseCore                  | 4.0.7
+BoringSSL                     | 9.0
+Firebase                      | 4.3.0
+FirebaseAnalytics             | 4.0.4
+FirebaseAuth                  | 4.2.1
+FirebaseCore                  | 4.0.8
 FirebaseCrash                 | 2.0.2
-FirebaseDatabase              | 4.0.3
+FirebaseDatabase              | 4.1.0
 FirebaseDynamicLinks          | 2.1.0
-FirebaseInstanceID            | 2.0.3
+FirebaseFirestore             | 0.8.0
+FirebaseInstanceID            | 2.0.4
 FirebaseInvites               | 2.0.1
-FirebaseMessaging             | 2.0.3
-FirebasePerformance           | 1.0.5
+FirebaseMessaging             | 2.0.4
+FirebasePerformance           | 1.0.6
 FirebaseRemoteConfig          | 2.0.3
 FirebaseStorage               | 2.0.2
 GTMOAuth2                     | 1.1.5
 GTMSessionFetcher             | 1.1.11
-Google-Mobile-Ads-SDK         | 7.24.0
+Google-Mobile-Ads-SDK         | 7.24.1
 GoogleAPIClientForREST        | 1.3.0
 GoogleSignIn                  | 4.1.0
 GoogleToolboxForMac           | 2.1.1
 Protobuf                      | 3.4.0
+gRPC                          | 1.6.0
+gRPC-Core                     | 1.6.0
+gRPC-ProtoRPC                 | 1.6.0
+gRPC-RxLibrary                | 1.6.0
 leveldb-library               | 1.18.3
 nanopb                        | 0.3.8
 
