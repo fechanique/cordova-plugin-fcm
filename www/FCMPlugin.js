@@ -4,6 +4,11 @@ function FCMPlugin() {
 	console.log("FCMPlugin.js: is created");
 }
 
+// Show the permission pop-up on iOS,
+FCMPlugin.prototype.requestPermissionOnIOS = function() {
+    exec(function() {}, function() {}, "FCMPlugin", 'requestPermissionOnIOS', []);
+};
+
 // SUBSCRIBE TO TOPIC //
 FCMPlugin.prototype.subscribeToTopic = function( topic, success, error ){
 	exec(success, error, "FCMPlugin", 'subscribeToTopic', [topic]);
