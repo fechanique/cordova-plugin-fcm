@@ -1,14 +1,14 @@
 buildscript {
 	repositories {
 		jcenter()
-			maven {
+			mavenLocal() {
 				url 'https://maven.google.com'
 			}
+	}
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'com.google.gms:google-services:3.0.0'
-
-    }
+        classpath 'com.google.gms:google-services:3.1.1'
+  }
 }
 // apply plugin: 'com.google.gms.google-services'
 // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
