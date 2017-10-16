@@ -31,7 +31,7 @@ Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root f
 
 ## Usage
 
-:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
+:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionality. **Pay attention to the payload example in order to use the plugin properly**.  
 
 #### Receiving Token Refresh
 
@@ -57,7 +57,7 @@ FCMPlugin.getToken(function(token){
 
 ```javascript
 //FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
-//No topics are subscribed to by default (this differs from the original version).
+//The plugin does not automatically subscribe to the "all", "ios" OR "android" topics (this differs from the original version).
 //Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
 FCMPlugin.subscribeToTopic('topicExample');
 ```
