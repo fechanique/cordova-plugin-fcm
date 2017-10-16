@@ -67,8 +67,10 @@
 
         <framework src="com.google.firebase:firebase-core:11.4.2" />
         <framework src="com.google.firebase:firebase-messaging:11.4.2" />
-
-		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
+        <framework src="com.google.android.gms:play-services-auth:11.4.2" />
+        <framework src="com.google.android.gms:play-services-identity:11.4.2" />
+        <framework src="com.google.android.gms:play-services-analytics:11.4.2" />
+		    <framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
 		<source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
 		<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
