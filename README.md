@@ -3,7 +3,7 @@
 
 #### Version 3.0.2 (16/10/2017)
 - Tested on Android and iOS using Cordova cli 7.0.1, Cordova android 6.2.3 and Cordova ios 4.5.0
-- Available sdk functions: getToken(), onTokenRefresh(), subscribeToTopic(), unsubscribeFromTopic(), onNotification()
+- Available sdk functions: requestPermissionOnIOS(), getToken(), onTokenRefresh(), subscribeToTopic(), unsubscribeFromTopic(), onNotification()
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
 - Supports iOS 9, 10 and 11. For lower versions see the original project: https://github.com/fechanique/cordova-plugin-fcm
@@ -31,17 +31,16 @@ Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root f
 
 ## Usage
 
-:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionality. **Pay attention to the payload example in order to use the plugin properly**.  
+:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionality. **Pay attention to the payload example in order to use the plugin properly**.
 
-#### Receiving Token Refresh
+#### Requesting push notification permission (iOS only)
 
 ```javascript
-//FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
-//Note that this callback will be fired everytime a new token is generated, including the first time.
-FCMPlugin.onTokenRefresh(function(token){
-    alert( token );
-});
-```
+//FCMPlugin.requestPermissionOnIOS();
+//Triggers the dialog which asks the user for permission to use push notifications
+//If you don't use this method, the first method called on the plugin will implicitly trigger the permission request anyway
+FCMPlugin.requestPermissionOnIOS();
+```  
 
 #### Get token
 
@@ -50,6 +49,16 @@ FCMPlugin.onTokenRefresh(function(token){
 //Keep in mind the function will return null if the token has not been established yet.
 FCMPlugin.getToken(function(token){
     alert(token);
+});
+```
+
+#### Receiving Token Refresh
+
+```javascript
+//FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
+//Note that this callback will be fired everytime a new token is generated, including the first time.
+FCMPlugin.onTokenRefresh(function(token){
+    alert( token );
 });
 ```
 

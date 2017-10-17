@@ -94,8 +94,11 @@ public class FCMPlugin extends CordovaPlugin {
 						}
 					}
 				});
+			} 
+			else if(action.equals("requestPermissionOnIOS")) {
+				//Do nothing
 			}
-			else{
+			else {
 				callbackContext.error("Method not found");
 				return false;
 			}
