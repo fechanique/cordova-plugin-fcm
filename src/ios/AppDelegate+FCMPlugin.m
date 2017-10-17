@@ -95,7 +95,9 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     }
 
     // [START configure_firebase]
-    [FIRApp configure];
+    if(![FIRApp defaultApp]) {
+        [FIRApp configure];
+    }
     // [END configure_firebase]
     // Add observer for InstanceID token refresh callback.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenRefreshNotification:)
