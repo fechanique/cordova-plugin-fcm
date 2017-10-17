@@ -26,10 +26,10 @@ static FCMPlugin *fcmPluginInstance;
 
 - (void) ready:(CDVInvokedUrlCommand *)command
 {
-    NSLog(@"Cordova view ready");
     //Initialize if necessary
     [self secondaryInit];
 
+    NSLog(@"ready:command");
     fcmPluginInstance = self;
     [self.commandDelegate runInBackground:^{
         
@@ -43,10 +43,10 @@ static FCMPlugin *fcmPluginInstance;
 // GET TOKEN //
 - (void) getToken:(CDVInvokedUrlCommand *)command 
 {
-    NSLog(@"get Token");
     //Initialize if necessary
     [self secondaryInit];
 
+    NSLog(@"getToken:command");
     [self.commandDelegate runInBackground:^{
         NSString* token = [FIRMessaging messaging].FCMToken;
         CDVPluginResult* pluginResult = nil;
@@ -61,8 +61,9 @@ static FCMPlugin *fcmPluginInstance;
     //Initialize if necessary
     [self secondaryInit];
     
+    NSLog(@"subscribeToTopic:command");
     NSString* topic = [command.arguments objectAtIndex:0];
-    NSLog(@"subscribe To Topic %@", topic);
+    NSLog(@"topic = %@", topic);
     [self.commandDelegate runInBackground:^{
         if(topic != nil)[[FIRMessaging messaging] subscribeToTopic:topic];
         CDVPluginResult* pluginResult = nil;
@@ -76,8 +77,9 @@ static FCMPlugin *fcmPluginInstance;
     //Initialize if necessary
     [self secondaryInit];
 
+    NSLog(@"unsubscribeFromTopic:command");
     NSString* topic = [command.arguments objectAtIndex:0];
-    NSLog(@"unsubscribe From Topic %@", topic);
+    NSLog(@"topic = %@", topic);
     [self.commandDelegate runInBackground:^{
         if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:topic];
         CDVPluginResult* pluginResult = nil;
