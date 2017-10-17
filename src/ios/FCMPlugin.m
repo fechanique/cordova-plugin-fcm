@@ -13,6 +13,7 @@
 @implementation FCMPlugin
 
 static BOOL notificatorReceptorReady = NO;
+static BOOL hasRequestedPermission = NO;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
@@ -26,6 +27,9 @@ static FCMPlugin *fcmPluginInstance;
 - (void) ready:(CDVInvokedUrlCommand *)command
 {
     NSLog(@"Cordova view ready");
+    //Initialize if necessary
+    [self secondaryInit];
+
     fcmPluginInstance = self;
     [self.commandDelegate runInBackground:^{
         
@@ -40,6 +44,9 @@ static FCMPlugin *fcmPluginInstance;
 - (void) getToken:(CDVInvokedUrlCommand *)command 
 {
     NSLog(@"get Token");
+    //Initialize if necessary
+    [self secondaryInit];
+
     [self.commandDelegate runInBackground:^{
         NSString* token = [FIRMessaging messaging].FCMToken;
         CDVPluginResult* pluginResult = nil;
@@ -51,6 +58,9 @@ static FCMPlugin *fcmPluginInstance;
 // UN/SUBSCRIBE TOPIC //
 - (void) subscribeToTopic:(CDVInvokedUrlCommand *)command 
 {
+    //Initialize if necessary
+    [self secondaryInit];
+    
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"subscribe To Topic %@", topic);
     [self.commandDelegate runInBackground:^{
@@ -63,6 +73,9 @@ static FCMPlugin *fcmPluginInstance;
 
 - (void) unsubscribeFromTopic:(CDVInvokedUrlCommand *)command 
 {
+    //Initialize if necessary
+    [self secondaryInit];
+
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"unsubscribe From Topic %@", topic);
     [self.commandDelegate runInBackground:^{
@@ -110,21 +123,40 @@ static FCMPlugin *fcmPluginInstance;
     }
 }
 
+
+//////////////////////////////////////////////////////
+///////////////// PERMISSION REQUEST /////////////////
+//////////////////////////////////////////////////////
+
 - (void) requestPermissionOnIOS:(CDVInvokedUrlCommand*)command;
 {
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
-        UIUserNotificationType allNotificationTypes =
-        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-    } else {
+    //Initialize is necessary
+   [self secondaryInit];
+}
+
+//Should be called in every AppDelegate method which does something FCM related to ensure everything is properly initialized
+- (void) secondaryInit
+{
+    if(!hasRequestedPermission) 
+    {
+         if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) 
+         {
+            UIUserNotificationType allNotificationTypes =
+            (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+            UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+            [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        } 
+        else 
+        {
         // iOS 10 or later
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-        UNAuthorizationOptions authOptions =
-        UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        }];
+            UNAuthorizationOptions authOptions =
+            UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+            [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            }];
 #endif
+        }
+        hasRequestedPermission = YES;
     }
 }
 
