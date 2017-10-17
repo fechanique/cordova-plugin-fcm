@@ -131,7 +131,7 @@ Send a push notification to a single device or topic.
 ```
 The MIT License
 
-Copyright (c) 2017 XXX XXX (XXX@XXX.com)
+Copyright (c) 2017 Christopher Palmer, Oliver Blum (chrisjpalmer@optusbet.com.au, olliblum@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
