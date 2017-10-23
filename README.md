@@ -14,6 +14,9 @@ Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-I
 cordova plugin add https://github.com/ostownsville/cordova-plugin-fcm.git
 ```
 
+#### IOS Ionic ####
+With the use of ios@4.5.0, you need to remove plugin "cordova-plugin-console" that is installed by default when generating a new Ionic project. Now this is in core part of cordova for iOS.
+
 ## Android Update 23/10/2017 ##
 Due to upgrades, cordova and google-play-store/firebase
 For now, another plugin is to install to fix version issues.
