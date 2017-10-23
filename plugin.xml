@@ -19,15 +19,15 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm"
-      version="3.0.1">
+      version="3.0.2">
     <name>FCMPlugin</name>
     <description>Cordova FCM Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova, fcm, push, plugin</keywords>
 
     <info>
-		Cordova FCM plugin v3.0.1 installed
-		For more details visit https://github.com/fechanique/cordova-plugin-fcm
+		Cordova FCM Plugin v3.0.2 installed
+		For more details visit https://github.com/ostownsville/cordova-plugin-fcm
 	</info>
 
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
@@ -35,7 +35,9 @@
     </js-module>
 
     <engines>
-	<engine name="cordova-android" version=">=4.0.0" />
+      <engine name="cordova" version=">=7.1.0"/>
+      <engine name="cordova-android" version=">=6.2.3"/>
+      <engine name="cordova-ios" version=">=4.4.0"/>
     </engines>
 
     <!-- ANDROID CONFIGURATION -->
@@ -65,11 +67,10 @@
 				</feature>
 		</config-file>
 
-        <framework src="com.google.firebase:firebase-core:11.4.2" />
-        <framework src="com.google.firebase:firebase-messaging:11.4.2" />
-        <framework src="com.google.android.gms:play-services-gcm:11.4.2" />
-        <framework src="com.google.android.gms:play-services-analytics:11.4.2" />
-		    <framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
+    <framework src="com.google.firebase:firebase-core:11.2.0" />
+    <framework src="com.google.firebase:firebase-messaging:11.2.0" />
+
+		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
 		<source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
 		<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
