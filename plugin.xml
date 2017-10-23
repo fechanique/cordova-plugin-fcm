@@ -35,8 +35,9 @@
     </js-module>
 
     <engines>
-	<engine name="cordova-android" version=">=6.2.0" />
-	<engine name="cordova-ios" version=">=4.4.0" />
+      <engine name="cordova" version=">=7.1.0"/>
+      <engine name="cordova-android" version=">=6.2.3"/>
+      <engine name="cordova-ios" version=">=4.4.0"/>
     </engines>
 
     <!-- ANDROID CONFIGURATION -->
@@ -66,8 +67,8 @@
 				</feature>
 		</config-file>
 
-        <framework src="com.google.firebase:firebase-core:+" />
-        <framework src="com.google.firebase:firebase-messaging:+" />
+    <framework src="com.google.firebase:firebase-core:11.4.2" />
+    <framework src="com.google.firebase:firebase-messaging:11.4.2" />
 
 		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
