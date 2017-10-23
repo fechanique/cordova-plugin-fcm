@@ -3,4 +3,6 @@ framework module FirebaseMessaging {
   export *
   module * { export *}
   link "sqlite3"
-  link "z"}
+  link "z"
+  link framework "Security"
+  link framework "SystemConfiguration"}
