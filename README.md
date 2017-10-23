@@ -14,6 +14,17 @@ Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-I
 cordova plugin add https://github.com/ostownsville/cordova-plugin-fcm.git
 ```
 
+## Android Update 23/10/2017 ##
+Due to upgrades, cordova and google-play-store/firebase
+For now, another plugin is to install to fix version issues.
+
+And you have to use android version 6.2.3, it wont run with 6.3.0
+
+```Bash
+cordova plugin add cordova-google-api-version --variable GOOGLE_API_VERSION=11.4.2
+cordova platform add android@6.2.3
+```
+
 #### Firebase configuration files
 Get the needed configuration files for Android or iOS from the Firebase Console (see docs: https://firebase.google.com/docs/).
 
