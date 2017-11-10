@@ -14,7 +14,12 @@
 // running iOS 10 and above. Implement FIRMessagingDelegate to receive data message via FCM for
 // devices running iOS 10 and above.
 
-static NSData* lastNotification;
+static NSLock *queueLock;
+static NSMutableArray *queue;
+
+
+static BOOL isInForeground = YES; //TODO test this
+static BOOL notificationCallbackRegistered = NO;
 
 @implementation AppDelegate (FCMPlugin)
 
@@ -31,7 +36,10 @@ static NSData* lastNotification;
 }
 
 - (BOOL)application:(UIApplication *)application customDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    //Initialize the queue
+    queueLock = [[NSLock alloc] init];
+    queue = [[NSMutableArray alloc] init];
+
     [self application:application customDidFinishLaunchingWithOptions:launchOptions];
     
     NSLog(@"DidFinishLaunchingWithOptions");
@@ -63,7 +71,7 @@ static NSData* lastNotification;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     [FIRMessaging messaging].shouldEstablishDirectChannel = YES;
     
-    
+
     
     return YES;
 }
@@ -140,15 +148,13 @@ static NSData* lastNotification;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [self setIsInForground: NO];
     NSLog(@"applicationDidBecomeActive:");
-    if(lastNotification) {
-        [FCMPlugin.fcmPlugin notifyOfMessage:lastNotification];
-        lastNotification = NULL;
-    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    [self setIsInForground: NO];
     NSLog(@"applicationDidEnterBackground:");
 }
 
@@ -159,13 +165,9 @@ static NSData* lastNotification;
 -(void) notifyOfMessage: (NSDictionary*) notification withTapInfo:(BOOL)wasTapped {
     NSData *jsonData = [self packageMessage:notification withTapInfo:wasTapped];
     [self logMessage:jsonData];
-    
-    if(wasTapped) {
-        NSLog(@"notifyOfMessage:withTapInfo: => wasTapped = true... therefore going to store the data and send when app returns to the foreground");
-        lastNotification = jsonData;
-        return;
-    }
-    [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
+
+    //Push notification onto a queue...
+    [self pushNotificationToQueue: jsonData];
 }
 
 -(void) logMessage: (NSData*) messageData {
@@ -183,5 +185,61 @@ static NSData* lastNotification;
     return jsonData;
 }
 
+//////////////////////////////////////////////////////
+/////////////////////// QUEUE ////////////////////////
+//////////////////////////////////////////////////////
+
+- (void)setIsInForground:(BOOL)value {
+    isInForeground = value;
+    [self triggerOffloadQueue];
+}
+
+- (void)setNotificationCallbackRegistered:(BOOL)value {
+    notificationCallbackRegistered = value;
+    [self triggerOffloadQueue];
+}
+
+-(void) pushNotificationToQueue: (NSData*) jsonData {
+    [queueLock lock];
+    [queue addObject:jsonData];
+    [arrayLock unlock];
+
+    //trigger the queue to be offloaded anyway, see if we can...
+    [self triggerOffloadQueue];
+}
+
+-(void) triggerOffloadQueue {
+    BOOL canOffloadQueue = isInForeground && notificationCallbackRegistered;
+    //Need to be in the foreground AND have a notification callback
+    if(canOffloadQueue) {
+        //Conditions met, lets offload the queue
+        [self offloadQueue];
+    } else {
+        [self countQueue];
+    }
+}
+
+-(void) offloadQueue {
+    [queueLock lock];
+
+    for(NSData* jsonData in queue) {
+        [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
+    }
+
+    [queue removeAllObjects];
+
+    [queueLock unlock];
+}
+
+-(void) countQueue {
+    [queueLock lock];
+
+    int count = [queue count];
+    if (count > 0) {
+        NSLog(@"Cannot offload notification queue, objects waiting %d", count);
+    }
+
+    [queueLock unlock];
+}
 
 @end

@@ -12,8 +12,6 @@
 
 @implementation FCMPlugin
 
-static BOOL notificatorReceptorReady = NO;
-
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
 static FCMPlugin *fcmPluginInstance;
@@ -73,11 +71,12 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
-- (void) registerNotification:(CDVInvokedUrlCommand *)command
+- (void) onNotification:(CDVInvokedUrlCommand *)command
 {
-    NSLog(@"view registered for notifications");
+    NSLog(@"onNotification:command");
     
-    notificatorReceptorReady = YES;
+    //Tell our app delegate that we have registered the notification handler...
+    [[[UIApplication sharedApplication] delegate] setNotificationCallbackRegistered:YES];
     
     CDVPluginResult* pluginResult = nil;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];

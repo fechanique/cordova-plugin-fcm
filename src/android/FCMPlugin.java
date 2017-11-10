@@ -60,7 +60,7 @@ public class FCMPlugin extends CordovaPlugin {
 				});
 			}
 			// NOTIFICATION CALLBACK REGISTER //
-			else if (action.equals("registerNotification")) {
+			else if (action.equals("onNotification")) {
 				notificationCallBackReady = true;
 				cordova.getActivity().runOnUiThread(new Runnable() {
 					public void run() {
