@@ -5,6 +5,7 @@
 
 #import <Cordova/CDV.h>
 #import "FCMPlugin.h"
+#import "FCMQueue.h"
 #import "Firebase.h"
 
 @interface FCMPlugin () {}
@@ -76,7 +77,7 @@ static FCMPlugin *fcmPluginInstance;
 {
     NSLog(@"onNotification:command");
     
-    //Tell our app delegate that we have registered the notification handler...
+    //Tell our queue that we have registered the notification handler...
     [[FCMQueue sharedFCMQueue] setNotificationCallbackRegistered:YES];
     
     CDVPluginResult* pluginResult = nil;

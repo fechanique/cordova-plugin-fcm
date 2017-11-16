@@ -12,24 +12,6 @@
 
 #import "Firebase.h"
 
-//THREADSAFE QUEUE
-@interface FCMQueue : NSObject {
-    NSLock *queueLock;
-    NSMutableArray *queue;
-    
-    
-    BOOL isInForeground;
-    BOOL notificationCallbackRegistered;
-}
-
-- (void)setIsInForground:(BOOL)value;
-- (void)setNotificationCallbackRegistered:(BOOL)value;
-- (void) pushNotificationToQueue: (NSData*_Nonnull) jsonData;
-
-+ (id _Nonnull )sharedFCMQueue;
-
-@end
-
 // Copied from Apple's header in case it is missing in some cases (e.g. pre-Xcode 8 builds).
 #ifndef NSFoundationVersionNumber_iOS_9_x_Max
 #define NSFoundationVersionNumber_iOS_9_x_Max 1299
