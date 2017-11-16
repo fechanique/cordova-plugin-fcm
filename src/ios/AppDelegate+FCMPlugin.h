@@ -12,6 +12,24 @@
 
 #import "Firebase.h"
 
+//THREADSAFE QUEUE
+@interface FCMQueue : NSObject {
+    NSLock *queueLock;
+    NSMutableArray *queue;
+    
+    
+    BOOL isInForeground;
+    BOOL notificationCallbackRegistered;
+}
+
+- (void)setIsInForground:(BOOL)value;
+- (void)setNotificationCallbackRegistered:(BOOL)value;
+- (void) pushNotificationToQueue: (NSData*_Nonnull) jsonData;
+
++ (id _Nonnull )sharedFCMQueue;
+
+@end
+
 // Copied from Apple's header in case it is missing in some cases (e.g. pre-Xcode 8 builds).
 #ifndef NSFoundationVersionNumber_iOS_9_x_Max
 #define NSFoundationVersionNumber_iOS_9_x_Max 1299
@@ -19,15 +37,22 @@
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 @import UserNotifications;
-
 @interface AppDelegate (FCMPlugin) <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
 
-@end
 #else
-
 @interface AppDelegate (FCMPlugin) <FIRMessagingDelegate>
 
-@end
 #endif
+
+- (BOOL)application:(UIApplication *_Nonnull)application customDidFinishLaunchingWithOptions:(NSDictionary *_Nonnull)launchOptions;
+- (void)application:(UIApplication *_Nonnull)application didReceiveRemoteNotification:(NSDictionary *_Nonnull)userInfo fetchCompletionHandler:(void (^_Nonnull)(UIBackgroundFetchResult))completionHandler;
+- (void)userNotificationCenter:(UNUserNotificationCenter *_Nonnull)center willPresentNotification:(UNNotification *_Nonnull)notification withCompletionHandler:(void (^_Nonnull)(UNNotificationPresentationOptions))completionHandler;
+- (void)userNotificationCenter:(UNUserNotificationCenter *_Nonnull)center didReceiveNotificationResponse:(UNNotificationResponse *_Nonnull)response withCompletionHandler:(void (^_Nonnull)())completionHandler;
+- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage;
+- (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken;
+- (void)applicationDidBecomeActive:(UIApplication *_Nonnull)application;
+- (void)applicationDidEnterBackground:(UIApplication *_Nonnull)application;
+
+@end
 
 

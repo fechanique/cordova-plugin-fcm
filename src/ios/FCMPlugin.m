@@ -71,12 +71,13 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
+//This is not called when a notification is called, it is called when the js subscribes to the onNotification callback
 - (void) onNotification:(CDVInvokedUrlCommand *)command
 {
     NSLog(@"onNotification:command");
     
     //Tell our app delegate that we have registered the notification handler...
-    [[[UIApplication sharedApplication] delegate] setNotificationCallbackRegistered:YES];
+    [[FCMQueue sharedFCMQueue] setNotificationCallbackRegistered:YES];
     
     CDVPluginResult* pluginResult = nil;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
