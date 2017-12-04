@@ -33,8 +33,6 @@ public class FCMPlugin extends CordovaPlugin {
 		super.initialize(cordova, webView);
 		gWebView = webView;
 		Log.d(TAG, "==> FCMPlugin initialize");
-		FirebaseMessaging.getInstance().subscribeToTopic("android");
-		FirebaseMessaging.getInstance().subscribeToTopic("all");
 	}
 	 
 	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -62,7 +60,7 @@ public class FCMPlugin extends CordovaPlugin {
 				});
 			}
 			// NOTIFICATION CALLBACK REGISTER //
-			else if (action.equals("registerNotification")) {
+			else if (action.equals("onNotification")) {
 				notificationCallBackReady = true;
 				cordova.getActivity().runOnUiThread(new Runnable() {
 					public void run() {

@@ -1,20 +1,31 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
->[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
-
-#### Version 2.1.2 (03/06/2017)
-- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
-- Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
+#### Version 3.0.3 (10/11/2017)
+- Tested on Android and iOS using Cordova cli 7.0.1, Cordova android 6.2.3 and Cordova ios 4.5.0
+- Available sdk functions: getToken(), onTokenRefresh(), subscribeToTopic(), unsubscribeFromTopic(), onNotification()
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
-- **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
+- Supports iOS 9, 10 and 11. For lower versions see the original project: https://github.com/fechanique/cordova-plugin-fcm
 
 ## Installation
 Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
 ```Bash
-cordova plugin add cordova-plugin-fcm
+cordova plugin add https://github.com/ostownsville/cordova-plugin-fcm.git
+```
 
+#### IOS Ionic ####
+With the use of ios@4.5.0, you need to remove plugin "cordova-plugin-console" that is installed by default when generating a new Ionic project. Now this is in core part of cordova for iOS.
+
+## Android Update 23/10/2017 ##
+Due to upgrades, cordova and google-play-store/firebase
+For now, another plugin is to install to fix version issues.
+
+And you have to use android version 6.2.3, it wont run with 6.3.0
+
+```Bash
+cordova plugin add cordova-google-api-version --variable GOOGLE_API_VERSION=11.4.2
+cordova platform add android@6.2.3
 ```
 
 #### Firebase configuration files
@@ -34,8 +45,7 @@ Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root f
 
 ## Usage
 
-:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
-You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
+:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionality. **Pay attention to the payload example in order to use the plugin properly**.  
 
 #### Receiving Token Refresh
 
@@ -61,7 +71,7 @@ FCMPlugin.getToken(function(token){
 
 ```javascript
 //FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
-//All devices are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
+//The plugin does not automatically subscribe to the "all", "ios" OR "android" topics (this differs from the original version).
 //Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
 FCMPlugin.subscribeToTopic('topicExample');
 ```
@@ -129,12 +139,13 @@ Send a push notification to a single device or topic.
  - If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
  - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
 
+ :warning: Silent notifications (ie. content-available=1) don't work as of yet.
 
 ## License
 ```
 The MIT License
 
-Copyright (c) 2017 Felipe Echanique Torres (felipe.echanique in the gmail.com)
+Copyright (c) 2017 Christopher Palmer, Oliver Blum (chrisjpalmer@optusbet.com.au, olliblum@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

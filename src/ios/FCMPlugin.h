@@ -11,10 +11,10 @@
 - (void)getToken:(CDVInvokedUrlCommand*)command;
 - (void)subscribeToTopic:(CDVInvokedUrlCommand*)command;
 - (void)unsubscribeFromTopic:(CDVInvokedUrlCommand*)command;
-- (void)registerNotification:(CDVInvokedUrlCommand*)command;
+- (void)onNotification:(CDVInvokedUrlCommand*)command;
 - (void)notifyOfMessage:(NSData*) payload;
 - (void)notifyOfTokenRefresh:(NSString*) token;
-- (void)appEnterBackground;
-- (void)appEnterForeground;
+
+//#define AppDelegateSingleton ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 
 @end

@@ -15,7 +15,7 @@ FCMPlugin.prototype.unsubscribeFromTopic = function( topic, success, error ){
 // NOTIFICATION CALLBACK //
 FCMPlugin.prototype.onNotification = function( callback, success, error ){
 	FCMPlugin.prototype.onNotificationReceived = callback;
-	exec(success, error, "FCMPlugin", 'registerNotification',[]);
+	exec(success, error, "FCMPlugin", 'onNotification',[]);
 }
 // TOKEN REFRESH CALLBACK //
 FCMPlugin.prototype.onTokenRefresh = function( callback ){
