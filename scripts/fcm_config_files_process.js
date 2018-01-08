@@ -60,7 +60,7 @@ if (directoryExists("platforms/android")) {
 	var cordovaVersion = execSync('cordova -v', {encoding: 'utf-8'});
         var isNewFolderStructures = cordovaVersion.split('.')[0] >= 7;
 
-        var gServicesWritePath = isNewFolderStructures ? "platforms/android/" : "platforms/android/app" ;
+        var gServicesWritePath = isNewFolderStructures ? "platforms/android/" : "platforms/android/app/" ;
         var stringsPath = (isNewFolderStructures ? "platforms/android" : "platforms/android/app/src/main") + "/res/values/strings.xml"
 
         fs.writeFileSync(gServicesWritePath + "google-services.json", contents);
