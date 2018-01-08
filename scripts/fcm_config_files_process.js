@@ -2,6 +2,7 @@
 'use strict';
 
 var fs = require('fs');
+var execSync = require('child_process').execSync;
 
 var getValue = function(config, name) {
     var value = config.match(new RegExp('<' + name + '>(.*?)</' + name + '>', "i"))
@@ -55,10 +56,17 @@ if (directoryExists("platforms/android")) {
     if (fileExists( path )) {
       try {
         var contents = fs.readFileSync(path).toString();
-        fs.writeFileSync("platforms/android/google-services.json", contents);
+
+	var cordovaVersion = execSync('cordova -v', {encoding: 'utf-8'});
+        var isNewFolderStructures = cordovaVersion.split('.')[0] >= 7;
+
+        var gServicesWritePath = isNewFolderStructures ? "platforms/android/" : "platforms/android/app" ;
+        var stringsPath = (isNewFolderStructures ? "platforms/android" : "platforms/android/app/src/main") + "/res/values/strings.xml"
+
+        fs.writeFileSync(gServicesWritePath + "google-services.json", contents);
 
         var json = JSON.parse(contents);
-        var strings = fs.readFileSync("platforms/android/res/values/strings.xml").toString();
+        var strings = fs.readFileSync(stringsPath).toString();
 
         // strip non-default value
         strings = strings.replace(new RegExp('<string name="google_app_id">([^\@<]+?)</string>', "i"), '')
@@ -75,7 +83,7 @@ if (directoryExists("platforms/android")) {
         // replace the default value
         strings = strings.replace(new RegExp('<string name="google_api_key">([^<]+?)</string>', "i"), '<string name="google_api_key">' + json.client[0].api_key[0].current_key + '</string>')
 
-        fs.writeFileSync("platforms/android/res/values/strings.xml", strings);
+        fs.writeFileSync(stringsPath, strings);
       } catch(err) {
         process.stdout.write(err);
       }
