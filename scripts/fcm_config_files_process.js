@@ -56,10 +56,16 @@ if (directoryExists("platforms/android")) {
       try {
         var contents = fs.readFileSync(path).toString();
         fs.writeFileSync("platforms/android/google-services.json", contents);
-
+        var xml_file = "";
+        if (fileExists("platforms/android/app/src/main/res/values/strings.xml")) {
+          xml_file = "platforms/android/app/src/main/res/values/strings.xml";
+        } else if (fileExists("platforms/android/res/values/strings.xml")) {
+          xml_file = "platforms/android/res/values/strings.xml";
+        } else {
+          throw new Error("cordova-plugin-fcm: You have installed platform android but file 'strings.xml' was not found at both 'platforms/android/app/src/main/res/values/' and 'platforms/android/res/values/'");
+        }
         var json = JSON.parse(contents);
-        var strings = fs.readFileSync("platforms/android/res/values/strings.xml").toString();
-
+        var strings = fs.readFileSync(xml_file).toString();
         // strip non-default value
         strings = strings.replace(new RegExp('<string name="google_app_id">([^\@<]+?)</string>', "i"), '')
 
@@ -75,7 +81,7 @@ if (directoryExists("platforms/android")) {
         // replace the default value
         strings = strings.replace(new RegExp('<string name="google_api_key">([^<]+?)</string>', "i"), '<string name="google_api_key">' + json.client[0].api_key[0].current_key + '</string>')
 
-        fs.writeFileSync("platforms/android/res/values/strings.xml", strings);
+        fs.writeFileSync(xml_file, strings);
       } catch(err) {
         process.stdout.write(err);
       }
