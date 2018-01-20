@@ -95,7 +95,9 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     }
 
     // [START configure_firebase]
-    [FIRApp configure];
+    if([FIRApp defaultApp] == nil)
+	[FIRApp configure];
+    
     // [END configure_firebase]
     // Add observer for InstanceID token refresh callback.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenRefreshNotification:)
@@ -223,8 +225,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     //                              foreground (user taps notification)
 
     UIApplicationState state = application.applicationState;
-    if (application.applicationState == UIApplicationStateActive
-        || application.applicationState == UIApplicationStateInactive) {
+    if (state == UIApplicationStateActive
+        || state == UIApplicationStateInactive) {
         [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
         NSLog(@"app active");
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
