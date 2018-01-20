@@ -47,6 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.d(TAG, "\tKey: " + key + " Value: " + value);
 				data.put(key, value);
         }
+        BadgeHelper.setBadgeCount((String)data.get(BadgeHelper.CONST_BADGE_KEY), getApplicationContext());
 		
 		Log.d(TAG, "\tNotification Data: " + data.toString());
         FCMPlugin.sendPushPayload( data );
