@@ -43,7 +43,10 @@ var PLATFORM = {
             ANDROID_DIR + '/assets/www/google-services.json',
             'www/google-services.json'
         ],
-        stringsXml: ANDROID_DIR + '/res/values/strings.xml'
+        stringsXml: [
+            ANDROID_DIR + '/res/values/strings.xml',
+            ANDROID_DIR + '/app/src/main/res/values/strings.xml'
+        ]
     }
 };
 
@@ -57,7 +60,19 @@ if (directoryExists(ANDROID_DIR)) {
 
 function updateStringsXml(contents) {
     var json = JSON.parse(contents);
-    var strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml).toString();
+    var string
+    try {
+        if (directoryExists(PLATFORM.ANDROID.stringsXml[0])) {
+            strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml[0]).toString();
+        } else if (directoryExists(PLATFORM.ANDROID.stringsXml[1])) {
+            strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml[1]).toString()
+        } else {
+            throw err
+        }
+        
+    } catch (e) {
+        console.log('error in project')
+    }
 
     // strip non-default value
     strings = strings.replace(new RegExp('<string name="google_app_id">([^\@<]+?)</string>', 'i'), '');
