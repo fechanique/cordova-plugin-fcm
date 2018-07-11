@@ -19,7 +19,7 @@ fs.ensureDirSync = function (dir) {
 var resolvePath = function (dir) {
     if (fs.existsSync(dir + "/res/values"))
         return "/res/values/";
-    else return "app/src/main/res/values/"
+    else return "/app/src/main/res/values/"
 }
 
 
