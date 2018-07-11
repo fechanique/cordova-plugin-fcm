@@ -77,6 +77,7 @@ function updateStringsXml(contents) {
     strings = strings.replace(new RegExp('(\r\n|\n|\r)[ \t]*(\r\n|\n|\r)', 'gm'), '$1');
 
     // replace the default value
+    console.log(strings, json);
     strings = strings.replace(new RegExp('<string name="google_app_id">([^<]+?)</string>', 'i'), '<string name="google_app_id">' + json.client[0].client_info.mobilesdk_app_id + '</string>');
 
     // replace the default value
