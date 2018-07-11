@@ -43,6 +43,7 @@ var PLATFORM = {
     },
     ANDROID: {
         dest: [
+            ANDROID_DIR + '/app/google-services.json',
             ANDROID_DIR + '/google-services.json'
         ],
         src: [
