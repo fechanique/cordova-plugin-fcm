@@ -16,6 +16,13 @@ fs.ensureDirSync = function (dir) {
     }
 };
 
+var resolvePath = function (dir) {
+    if (fs.existsSync(dir + "/res/values"))
+        return "/res/values/";
+    else return "/app/src/main/res/values/"
+}
+
+
 var config = fs.readFileSync('config.xml').toString();
 var name = getValue(config, 'name');
 
@@ -36,6 +43,7 @@ var PLATFORM = {
     },
     ANDROID: {
         dest: [
+            ANDROID_DIR + '/app/google-services.json',
             ANDROID_DIR + '/google-services.json'
         ],
         src: [
@@ -43,7 +51,7 @@ var PLATFORM = {
             ANDROID_DIR + '/assets/www/google-services.json',
             'www/google-services.json'
         ],
-        stringsXml: ANDROID_DIR + '/res/values/strings.xml'
+        stringsXml: ANDROID_DIR + resolvePath(ANDROID_DIR)+'strings.xml'
     }
 };
 
@@ -69,6 +77,7 @@ function updateStringsXml(contents) {
     strings = strings.replace(new RegExp('(\r\n|\n|\r)[ \t]*(\r\n|\n|\r)', 'gm'), '$1');
 
     // replace the default value
+    console.log(strings, json);
     strings = strings.replace(new RegExp('<string name="google_app_id">([^<]+?)</string>', 'i'), '<string name="google_app_id">' + json.client[0].client_info.mobilesdk_app_id + '</string>');
 
     // replace the default value
