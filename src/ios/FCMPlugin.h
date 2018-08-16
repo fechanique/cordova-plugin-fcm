@@ -13,8 +13,9 @@
 - (void)unsubscribeFromTopic:(CDVInvokedUrlCommand*)command;
 - (void)registerNotification:(CDVInvokedUrlCommand*)command;
 - (void)notifyOfMessage:(NSData*) payload;
-- (void)setBadgeNumber:(CDVInvokedUrlCommand*)command;
+- (void)notifyOfTokenRefresh:(NSString*) token;
 - (void)appEnterBackground;
 - (void)appEnterForeground;
+- (void)setBadgeNumber:(CDVInvokedUrlCommand *)command;
 
 @end

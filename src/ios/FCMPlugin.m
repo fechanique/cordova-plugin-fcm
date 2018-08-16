@@ -16,6 +16,7 @@ static BOOL notificatorReceptorReady = NO;
 static BOOL appInForeground = YES;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
+static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
 static FCMPlugin *fcmPluginInstance;
 
 + (FCMPlugin *) fcmPlugin {
@@ -35,18 +36,6 @@ static FCMPlugin *fcmPluginInstance;
     }];
     
 }
-
-- (void)setBadgeNumber:(CDVInvokedUrlCommand *)command {
-    int number    = [[command.arguments objectAtIndex:0] intValue];
-    
-    [self.commandDelegate runInBackground:^{
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:number];
-        
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }];
-}
-
 
 // GET TOKEN //
 - (void) getToken:(CDVInvokedUrlCommand *)command 
@@ -100,10 +89,33 @@ static FCMPlugin *fcmPluginInstance;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)setBadgeNumber:(CDVInvokedUrlCommand *)command {
+    int number    = [[command.arguments objectAtIndex:0] intValue];
+    
+    [self.commandDelegate runInBackground:^{
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:number];
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 -(void) notifyOfMessage:(NSData *)payload
 {
     NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
+    NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
+    
+    if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
+        [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
+    } else {
+        [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
+    }
+}
+
+-(void) notifyOfTokenRefresh:(NSString *)token
+{
+    NSString * notifyJS = [NSString stringWithFormat:@"%@('%@');", tokenRefreshCallback, token];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
     
     if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
