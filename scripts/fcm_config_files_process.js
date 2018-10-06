@@ -57,7 +57,11 @@ if (directoryExists(ANDROID_DIR)) {
 
 function updateStringsXml(contents) {
     var json = JSON.parse(contents);
-    var strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml).toString();
+    var strings = '';
+
+    if(fileExists(PLATFORM.ANDROID.stringsXml)) {
+        strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml).toString();
+    }
 
     // strip non-default value
     strings = strings.replace(new RegExp('<string name="google_app_id">([^\@<]+?)</string>', 'i'), '');
