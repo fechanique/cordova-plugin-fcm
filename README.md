@@ -7,9 +7,10 @@
 [![GitHub issues](https://img.shields.io/github/issues/andrehtissot/cordova-plugin-fcm-with-dependecy-updated.svg)](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues)
 
 ## Authorship
-This is a simple fork from https://github.com/fechanique/cordova-plugin-fcm.
+This is a fork from https://github.com/fechanique/cordova-plugin-fcm with behind-the-scenes improvements.
 
-This fork has it's dependencies versions defined, which is necessary to avoid cordova build errors.
+This fork has it's google and firebase dependencies versions defined, which is necessary to avoid cordova build errors.
+
 
 #### Version 2.1.2 (03/06/2017)
 - Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
