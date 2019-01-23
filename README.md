@@ -130,6 +130,7 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 //priority: must be set to "high" for delivering notifications on closed iOS apps
 //restricted_package_name: optional field if you want to send only to a restricted app package (i.e: com.myapp.test)
 ```
+
 ## How it works
 Send a push notification to a single device or topic.
 - 1.a Application is in foreground:
