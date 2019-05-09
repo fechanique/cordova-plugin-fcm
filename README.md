@@ -1,8 +1,8 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
-#### Version 3.0.0 (05/09/2019)
-- Support for new Firebase SDK
+#### Version 3.0.1 (05/09/2019)
+- Support for new Firebase SDK. (https://firebase.google.com/docs/reference/android/com/google/firebase/iid/FirebaseInstanceIdService)[Deprecated function]
 - Available in NPMjs.com
 
 #### Version 2.1.2 (03/06/2017)
@@ -15,7 +15,7 @@
 ## Installation
 Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
 ```Bash
-cordova plugin add cordova-plugin-fcm
+cordova plugin add cordova-plugin-fcm-ng
 
 ```
 

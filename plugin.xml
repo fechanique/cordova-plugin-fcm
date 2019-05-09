@@ -19,17 +19,11 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm"
-      version="3.0.0">
+      version="3.0.1">
     <name>FCMPluginNG</name>
     <description>Cordova FCM Plugin NG</description>
     <license>Apache 2.0</license>
     <keywords>cordova, fcm, push, plugin</keywords>
-    
-    <info>
-		Cordova FCM plugin v3.0.0 installed
-		For more details visit https://github.com/cmgustavo/cordova-plugin-fcm
-	</info>
-	
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
 	<clobbers target="FCMPlugin" />
     </js-module>
