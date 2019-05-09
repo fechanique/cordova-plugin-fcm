@@ -129,7 +129,18 @@ Send a push notification to a single device or topic.
  - If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
  - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
 
+## Delete InstanceId
 
+```javascript
+//  Stops device from receiving Firebase notifications, returns a promise
+// Note: Deleting the Firebase instance triggers a token refresh, 
+// have to prevent the refreshed token from being sent to the server to stop notifications
+FCMPlugin.deleteInstanceId().then(()=>{
+    // success
+}, err => {
+    //error
+})
+```
 ## License
 ```
 The MIT License
