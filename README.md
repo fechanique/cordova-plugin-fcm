@@ -2,7 +2,7 @@
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
 #### Version 3.0.1 (05/09/2019)
-- Support for new Firebase SDK. (https://firebase.google.com/docs/reference/android/com/google/firebase/iid/FirebaseInstanceIdService)[Deprecated function]
+- Support for new Firebase SDK. [Deprecated function](https://firebase.google.com/docs/reference/android/com/google/firebase/iid/FirebaseInstanceIdService)
 - Available in NPMjs.com
 
 #### Version 2.1.2 (03/06/2017)
