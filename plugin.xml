@@ -52,11 +52,6 @@
 					<action android:name="com.google.firebase.MESSAGING_EVENT"/>
 				</intent-filter>
 			</service>
-			<service android:name="com.gae.scaffolder.plugin.MyFirebaseInstanceIDService">
-				<intent-filter>
-					<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-				</intent-filter>
-			</service>
 		</config-file>
 		<config-file target="res/xml/config.xml" parent="/*">
 			<feature name="FCMPlugin" >
@@ -72,7 +67,6 @@
 			
 		<source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
 		<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
 		<source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
     </platform>
 	
