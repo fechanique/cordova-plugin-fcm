@@ -15,20 +15,21 @@ import android.os.Bundle;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+
 import java.util.Map;
 
 public class FCMPlugin extends CordovaPlugin {
- 
+
 	private static final String TAG = "FCMPlugin";
-	
+
 	public static CordovaWebView gWebView;
 	public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
 	public static String tokenRefreshCallBack = "FCMPlugin.onTokenRefreshReceived";
 	public static Boolean notificationCallBackReady = false;
 	public static Map<String, Object> lastPush = null;
-	 
+
 	public FCMPlugin() {}
-	
+
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 		gWebView = webView;
@@ -36,20 +37,33 @@ public class FCMPlugin extends CordovaPlugin {
 		FirebaseMessaging.getInstance().subscribeToTopic("android");
 		FirebaseMessaging.getInstance().subscribeToTopic("all");
 	}
-	 
+
 	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
 		Log.d(TAG,"==> FCMPlugin execute: "+ action);
-		
+
 		try{
 			// READY //
 			if (action.equals("ready")) {
 				//
 				callbackContext.success();
 			}
+			else if (action.equals("deleteInstanceId")) {
+				cordova.getThreadPool().execute(new Runnable() {
+
+					public void run() {
+                                try {
+                                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                                    callbackContext.success();
+                                } catch (Exception e) {
+                                    callbackContext.error(e.getMessage());
+                                }
+                            }
+				});
+			}
 			// GET TOKEN //
 			else if (action.equals("getToken")) {
-				cordova.getActivity().runOnUiThread(new Runnable() {
+				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
 							String token = FirebaseInstanceId.getInstance().getToken();
@@ -64,7 +78,7 @@ public class FCMPlugin extends CordovaPlugin {
 			// NOTIFICATION CALLBACK REGISTER //
 			else if (action.equals("registerNotification")) {
 				notificationCallBackReady = true;
-				cordova.getActivity().runOnUiThread(new Runnable() {
+				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						if(lastPush != null) FCMPlugin.sendPushPayload( lastPush );
 						lastPush = null;
@@ -106,21 +120,21 @@ public class FCMPlugin extends CordovaPlugin {
 			callbackContext.error(e.getMessage());
 			return false;
 		}
-		
+
 		//cordova.getThreadPool().execute(new Runnable() {
 		//	public void run() {
 		//	  //
 		//	}
 		//});
-		
-		//cordova.getActivity().runOnUiThread(new Runnable() {
+
+		//cordova.getThreadPool().execute(new Runnable() {
         //    public void run() {
         //      //
         //    }
         //});
 		return true;
 	}
-	
+
 	public static void sendPushPayload(Map<String, Object> payload) {
 		Log.d(TAG, "==> FCMPlugin sendPushPayload");
 		Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);
@@ -154,10 +168,10 @@ public class FCMPlugin extends CordovaPlugin {
 			Log.d(TAG, "\tERROR sendRefreshToken: " + e.getMessage());
 		}
 	}
-  
+
   @Override
 	public void onDestroy() {
 		gWebView = null;
 		notificationCallBackReady = false;
 	}
-} 
+}

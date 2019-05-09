@@ -36,6 +36,9 @@ FCMPlugin.prototype.onTokenRefreshReceived = function(token){
 	console.log("Received token refresh")
 	console.log(token)
 }
+FCMPlugin.prototype.deleteInstanceId = function (success, error) {
+	exec(success, error, "FCMPlugin", "deleteInstanceId", []);
+}
 // FIRE READY //
 exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
 
