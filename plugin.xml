@@ -19,15 +19,15 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm"
-      version="2.1.2">
-    <name>FCMPlugin</name>
-    <description>Cordova FCM Plugin</description>
+      version="3.0.0">
+    <name>FCMPluginNG</name>
+    <description>Cordova FCM Plugin NG</description>
     <license>Apache 2.0</license>
     <keywords>cordova, fcm, push, plugin</keywords>
     
     <info>
-		Cordova FCM plugin v2.1.2 installed
-		For more details visit https://github.com/fechanique/cordova-plugin-fcm
+		Cordova FCM plugin v3.0.0 installed
+		For more details visit https://github.com/cmgustavo/cordova-plugin-fcm
 	</info>
 	
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
@@ -35,7 +35,7 @@
     </js-module>
 
     <engines>
-	<engine name="cordova-android" version=">=4.0.0" />
+      <engine name="cordova-android" version=">=7.1.2" />
     </engines>
 	
     <!-- ANDROID CONFIGURATION -->
