@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-fcm-with-dependecy-updated" version="2.4.0">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-fcm-with-dependecy-updated" version="2.4.1">
     <name>Cordova FCM Push Plugin</name>
     <description>Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated</description>
     <license>MIT</license>
@@ -63,10 +63,10 @@
 
 		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
-		<source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
+		<source-file src="src/android/com/gae/scaffolder/plugin/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
+		<source-file src="src/android/com/gae/scaffolder/plugin/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
+		<source-file src="src/android/com/gae/scaffolder/plugin/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
+		<source-file src="src/android/com/gae/scaffolder/plugin/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
     </platform>
 
     <!-- IOS CONFIGURATION -->
