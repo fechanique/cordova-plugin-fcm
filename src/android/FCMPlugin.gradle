@@ -1,20 +1,29 @@
+def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: "16.0.9"
+def FCM_VERSION = System.getenv("FCM_VERSION") ?: "18.0.0"
+
 buildscript {
     repositories {
         mavenCentral()
         jcenter()
         mavenLocal()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.+'
-        classpath 'com.google.gms:google-services:3.1.+'
+        /**
+         * Reference: https://github.com/google/play-services-plugins/issues/22
+         */
+        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.google.gms:google-services:4.1.0' // 4.2.0 throws a NullPointerException
     }
 }
 repositories {
     mavenCentral()
     jcenter()
+    google()
 }
 dependencies {
-    compile 'com.google.firebase:firebase-core:10.+'
+    implementation "com.google.firebase:firebase-core:${FCM_CORE_VERSION}"
+    implementation "com.google.firebase:firebase-messaging:${FCM_VERSION}"
 }
 // apply plugin: 'com.google.gms.google-services'
 // class must be used instead of id(string) to be able to apply plugin from non-root gradle file

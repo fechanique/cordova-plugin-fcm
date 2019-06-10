@@ -17,22 +17,26 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-fcm-with-dependecy-updated" version="2.4.1">
-    <name>Cordova FCM Push Plugin</name>
-    <description>Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated</description>
-    <license>MIT</license>
-    <keywords>notifications, push, firebase, fcm, ios, android, cordova, plugin</keywords>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-fcm-with-dependecy-updated" version="2.4.2">
+	<name>Cordova FCM Push Plugin</name>
+	<description>Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated</description>
+	<license>MIT</license>
+	<keywords>notifications, push, firebase, fcm, ios, android, cordova, plugin</keywords>
 
-    <js-module src="www/FCMPlugin.js" name="FCMPlugin">
-	<clobbers target="FCMPlugin" />
-    </js-module>
+	<js-module src="www/FCMPlugin.js" name="FCMPlugin">
+		<clobbers target="FCMPlugin" />
+	</js-module>
 
-    <engines>
-	<engine name="cordova-android" version=">=4.0.0" />
-    </engines>
+	<engines>
+		<engine name="cordova-android" version=">=4.0.0" />
+	</engines>
 
-    <!-- ANDROID CONFIGURATION -->
-    <platform name="android">
+	<!-- ANDROID CONFIGURATION -->
+	<platform name="android">
+
+		<preference name="FCM_CORE_VERSION" default="16.0.9" />
+		<preference name="FCM_VERSION" default="18.0.0" />
+
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
 				<intent-filter>
@@ -52,14 +56,14 @@
 			</service>
 		</config-file>
 		<config-file target="res/xml/config.xml" parent="/*">
-			<feature name="FCMPlugin" >
-					<param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
-					<param name="onload" value="true" />
-				</feature>
+			<feature name="FCMPlugin">
+				<param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
+				<param name="onload" value="true" />
+			</feature>
 		</config-file>
 
-        <framework src="com.google.firebase:firebase-core:10.+" />
-        <framework src="com.google.firebase:firebase-messaging:10.+" />
+		<framework src="com.google.firebase:firebase-core:$FCM_CORE_VERSION" />
+		<framework src="com.google.firebase:firebase-messaging:$FCM_VERSION" />
 
 		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
@@ -67,19 +71,19 @@
 		<source-file src="src/android/com/gae/scaffolder/plugin/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
 		<source-file src="src/android/com/gae/scaffolder/plugin/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
 		<source-file src="src/android/com/gae/scaffolder/plugin/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
-    </platform>
+	</platform>
 
-    <!-- IOS CONFIGURATION -->
-    <platform name="ios">
-        <config-file target="config.xml" parent="/*">
-            <feature name="FCMPlugin">
-                <param name="ios-package" value="FCMPlugin"/>
-            </feature>
-        </config-file>
+	<!-- IOS CONFIGURATION -->
+	<platform name="ios">
+		<config-file target="config.xml" parent="/*">
+			<feature name="FCMPlugin">
+				<param name="ios-package" value="FCMPlugin"/>
+			</feature>
+		</config-file>
 
 		<!-- ENABLE PUSH CAPABILITY -->
 		<config-file parent="aps-environment" target="*/Entitlements-Debug.plist">
-		    <string>development</string>
+			<string>development</string>
 		</config-file>
 		<config-file parent="aps-environment" target="*/Entitlements-Release.plist">
 			<string>production</string>
@@ -87,8 +91,8 @@
 
 		<resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
 
-        <header-file src="src/ios/FCMPlugin.h" />
-        <source-file src="src/ios/FCMPlugin.m" />
+		<header-file src="src/ios/FCMPlugin.h" />
+		<source-file src="src/ios/FCMPlugin.m" />
 
 		<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
 		<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
@@ -114,7 +118,7 @@
 		<framework src="libsqlite3.0.tbd" />
 		<framework src="libz.tbd" />
 		<framework src="Security.framework" />
-    </platform>
+	</platform>
 
 	<!-- COPY FCM CONFIG FILES TO PLATFORM AFTER PLUGIN INSTALL OR PLATFORM PREPARE -->
 	<hook src="scripts/fcm_config_files_process.js" type="after_plugin_add" />
