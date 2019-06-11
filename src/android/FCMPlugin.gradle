@@ -1,5 +1,5 @@
-def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: "16.0.9"
-def FCM_VERSION = System.getenv("FCM_VERSION") ?: "18.0.0"
+def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: rootProject.ext.FCM_CORE_VERSION
+def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.ext.FCM_VERSION
 
 buildscript {
     repositories {

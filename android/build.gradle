@@ -13,7 +13,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        
+        classpath 'com.google.gms:google-services:4.2.0'
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,6 +23,8 @@ buildscript {
 allprojects {
 
     ext {
+        FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: "16.0.9"
+        FCM_VERSION = System.getenv("FCM_VERSION") ?: "18.0.0"
         supportLibraryVersion = '28.0.0'
     }
 
