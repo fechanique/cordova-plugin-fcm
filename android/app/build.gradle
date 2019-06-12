@@ -22,15 +22,21 @@ android {
             includeAndroidResources = true
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation project(path: ':lib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.github.mfdeveloper:cordova-android:7.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
 
     implementation "com.google.firebase:firebase-core:${rootProject.ext.FCM_CORE_VERSION}"
     implementation "com.google.firebase:firebase-messaging:${rootProject.ext.FCM_VERSION}"
+
+    implementation 'com.github.mfdeveloper:cordova-android:7.1.1'
 
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

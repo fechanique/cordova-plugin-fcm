@@ -35,18 +35,16 @@ public class FCMPluginTest {
 
     /**
      * @todo Verify how to run integration tests for Firebase Cloud Messaging
-     *       Until here, that throws a error for FirebaseApp not initialized
+     *       Until here, that throws a error for FirebaseApp is not initialized
      */
     @Test
     public void getToken() {
 
-        TokenListeners events = Mockito.mock(TokenListeners.class);
+        TokenListeners<String, JSONObject> events = Mockito.mock(TokenListeners.class);
         fcmPlugin.getToken(events);
 
 
-        Mockito.verify(events, Mockito.times(0)).error(anyString());
         Mockito.verify(events, Mockito.times(0)).error(any(JSONObject.class));
-
         Mockito.verify(events, Mockito.times(1)).success(anyString());
     }
 }
