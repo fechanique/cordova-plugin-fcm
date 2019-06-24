@@ -1,6 +1,9 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
+#### Version 3.0.4 (06/23/2019)
+- Upgrade Android plugin for Gradle, revision 1.1.3 (March 2015)
+
 #### Version 3.0.2 (05/09/2019)
 - Support for new Firebase SDK. [Deprecated function](https://firebase.google.com/docs/reference/android/com/google/firebase/iid/FirebaseInstanceIdService)
 - Available in NPMjs.com
