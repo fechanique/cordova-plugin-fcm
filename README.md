@@ -1,6 +1,10 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
+#### Version 4.0.0 (06/28/2019)
+- Adds support for Google Analytics Events Tracking (`logEvent`, `setUserId` and `setUserProperty`).
+- This wrapper `@ionic-native/fcm` is not required any more. You need to install a new one [FCMNG](https://github.com/cmgustavo/fcm-ng)
+
 #### Version 3.0.4 (06/23/2019)
 - Upgrade Android plugin for Gradle, revision 1.1.3 (March 2015)
 
@@ -13,7 +17,6 @@
 - Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
-- **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
 ## Installation
 Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder. You don´t need to configure anything else in order to have push notification working for both platforms, everything is magic.
@@ -40,14 +43,13 @@ Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root f
 ## Usage
 
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
-You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
 #### Receiving Token Refresh
 
 ```javascript
-//FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
+//FCMPluginNG.onTokenRefresh( onTokenRefreshCallback(token) );
 //Note that this callback will be fired everytime a new token is generated, including the first time.
-FCMPlugin.onTokenRefresh(function(token){
+FCMPluginNG.onTokenRefresh(function(token){
     alert( token );
 });
 ```
@@ -55,9 +57,9 @@ FCMPlugin.onTokenRefresh(function(token){
 #### Get token
 
 ```javascript
-//FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+//FCMPluginNG.getToken( successCallback(token), errorCallback(err) );
 //Keep in mind the function will return null if the token has not been established yet.
-FCMPlugin.getToken(function(token){
+FCMPluginNG.getToken(function(token){
     alert(token);
 });
 ```
@@ -65,25 +67,25 @@ FCMPlugin.getToken(function(token){
 #### Subscribe to topic
 
 ```javascript
-//FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
+//FCMPluginNG.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
 //All devices are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
 //Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
-FCMPlugin.subscribeToTopic('topicExample');
+FCMPluginNG.subscribeToTopic('topicExample');
 ```
 
 #### Unsubscribe from topic
 
 ```javascript
-//FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
-FCMPlugin.unsubscribeFromTopic('topicExample');
+//FCMPluginNG.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
+FCMPluginNG.unsubscribeFromTopic('topicExample');
 ```
 
 #### Receiving push notification data
 
 ```javascript
-//FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
+//FCMPluginNG.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
 //Here you define your application behaviour based on the notification data.
-FCMPlugin.onNotification(function(data){
+FCMPluginNG.onNotification(function(data){
     if(data.wasTapped){
       //Notification was received on device tray and tapped by the user.
       alert( JSON.stringify(data) );
@@ -96,7 +98,6 @@ FCMPlugin.onNotification(function(data){
 
 #### Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
-Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
 //POST: https://fcm.googleapis.com/fcm/send
 //HEADER: Content-Type: application/json
@@ -134,6 +135,29 @@ Send a push notification to a single device or topic.
  - If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
  - If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
 
+## Usage of Google Analytics Methods
+Every method returns a promise that fulfills when a call was successful.
+
+### logEvent(_name_, _params_)
+Logs an app event.
+```js
+FCMPluginNG.analytics.logEvent("my_event", {param1: "value1"});
+```
+
+Be aware of [automatically collected events](https://support.google.com/firebase/answer/6317485).
+
+### setUserId(_id_)
+Sets the user ID property.
+```js
+FCMPluginNG.setUserId("12345");
+```
+This feature must be used in accordance with [Google's Privacy Policy](https://www.google.com/policies/privacy).
+
+### setUserProperty(_name_, _value_)
+Sets a user property to a given value.
+```js
+FCMPluginNG.setUserProperty("name1", "value1");
+```
 
 ## License
 ```

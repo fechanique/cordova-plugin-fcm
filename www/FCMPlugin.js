@@ -36,12 +36,23 @@ FCMPlugin.prototype.onTokenRefreshReceived = function(token){
 	console.log("Received token refresh")
 	console.log(token)
 }
+
+// Analytics Plugin
+
+FCMPlugin.prototype.logEvent = function(eventName, eventParams, success, error){
+  exec(success, error, 'FCMPlugin', 'logEvent', [eventName, eventParams || {}]);
+}
+
+FCMPlugin.prototype.setUserId = function(userId, success, error){
+  exec(success, error, 'FCMPlugin', 'setUserId', [userId]);
+}
+
+FCMPlugin.prototype.setUserProperty = function(name, value, success, error){
+  exec(success, error, 'FCMPlugin', 'setUserProperty', [name, value]);
+}
+
 // FIRE READY //
-exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
-
-
-
-
+exec(function(result){ console.log("FCMPlugin NG Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
 
 var fcmPlugin = new FCMPlugin();
 module.exports = fcmPlugin;

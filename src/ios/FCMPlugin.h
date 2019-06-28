@@ -16,5 +16,8 @@
 - (void)notifyOfTokenRefresh:(NSString*) token;
 - (void)appEnterBackground;
 - (void)appEnterForeground;
+- (void)logEvent:(CDVInvokedUrlCommand*)command;
+- (void)setUserId:(CDVInvokedUrlCommand*)command;
+- (void)setUserProperty:(CDVInvokedUrlCommand*)command;
 
 @end
