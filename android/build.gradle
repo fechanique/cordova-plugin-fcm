@@ -25,6 +25,8 @@ allprojects {
     ext {
         FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: "16.0.9"
         FCM_VERSION = System.getenv("FCM_VERSION") ?: "18.0.0"
+        GRADLE_TOOLS_VERSION = '3.4.1'
+        GOOGLE_SERVICES_VERSION = '4.1.0'
         supportLibraryVersion = '28.0.0'
     }
 

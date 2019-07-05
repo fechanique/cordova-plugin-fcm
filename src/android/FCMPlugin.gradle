@@ -1,15 +1,30 @@
-def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: rootProject.ext.FCM_CORE_VERSION
-def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.ext.FCM_VERSION
+def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: rootProject.hasProperty("FCM_CORE_VERSION") ? rootProject.ext.FCM_CORE_VERSION : '16.0.9'
+def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.hasProperty("FCM_VERSION") ? rootProject.ext.FCM_VERSION : '18.0.0'
 
 buildscript {
+    ext {
+        GRADLE_TOOLS_VERSION = System.getenv("GRADLE_TOOLS_VERSION") ?: rootProject.hasProperty("GRADLE_TOOLS_VERSION") ? rootProject.ext.GRADLE_TOOLS_VERSION : '2.3.+'
+        GOOGLE_SERVICES_VERSION = System.getenv("GOOGLE_SERVICES_VERSION") ?: rootProject.hasProperty("GOOGLE_SERVICES_VERSION") ? rootProject.ext.GOOGLE_SERVICES_VERSION : '3.0.0'
+
+        ext.gradleNumberVersion = GRADLE_TOOLS_VERSION.substring(0, GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
+    }
     repositories {
         mavenCentral()
         jcenter()
         mavenLocal()
-        google()
+        if (gradleNumberVersion >= 3.4f) {
+            google()
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        /**
+         * PS: Avoid use "GRADLE_VERSION" because jitpack
+         * set this like a environment variable
+         */
+        print("FCM PLUGIN GRADLE TOOLS VERSION: ${GRADLE_TOOLS_VERSION}")
+
+        classpath "com.android.tools.build:gradle:${GRADLE_TOOLS_VERSION}"
+
         /**
          * Reference: https://github.com/google/play-services-plugins/issues/22
          *
@@ -18,17 +33,24 @@ buildscript {
          *     instead of id(string)
          */
 
-        classpath 'com.google.gms:google-services:4.1.0'
+        classpath "com.google.gms:google-services:${GOOGLE_SERVICES_VERSION}"
     }
 }
 repositories {
     mavenCentral()
     jcenter()
-    google()
+    if (gradleNumberVersion >= 3.4f) {
+        google()
+    }
 }
 dependencies {
-    implementation "com.google.firebase:firebase-core:${FCM_CORE_VERSION}"
-    implementation "com.google.firebase:firebase-messaging:${FCM_VERSION}"
+    if (gradleNumberVersion >= 3.4f) {
+        implementation "com.google.firebase:firebase-core:${FCM_CORE_VERSION}"
+        implementation "com.google.firebase:firebase-messaging:${FCM_VERSION}"
+    } else {
+        compile "com.google.firebase:firebase-core:${FCM_CORE_VERSION}"
+        compile "com.google.firebase:firebase-messaging:${FCM_VERSION}"
+    }
 }
 // apply plugin: 'com.google.gms.google-services'
 // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
