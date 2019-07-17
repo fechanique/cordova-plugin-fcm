@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FCMPluginActivity extends Activity {
     private static String TAG = "FCMPlugin";
@@ -33,7 +30,7 @@ public class FCMPluginActivity extends Activity {
 			Log.d(TAG, "==> USER TAPPED NOTFICATION");
 			data.put("wasTapped", true);
 			for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
+                Object value = getIntent().getExtras().get(key);
                 Log.d(TAG, "\tKey: " + key + " Value: " + value);
 				data.put(key, value);
             }
