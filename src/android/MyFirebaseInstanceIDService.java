@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-public class FirebasePluginInstanceIDService extends FirebaseInstanceIdService {
+public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
   private static final String TAG = "FCMPlugin";
 
@@ -19,7 +19,5 @@ public class FirebasePluginInstanceIDService extends FirebaseInstanceIdService {
     // Get updated InstanceID token.
     String refreshedToken = FirebaseInstanceId.getInstance().getToken();
     Log.d(TAG, "Refreshed token: " + refreshedToken);
-
-    FirebasePlugin.sendToken(refreshedToken);
   }
 }

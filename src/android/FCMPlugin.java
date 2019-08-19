@@ -17,6 +17,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Map;
+import java.util.Iterator;
 
 public class FCMPlugin extends CordovaPlugin {
  
@@ -38,8 +39,6 @@ public class FCMPlugin extends CordovaPlugin {
 		Log.d(TAG, "==> FCMPlugin initialize");
 		FirebaseMessaging.getInstance().subscribeToTopic("android");
 		FirebaseMessaging.getInstance().subscribeToTopic("all");
-                mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
-                mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
 	}
 	 
 	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -181,7 +180,6 @@ public class FCMPlugin extends CordovaPlugin {
                   mFirebaseAnalytics.logEvent(name, bundle);
                   callbackContext.success();
                 } catch (Exception e) {
-                  Crashlytics.logException(e);
                   callbackContext.error(e.getMessage());
                 }
               }
@@ -195,7 +193,6 @@ public class FCMPlugin extends CordovaPlugin {
                 mFirebaseAnalytics.setUserId(id);
                 callbackContext.success();
               } catch (Exception e) {
-                Crashlytics.logException(e);
                 callbackContext.error(e.getMessage());
               }
             }
@@ -209,7 +206,6 @@ public class FCMPlugin extends CordovaPlugin {
                 mFirebaseAnalytics.setUserProperty(name, value);
                 callbackContext.success();
               } catch (Exception e) {
-                Crashlytics.logException(e);
                 callbackContext.error(e.getMessage());
               }
             }
