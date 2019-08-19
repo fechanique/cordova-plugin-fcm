@@ -1,8 +1,12 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
+#### Version 4.1.0 (08/19/2019)
+- Adds Google Analytics Events Tracking support (Android API level 27+).
+- Fix builder on development mode for Android.
+
 #### Version 4.0.0 (06/28/2019)
-- Adds support for Google Analytics Events Tracking (`logEvent`, `setUserId` and `setUserProperty`).
+- Adds support for Google Analytics Events Tracking (`logEvent`, `setUserId` and `setUserProperty`) (only iOS).
 - This wrapper `@ionic-native/fcm` is not required any more. You need to install a new one [FCMNG](https://github.com/cmgustavo/fcm-ng)
 
 #### Version 3.0.4 (06/23/2019)

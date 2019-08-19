@@ -14,12 +14,15 @@ import android.os.Bundle;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Map;
 
 public class FCMPlugin extends CordovaPlugin {
  
 	private static final String TAG = "FCMPlugin";
+
+        private FirebaseAnalytics mFirebaseAnalytics;
 	
 	public static CordovaWebView gWebView;
 	public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
@@ -35,6 +38,8 @@ public class FCMPlugin extends CordovaPlugin {
 		Log.d(TAG, "==> FCMPlugin initialize");
 		FirebaseMessaging.getInstance().subscribeToTopic("android");
 		FirebaseMessaging.getInstance().subscribeToTopic("all");
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
 	}
 	 
 	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -154,6 +159,62 @@ public class FCMPlugin extends CordovaPlugin {
 			Log.d(TAG, "\tERROR sendRefreshToken: " + e.getMessage());
 		}
 	}
+
+        public void logEvent(final CallbackContext callbackContext, final String name, final JSONObject params)
+            throws JSONException {
+            final Bundle bundle = new Bundle();
+            Iterator iter = params.keys();
+            while (iter.hasNext()) {
+              String key = (String) iter.next();
+              Object value = params.get(key);
+
+              if (value instanceof Integer || value instanceof Double) {
+                bundle.putFloat(key, ((Number) value).floatValue());
+              } else {
+                bundle.putString(key, value.toString());
+              }
+            }
+
+            cordova.getThreadPool().execute(new Runnable() {
+              public void run() {
+                try {
+                  mFirebaseAnalytics.logEvent(name, bundle);
+                  callbackContext.success();
+                } catch (Exception e) {
+                  Crashlytics.logException(e);
+                  callbackContext.error(e.getMessage());
+                }
+              }
+            });
+        }
+
+        public void setUserId(final CallbackContext callbackContext, final String id) {
+          cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+              try {
+                mFirebaseAnalytics.setUserId(id);
+                callbackContext.success();
+              } catch (Exception e) {
+                Crashlytics.logException(e);
+                callbackContext.error(e.getMessage());
+              }
+            }
+          });
+        }
+
+        public void setUserProperty(final CallbackContext callbackContext, final String name, final String value) {
+          cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+              try {
+                mFirebaseAnalytics.setUserProperty(name, value);
+                callbackContext.success();
+              } catch (Exception e) {
+                Crashlytics.logException(e);
+                callbackContext.error(e.getMessage());
+              }
+            }
+          });
+        }
   
   @Override
 	public void onDestroy() {

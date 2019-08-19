@@ -19,7 +19,7 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm-ng"
-      version="4.0.0">
+      version="4.1.0">
     <name>FCMPluginNG</name>
     <description>Cordova FCM Plugin NG</description>
     <license>Apache 2.0</license>
@@ -29,39 +29,48 @@
     </js-module>
 
     <engines>
-      <engine name="cordova-android" version=">=7.1.2" />
+      <engine name="cordova-android" version=">=7.1.4" />
     </engines>
-	
+
     <!-- ANDROID CONFIGURATION -->
     <platform name="android">
-		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
-				<intent-filter>   
-					<action android:name="FCM_PLUGIN_ACTIVITY" />  
-					<category android:name="android.intent.category.DEFAULT" />
-				</intent-filter>			
-			</activity>
-			<service android:name="com.gae.scaffolder.plugin.MyFirebaseMessagingService">
-				<intent-filter>
-					<action android:name="com.google.firebase.MESSAGING_EVENT"/>
-				</intent-filter>
-			</service>
-		</config-file>
-		<config-file target="res/xml/config.xml" parent="/*">
-			<feature name="FCMPlugin" >
-					<param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
-					<param name="onload" value="true" />
-				</feature>
-		</config-file>
-		
-        <framework src="com.google.firebase:firebase-core:+" />
-        <framework src="com.google.firebase:firebase-messaging:+" />
-		
-		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
-			
-		<source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
-		<source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
+      <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
+          <intent-filter>
+            <action android:name="FCM_PLUGIN_ACTIVITY" />
+            <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
+        </activity>
+        <service android:name="com.gae.scaffolder.plugin.MyFirebaseMessagingService">
+          <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+          </intent-filter>
+        </service>
+        <service android:name="com.gae.scaffolder.plugin.MyFirebaseInstanceIDService">
+          <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+          </intent-filter>
+        </service>
+      </config-file>
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="FCMPlugin" >
+          <param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
+
+      <framework src="com.google.android.gms:play-services-tagmanager:16.0.8" />
+      <framework src="com.google.firebase:firebase-core:16.0.8" />
+      <framework src="com.google.firebase:firebase-messaging:17.5.0" />
+      <framework src="com.google.firebase:firebase-config:16.4.1" />
+      <framework src="com.google.firebase:firebase-perf:16.2.4" />
+
+      <framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
+
+      <source-file src="src/android/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
+      <source-file src="src/android/MyFirebaseMessagingService.java" target-dir="src/com/gae/scaffolder/plugin" />
+      <source-file src="src/android/MyFirebaseInstanceIDService.java" target-dir="src/com/gae/scaffolder/plugin" />
+      <source-file src="src/android/FCMPluginActivity.java" target-dir="src/com/gae/scaffolder/plugin" />
     </platform>
 	
     <!-- IOS CONFIGURATION -->
