@@ -24,267 +24,246 @@ import org.json.JSONObject;
 import java.util.Map;
 
 public class FCMPlugin extends CordovaPlugin {
-
-	public static CordovaWebView gWebView;
-	public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
-	public static String tokenRefreshCallBack = "FCMPlugin.onTokenRefreshReceived";
-	public static Boolean notificationCallBackReady = false;
+    public static CordovaWebView gWebView;
+    public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
+    public static String tokenRefreshCallBack = "FCMPlugin.onTokenRefreshReceived";
+    public static Boolean notificationCallBackReady = false;
 	public static Map<String, Object> lastPush = null;
 
 	protected Context context = null;
 	protected static OnFinishedListener<JSONObject> notificationFn = null;
-	private static final String TAG = "FCMPlugin";
-	private static CordovaPlugin instance = null;
+    private static final String TAG = "FCMPlugin";
+    private static CordovaPlugin instance = null;
 
-	public FCMPlugin() {}
-	public FCMPlugin(Context context) {
-		this.context = context;
-	}
+    public FCMPlugin() {}
+    public FCMPlugin(Context context) {
+        this.context = context;
+    }
 
-	public static synchronized FCMPlugin getInstance(Context context) {
+    public static synchronized FCMPlugin getInstance(Context context) {
+        if (instance == null) {
+            instance = new FCMPlugin(context);
+            instance = getPlugin(instance);
+        }
 
-		if (instance == null) {
-			instance = new FCMPlugin(context);
-			instance = getPlugin(instance);
-		}
+        return (FCMPlugin) instance;
+    }
 
-		return (FCMPlugin) instance;
-	}
+    public static synchronized FCMPlugin getInstance() {
+        if (instance == null) {
+            instance = new FCMPlugin();
+            instance = getPlugin(instance);
+        }
 
-	public static synchronized FCMPlugin getInstance() {
+        return (FCMPlugin) instance;
+    }
 
-		if (instance == null) {
-			instance = new FCMPlugin();
-			instance = getPlugin(instance);
-		}
+    public static CordovaPlugin getPlugin(CordovaPlugin plugin) {
+        if (plugin.webView != null) {
+            instance = plugin.webView.getPluginManager().getPlugin(FCMPlugin.class.getName());
+        } else {
+            plugin.initialize(null, null);
+            instance = plugin;
+        }
 
-		return (FCMPlugin) instance;
-	}
+        return instance;
+    }
 
-	public static CordovaPlugin getPlugin(CordovaPlugin plugin) {
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+        gWebView = webView;
+        Log.d(TAG, "==> FCMPlugin initialize");
 
-		if (plugin.webView != null) {
+        FirebaseMessaging.getInstance().subscribeToTopic("android");
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+    }
 
-			instance = plugin.webView.getPluginManager().getPlugin(FCMPlugin.class.getName());
-		} else {
-			plugin.initialize(null, null);
-			instance = plugin;
-		}
+    public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        Log.d(TAG, "==> FCMPlugin execute: " + action);
 
-		return instance;
-	}
-	
-	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-		super.initialize(cordova, webView);
-		gWebView = webView;
-		Log.d(TAG, "==> FCMPlugin initialize");
+        try {
+            // READY //
+            if (action.equals("ready")) {
+                callbackContext.success();
+            }
+            // GET TOKEN //
+            else if (action.equals("getToken")) {
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        getToken(callbackContext);
+                    }
+                });
+            }
+            // NOTIFICATION CALLBACK REGISTER //
+            else if (action.equals("registerNotification")) {
+                notificationCallBackReady = true;
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        registerNotification(callbackContext);
+                    }
+                });
+            }
+            // UN/SUBSCRIBE TOPICS //
+            else if (action.equals("subscribeToTopic")) {
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try {
+                            FirebaseMessaging.getInstance().subscribeToTopic(args.getString(0));
+                            callbackContext.success();
+                        } catch (Exception e) {
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            } else if (action.equals("unsubscribeFromTopic")) {
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try {
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(args.getString(0));
+                            callbackContext.success();
+                        } catch (Exception e) {
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            } else {
+                callbackContext.error("Method not found");
+                return false;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "ERROR: onPluginAction: " + e.getMessage());
+            callbackContext.error(e.getMessage());
+            return false;
+        }
 
-		FirebaseMessaging.getInstance().subscribeToTopic("android");
-		FirebaseMessaging.getInstance().subscribeToTopic("all");
-	}
+        return true;
+    }
 
-	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
-
-		Log.d(TAG,"==> FCMPlugin execute: "+ action);
-
-		try{
-			// READY //
-			if (action.equals("ready")) {
-				//
-				callbackContext.success();
-			}
-			// GET TOKEN //
-			else if (action.equals("getToken")) {
-				cordova.getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getToken(callbackContext);
-					}
-				});
-			}
-			// NOTIFICATION CALLBACK REGISTER //
-			else if (action.equals("registerNotification")) {
-				notificationCallBackReady = true;
-				cordova.getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						registerNotification(callbackContext);
-					}
-				});
-			}
-			// UN/SUBSCRIBE TOPICS //
-			else if (action.equals("subscribeToTopic")) {
-				cordova.getThreadPool().execute(new Runnable() {
-					public void run() {
-						try{
-							FirebaseMessaging.getInstance().subscribeToTopic( args.getString(0) );
-							callbackContext.success();
-						}catch(Exception e){
-							callbackContext.error(e.getMessage());
-						}
-					}
-				});
-			}
-			else if (action.equals("unsubscribeFromTopic")) {
-				cordova.getThreadPool().execute(new Runnable() {
-					public void run() {
-						try{
-							FirebaseMessaging.getInstance().unsubscribeFromTopic( args.getString(0) );
-							callbackContext.success();
-						}catch(Exception e){
-							callbackContext.error(e.getMessage());
-						}
-					}
-				});
-			}
-			else{
-				callbackContext.error("Method not found");
-				return false;
-			}
-		}catch(Exception e){
-			Log.d(TAG, "ERROR: onPluginAction: " + e.getMessage());
-			callbackContext.error(e.getMessage());
-			return false;
-		}
-		
-		//cordova.getThreadPool().execute(new Runnable() {
-		//	public void run() {
-		//	  //
-		//	}
-		//});
-		
-		//cordova.getActivity().runOnUiThread(new Runnable() {
-        //    public void run() {
-        //      //
-        //    }
-        //});
-		return true;
-	}
-
-	public void registerNotification(CallbackContext callbackContext) {
-		if(lastPush != null) FCMPlugin.sendPushPayload( lastPush );
-		lastPush = null;
-		callbackContext.success();
-	}
+    public void registerNotification(CallbackContext callbackContext) {
+        if (lastPush != null) FCMPlugin.sendPushPayload(lastPush);
+        lastPush = null;
+        callbackContext.success();
+    }
 
 	public void registerNotification(OnFinishedListener<JSONObject> callback) {
-
-		notificationFn = callback;
-		if(lastPush != null) FCMPlugin.sendPushPayload( lastPush );
-		lastPush = null;
-	}
+        notificationFn = callback;
+        if (lastPush != null) FCMPlugin.sendPushPayload(lastPush);
+        lastPush = null;
+    }
 
 	public void onNotification(OnFinishedListener<JSONObject> callback) {
-		this.registerNotification(callback);
-	}
+        this.registerNotification(callback);
+    }
 
-	public void getToken(final TokenListeners callback) {
-		try{
-
+    public void getToken(final TokenListeners callback) {
+        try {
 			FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-				@Override
+                @Override
 				public void onComplete(@NonNull Task<InstanceIdResult> task) {
-					if (!task.isSuccessful()) {
-						Log.w(TAG, "getInstanceId failed", task.getException());
-						callback.error(task.getException().getMessage());
-						return;
-					}
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        callback.error(task.getException().getMessage());
+                        return;
+                    }
 
-					// Get new Instance ID token
-					String newToken = task.getResult().getToken();
+                    // Get new Instance ID token
+                    String newToken = task.getResult().getToken();
 
-					Log.i(TAG,"\tToken: "+ newToken);
-					callback.success(newToken);
-				}
-			});
+                    Log.i(TAG, "\tToken: " + newToken);
+                    callback.success(newToken);
+                }
+            });
 
-			FirebaseInstanceId.getInstance().getInstanceId().addOnFailureListener(new OnFailureListener() {
-				@Override
-				public void onFailure(@NonNull final Exception e) {
-					try {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull final Exception e) {
+                    try {
 
-						JSONObject error = new JSONObject(){{
-							put("message", e.getMessage());
-							put("cause", e.getClass().getName());
-							put("stacktrace", e.getStackTrace().toString());
-						}};
+                        JSONObject error = new JSONObject() {
+                            {
+                                put("message", e.getMessage());
+                                put("cause", e.getClass().getName());
+                                put("stacktrace", e.getStackTrace().toString());
+                            }
+                        };
 
-						Log.e(TAG,"Error retrieving token: ", e);
-						callback.error(error);
-					} catch (JSONException jsonErr) {
-						callback.error(jsonErr.getMessage());
-					}
-				}
-			});
-		}catch(Exception e){
-			Log.d(TAG,"\tError retrieving token", e);
-		}
-	}
+                        Log.e(TAG, "Error retrieving token: ", e);
+                        callback.error(error);
+                    } catch (JSONException jsonErr) {
+                        callback.error(jsonErr.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.d(TAG, "\tError retrieving token", e);
+        }
+    }
 
-	public void getToken(final CallbackContext callbackContext) {
-
+    public void getToken(final CallbackContext callbackContext) {
 		this.getToken(new TokenListeners<String, JSONObject>() {
-			@Override
-			public void success(String message) {
-				callbackContext.success(message);
-			}
+            @Override
+            public void success(String message) {
+                callbackContext.success(message);
+            }
 
-			@Override
-			public void error(JSONObject message) {
-				callbackContext.error(message);
-			}
-		});
-	}
+            @Override
+            public void error(JSONObject message) {
+                callbackContext.error(message);
+            }
+        });
+    }
 
 	public static void sendPushPayload(Map<String, Object> payload) {
-		Log.d(TAG, "==> FCMPlugin sendPushPayload");
-		Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);
-		Log.d(TAG, "\tgWebView: " + gWebView);
-	    try {
-		    JSONObject jo = new JSONObject();
+        Log.d(TAG, "==> FCMPlugin sendPushPayload");
+        Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);
+        Log.d(TAG, "\tgWebView: " + gWebView);
+        try {
+            JSONObject jo = new JSONObject();
 			for (String key : payload.keySet()) {
-			    jo.put(key, payload.get(key));
-				Log.d(TAG, "\tpayload: " + key + " => " + payload.get(key));
+                jo.put(key, payload.get(key));
+                Log.d(TAG, "\tpayload: " + key + " => " + payload.get(key));
             }
-			String callBack = "javascript:" + notificationCallBack + "(" + jo.toString() + ")";
-			if(notificationCallBackReady && gWebView != null){
-				Log.d(TAG, "\tSent PUSH to view: " + callBack);
-				gWebView.sendJavascript(callBack);
-			}else {
-				Log.d(TAG, "\tView not ready. SAVED NOTIFICATION: " + callBack);
-				if (notificationFn != null) {
-					notificationFn.success(jo);
-					Log.i(TAG, "\tCalled java callback to get notification: with data:" + jo.toString());
-				}
+            String callBack = "javascript:" + notificationCallBack + "(" + jo.toString() + ")";
+            if (notificationCallBackReady && gWebView != null) {
+                Log.d(TAG, "\tSent PUSH to view: " + callBack);
+                gWebView.sendJavascript(callBack);
+            } else {
+                Log.d(TAG, "\tView not ready. SAVED NOTIFICATION: " + callBack);
+                if (notificationFn != null) {
+                    notificationFn.success(jo);
+                    Log.i(TAG, "\tCalled java callback to get notification: with data:" + jo.toString());
+                }
 
-				lastPush = payload;
-			}
-		} catch (Exception e) {
-			Log.d(TAG, "\tERROR sendPushToView. SAVED NOTIFICATION: " + e.getMessage());
-			lastPush = payload;
-		}
-	}
+                lastPush = payload;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "\tERROR sendPushToView. SAVED NOTIFICATION: " + e.getMessage());
+            lastPush = payload;
+        }
+    }
 
-	public static void sendTokenRefresh(String token) {
-		Log.d(TAG, "==> FCMPlugin sendRefreshToken");
-	  try {
-			String callBack = "javascript:" + tokenRefreshCallBack + "('" + token + "')";
-			gWebView.sendJavascript(callBack);
-		} catch (Exception e) {
-			Log.d(TAG, "\tERROR sendRefreshToken: " + e.getMessage());
-		}
-	}
-  
-  	@Override
-	public void onDestroy() {
-		gWebView = null;
-		notificationCallBackReady = false;
-	}
+    public static void sendTokenRefresh(String token) {
+        Log.d(TAG, "==> FCMPlugin sendRefreshToken");
+        try {
+            String callBack = "javascript:" + tokenRefreshCallBack + "('" + token + "')";
+            gWebView.sendJavascript(callBack);
+        } catch (Exception e) {
+            Log.d(TAG, "\tERROR sendRefreshToken: " + e.getMessage());
+        }
+    }
 
-	protected Context getContext() {
-		context = cordova != null ? cordova.getActivity().getBaseContext() : context;
-		if (context == null) {
-			throw new RuntimeException("The Android Context is required. Verify if the 'activity' or 'context' are passed by constructor");
-		}
+    @Override
+    public void onDestroy() {
+        gWebView = null;
+        notificationCallBackReady = false;
+    }
 
-		return context;
-	}
-} 
+    protected Context getContext() {
+        context = cordova != null ? cordova.getActivity().getBaseContext() : context;
+        if (context == null) {
+            throw new RuntimeException("The Android Context is required. Verify if the 'activity' or 'context' are passed by constructor");
+        }
+
+        return context;
+    }
+}

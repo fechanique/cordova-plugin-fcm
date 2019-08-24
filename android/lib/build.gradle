@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group 'com.github.SerproLivre'
+group 'com.github.andrehtissot'
 def hasBuildExtras = file('../../src/android/FCMPlugin.gradle').exists()
 if(hasBuildExtras) {
     apply from: '../../src/android/FCMPlugin.gradle'
@@ -63,6 +62,4 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    implementation 'com.github.mfdeveloper:cordova-android:7.1.1'
 }
