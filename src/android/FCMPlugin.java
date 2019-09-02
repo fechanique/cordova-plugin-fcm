@@ -4,6 +4,7 @@ import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaInterface;
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -34,12 +35,19 @@ public class FCMPlugin extends CordovaPlugin {
 	public FCMPlugin() {}
 	
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+                final Context context = cordova.getActivity().getApplicationContext();
 		super.initialize(cordova, webView);
 		gWebView = webView;
 		Log.d(TAG, "==> FCMPlugin initialize");
 		FirebaseMessaging.getInstance().subscribeToTopic("android");
 		FirebaseMessaging.getInstance().subscribeToTopic("all");
-	}
+                cordova.getThreadPool().execute(new Runnable() {
+                  public void run() {
+                    Log.d(TAG, "Starting Analytics");
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                  }
+                });
+        }
 	 
 	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
@@ -94,6 +102,42 @@ public class FCMPlugin extends CordovaPlugin {
 					public void run() {
 						try{
 							FirebaseMessaging.getInstance().unsubscribeFromTopic( args.getString(0) );
+							callbackContext.success();
+						}catch(Exception e){
+							callbackContext.error(e.getMessage());
+						}
+					}
+				});
+			}
+                        else if (action.equals("logEvent")) {
+				cordova.getThreadPool().execute(new Runnable() {
+					public void run() {
+						try{
+                                                  logEvent(callbackContext, args.getString(0), args.getJSONObject(1));
+							callbackContext.success();
+						}catch(Exception e){
+							callbackContext.error(e.getMessage());
+						}
+					}
+				});
+                        }
+                        else if (action.equals("setUserId")) {
+				cordova.getThreadPool().execute(new Runnable() {
+					public void run() {
+						try{
+                                                  setUserId(callbackContext, args.getString(0));
+							callbackContext.success();
+						}catch(Exception e){
+							callbackContext.error(e.getMessage());
+						}
+					}
+				});
+			}
+                        else if (action.equals("setUserProperty")) {
+				cordova.getThreadPool().execute(new Runnable() {
+					public void run() {
+						try{
+                                                  setUserProperty(callbackContext, args.getString(0), args.getString(1));
 							callbackContext.success();
 						}catch(Exception e){
 							callbackContext.error(e.getMessage());

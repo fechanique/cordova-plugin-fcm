@@ -1,6 +1,9 @@
 # Google Firebase Cloud Messaging Cordova Push Plugin
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
+#### Version 4.1.3 (09/02/2019)
+- Fix Analytic issues on Android devices.
+
 #### Version 4.1.2 (08/19/2019)
 - Adds Google Analytics Events Tracking support (Android API level 27+).
 - Fix builder on development mode for Android.
@@ -37,8 +40,7 @@ Put the downloaded file 'google-services.json' in the Cordova project root folde
 
 You will need to ensure that you have installed the appropiate Android SDK libraries.
 
-
-:warning: For Android >5.0 status bar icon, you must include transparent solid color icon with name 'fcm_push_icon.png' in the 'res' folder in the same way you add the other application icons.
+For Android >5.0 status bar icon, you must include transparent solid color icon with name `fcm_push_icon.png` in the 'res' folder in the same way you add the other application icons.
 If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android >5.0.
 
 #### iOS compilation details
@@ -46,7 +48,7 @@ Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root f
 
 ## Usage
 
-:warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
+It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.
 
 #### Receiving Token Refresh
 
@@ -130,6 +132,7 @@ Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server
 //priority: must be set to "high" for delivering notifications on closed iOS apps
 //restricted_package_name: optional field if you want to send only to a restricted app package (i.e: com.myapp.test)
 ```
+
 ## How it works
 Send a push notification to a single device or topic.
 - 1.a Application is in foreground:

@@ -1,4 +1,4 @@
-package org.apache.cordova.firebase;
+package com.gae.scaffolder.plugin;
 
 import android.util.Log;
 
@@ -19,5 +19,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     // Get updated InstanceID token.
     String refreshedToken = FirebaseInstanceId.getInstance().getToken();
     Log.d(TAG, "Refreshed token: " + refreshedToken);
+
+    FCMPlugin.sendTokenRefresh(refreshedToken);
   }
 }
