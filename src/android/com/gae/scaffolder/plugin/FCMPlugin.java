@@ -28,10 +28,10 @@ public class FCMPlugin extends CordovaPlugin {
     public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
     public static String tokenRefreshCallBack = "FCMPlugin.onTokenRefreshReceived";
     public static Boolean notificationCallBackReady = false;
-	public static Map<String, Object> lastPush = null;
+    public static Map<String, Object> lastPush = null;
 
-	protected Context context = null;
-	protected static OnFinishedListener<JSONObject> notificationFn = null;
+    protected Context context = null;
+    protected static OnFinishedListener<JSONObject> notificationFn = null;
     private static final String TAG = "FCMPlugin";
     private static CordovaPlugin instance = null;
 
@@ -145,24 +145,29 @@ public class FCMPlugin extends CordovaPlugin {
         callbackContext.success();
     }
 
-	public void registerNotification(OnFinishedListener<JSONObject> callback) {
+    public void registerNotification(OnFinishedListener<JSONObject> callback) {
         notificationFn = callback;
         if (lastPush != null) FCMPlugin.sendPushPayload(lastPush);
         lastPush = null;
     }
 
-	public void onNotification(OnFinishedListener<JSONObject> callback) {
+    public void onNotification(OnFinishedListener<JSONObject> callback) {
         this.registerNotification(callback);
     }
 
-    public void getToken(final TokenListeners callback) {
+    public void getToken(final TokenListeners<String, JSONObject> callback) {
         try {
-			FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                 @Override
-				public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
                     if (!task.isSuccessful()) {
                         Log.w(TAG, "getInstanceId failed", task.getException());
-                        callback.error(task.getException().getMessage());
+                        try {
+                            callback.error(exceptionToJson(task.getException()));
+                        }
+                        catch (JSONException jsonErr) {
+                            Log.e(TAG, "Error when parsing json", jsonErr);
+                        }
                         return;
                     }
 
@@ -178,19 +183,10 @@ public class FCMPlugin extends CordovaPlugin {
                 @Override
                 public void onFailure(@NonNull final Exception e) {
                     try {
-
-                        JSONObject error = new JSONObject() {
-                            {
-                                put("message", e.getMessage());
-                                put("cause", e.getClass().getName());
-                                put("stacktrace", e.getStackTrace().toString());
-                            }
-                        };
-
                         Log.e(TAG, "Error retrieving token: ", e);
-                        callback.error(error);
+                        callback.error(exceptionToJson(e));
                     } catch (JSONException jsonErr) {
-                        callback.error(jsonErr.getMessage());
+                        Log.e(TAG, "Error when parsing json", jsonErr);
                     }
                 }
             });
@@ -199,8 +195,18 @@ public class FCMPlugin extends CordovaPlugin {
         }
     }
 
+    private JSONObject exceptionToJson(Exception exception) throws JSONException {
+        return new JSONObject() {
+            {
+                put("message", exception.getMessage());
+                put("cause", exception.getClass().getName());
+                put("stacktrace", exception.getStackTrace().toString());
+            }
+        };
+    }
+
     public void getToken(final CallbackContext callbackContext) {
-		this.getToken(new TokenListeners<String, JSONObject>() {
+        this.getToken(new TokenListeners<String, JSONObject>() {
             @Override
             public void success(String message) {
                 callbackContext.success(message);
@@ -213,13 +219,13 @@ public class FCMPlugin extends CordovaPlugin {
         });
     }
 
-	public static void sendPushPayload(Map<String, Object> payload) {
+    public static void sendPushPayload(Map<String, Object> payload) {
         Log.d(TAG, "==> FCMPlugin sendPushPayload");
         Log.d(TAG, "\tnotificationCallBackReady: " + notificationCallBackReady);
         Log.d(TAG, "\tgWebView: " + gWebView);
         try {
             JSONObject jo = new JSONObject();
-			for (String key : payload.keySet()) {
+            for (String key : payload.keySet()) {
                 jo.put(key, payload.get(key));
                 Log.d(TAG, "\tpayload: " + key + " => " + payload.get(key));
             }

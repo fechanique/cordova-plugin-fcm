@@ -3,8 +3,8 @@ def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.hasProperty("FCM_V
 
 buildscript {
     ext {
-        GRADLE_TOOLS_VERSION = System.getenv("GRADLE_TOOLS_VERSION") ?: rootProject.hasProperty("GRADLE_TOOLS_VERSION") ? rootProject.ext.GRADLE_TOOLS_VERSION : '2.3.+'
-        GOOGLE_SERVICES_VERSION = System.getenv("GOOGLE_SERVICES_VERSION") ?: rootProject.hasProperty("GOOGLE_SERVICES_VERSION") ? rootProject.ext.GOOGLE_SERVICES_VERSION : '3.0.0'
+        GRADLE_TOOLS_VERSION = System.getenv("GRADLE_TOOLS_VERSION") ?: rootProject.hasProperty("GRADLE_TOOLS_VERSION") ? rootProject.ext.GRADLE_TOOLS_VERSION : '3.5.0'
+        GOOGLE_SERVICES_VERSION = System.getenv("GOOGLE_SERVICES_VERSION") ?: rootProject.hasProperty("GOOGLE_SERVICES_VERSION") ? rootProject.ext.GOOGLE_SERVICES_VERSION : '4.2.0'
 
         ext.gradleNumberVersion = GRADLE_TOOLS_VERSION.substring(0, GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
     }
