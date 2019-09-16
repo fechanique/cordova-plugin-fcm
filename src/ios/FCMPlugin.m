@@ -1,8 +1,7 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
-
 #import "AppDelegate+FCMPlugin.h"
-
+#import <UserNotifications/UserNotifications.h>
 #import <Cordova/CDV.h>
 #import "FCMPlugin.h"
 #import "Firebase.h"
@@ -35,6 +34,33 @@ static FCMPlugin *fcmPluginInstance;
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
     
+}
+
+// HAS PERMISSION //
+- (void) hasPermission:(CDVInvokedUrlCommand *)command
+{
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    __block CDVPluginResult *commandResult;
+    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings){
+        switch (settings.authorizationStatus) {
+            case UNAuthorizationStatusAuthorized: {
+                NSLog(@"has push permission: true");
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+                break;
+            }
+            case UNAuthorizationStatusDenied: {
+                NSLog(@"has push permission: false");
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
+                break;
+            }
+            default: {
+                NSLog(@"has push permission: unknown");
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                break;
+            }
+        }
+        [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+    }];
 }
 
 // GET TOKEN //
