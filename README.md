@@ -11,12 +11,26 @@
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
 ## Authorship
-This is a fork from https://github.com/fechanique/cordova-plugin-fcm with behind-the-scenes improvements.
+This is a fork from https://github.com/fechanique/cordova-plugin-fcm with improvements.
 
 This fork has its google and firebase dependencies versions defined, which is necessary to avoid cordova build errors.
 
+### Version 3.2.0 (16/09/2019)
+#### Checking for permissions
+Useful for IOS. On android, it will always return `true`.
 
-#### Version 2.1.2 (03/06/2017)
+```javascript
+FCMPlugin.hasPermission(function(doesIt){
+    // doesIt === true => yes, push was allowed
+    // doesIt === false => nope, push will not be available
+    // doesIt === null => still not answered, recommended checking again later
+    if(doesIt) {
+        haveFun();
+    }
+});
+```
+
+### Version 2.1.2 (03/06/2017)
 - Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
 - Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
@@ -29,10 +43,10 @@ Make sure you have ‘google-services.json’ for Android or  ‘GoogleService-I
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 ```
 
-#### Firebase configuration files
+### Firebase configuration files
 Get the needed configuration files for Android or iOS from the Firebase Console (see docs: https://firebase.google.com/docs/).
 
-#### Android compilation details
+### Android compilation details
 Put the downloaded file 'google-services.json' in the Cordova project root folder.
 
 You will need to ensure that you have installed the appropiate Android SDK libraries.
@@ -40,7 +54,7 @@ You will need to ensure that you have installed the appropiate Android SDK libra
 :warning: For Android >5.0 status bar icon, you must include transparent solid color icon with name 'fcm_push_icon.png' in the 'res' folder in the same way you add the other application icons.
 If you do not set this resource, then the SDK will use the default icon for your app which may not meet the standards for Android >5.0.
 
-#### iOS compilation details
+### iOS compilation details
 Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root folder.
 
 ## Usage
@@ -48,7 +62,7 @@ Put the downloaded file 'GoogleService-Info.plist' in the Cordova project root f
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
 You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
-#### Receiving Token Refresh
+### Receiving Token Refresh
 
 ```javascript
 //FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
@@ -58,7 +72,7 @@ FCMPlugin.onTokenRefresh(function(token){
 });
 ```
 
-#### Get token
+### Get token
 
 ```javascript
 //FCMPlugin.getToken( successCallback(token), errorCallback(err) );
@@ -68,7 +82,7 @@ FCMPlugin.getToken(function(token){
 });
 ```
 
-#### Subscribe to topic
+### Subscribe to topic
 
 ```javascript
 //FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
@@ -77,14 +91,14 @@ FCMPlugin.getToken(function(token){
 FCMPlugin.subscribeToTopic('topicExample');
 ```
 
-#### Unsubscribe from topic
+### Unsubscribe from topic
 
 ```javascript
 //FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
 FCMPlugin.unsubscribeFromTopic('topicExample');
 ```
 
-#### Receiving push notification data
+### Receiving push notification data
 
 ```javascript
 //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
@@ -100,7 +114,7 @@ FCMPlugin.onNotification(function(data){
 });
 ```
 
-#### Send notification. Payload example (REST API)
+### Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
