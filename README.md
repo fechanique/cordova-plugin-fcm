@@ -2,6 +2,7 @@
 > Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
 
 [![npm downloads](https://img.shields.io/npm/dt/cordova-plugin-fcm-with-dependecy-updated.svg)](https://www.npmjs.com/package/cordova-plugin-fcm-with-dependecy-updated)
+[![npm per month](https://img.shields.io/npm/dm/cordova-plugin-fcm-with-dependecy-updated.svg)](https://www.npmjs.com/package/cordova-plugin-fcm-with-dependecy-updated)
 [![npm version](https://img.shields.io/npm/v/cordova-plugin-fcm-with-dependecy-updated.svg)](https://www.npmjs.com/package/cordova-plugin-fcm-with-dependecy-updated)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![GitHub issues](https://img.shields.io/github/issues/andrehtissot/cordova-plugin-fcm-with-dependecy-updated.svg)](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues)
