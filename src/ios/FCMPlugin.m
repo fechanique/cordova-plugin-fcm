@@ -16,6 +16,7 @@ static BOOL appInForeground = YES;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
+static NSString *fcmToken = nil;
 static FCMPlugin *fcmPluginInstance;
 
 + (FCMPlugin *) fcmPlugin {
@@ -68,9 +69,8 @@ static FCMPlugin *fcmPluginInstance;
 {
     NSLog(@"get Token");
     [self.commandDelegate runInBackground:^{
-        NSString* token = [[FIRInstanceID instanceID] token];
         CDVPluginResult* pluginResult = nil;
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:token];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:fcmToken];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }
@@ -132,6 +132,7 @@ static FCMPlugin *fcmPluginInstance;
 {
     NSString * notifyJS = [NSString stringWithFormat:@"%@('%@');", tokenRefreshCallback, token];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
+    fcmToken = token;
     
     if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
         [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];

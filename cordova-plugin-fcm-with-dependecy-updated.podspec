@@ -26,7 +26,7 @@ Pod::Spec.new do |spec|
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   spec.description  = <<-DESC
   Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
-                   DESC
+DESC
 
   spec.homepage     = "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
@@ -120,16 +120,6 @@ Pod::Spec.new do |spec|
   #
 
   spec.frameworks  = "AddressBook", "Security", "UIKit"
-  spec.vendored_frameworks = [
-    "src/ios/firebase/FirebaseAnalytics.framework",
-    "src/ios/firebase/FirebaseCore.framework",
-    "src/ios/firebase/FirebaseInstanceID.framework",
-    "src/ios/firebase/FirebaseMessaging.framework",
-    "src/ios/firebase/GoogleInterchangeUtilities.framework",
-    "src/ios/firebase/GoogleIPhoneUtilities.framework",
-    "src/ios/firebase/GoogleSymbolUtilities.framework",
-    "src/ios/firebase/GoogleUtilities.framework"
-  ]
   # spec.framework  = "SomeFramework"
   # spec.frameworks = "SomeFramework", "AnotherFramework"
 
@@ -150,7 +140,7 @@ Pod::Spec.new do |spec|
   spec.dependency "Cordova", ">= 3.0.0"
 
   # TODO: Migrate to use Core cocoapods Firebase dependencies
-  # spec.dependency "Firebase/Core"
-  # spec.dependency "Firebase/Messaging"
+  spec.dependency 'Firebase/Analytics', '~> 6.3.0'
+  spec.dependency 'Firebase/Messaging', '~> 6.3.0'
 
 end
