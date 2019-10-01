@@ -43,6 +43,10 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
     NSLog(@"DidFinishLaunchingWithOptions");
  
+    // [START configure_firebase]
+    [FIRApp configure];
+    // [END configure_firebase]
+    
     // iOS 9 or earlier Disable the deprecation warnings.
     // [START register_for_notifications]
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
@@ -57,12 +61,8 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     } else {
         // iOS 10 or later
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-        UNAuthorizationOptions authOptions =
-        UNAuthorizationOptionAlert
-        | UNAuthorizationOptionSound
-        | UNAuthorizationOptionBadge;
-        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        }];
+        UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
         
         // For iOS 10 display notification (sent via APNS)
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;
@@ -70,13 +70,9 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
         [FIRMessaging messaging].delegate = self;
 #endif
     }
-    
+
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     // [END register_for_notifications]
-
-    // [START configure_firebase]
-    [FIRApp configure];
-    // [END configure_firebase]
     return YES;
 }
 
@@ -223,7 +219,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:deviceToken forKey:@"token"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FCMToken" object:nil userInfo:dataDict];
     fcmToken = deviceToken;
-    [FCMPlugin.fcmPlugin notifyOfTokenRefresh:deviceToken];
+    [FCMPlugin notifyOfInitialToken:deviceToken];
     [self connectToFcm];
 }
 // [END refresh_token]
@@ -240,8 +236,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 
     [[FIRMessaging messaging] setShouldEstablishDirectChannel:YES];
 
-    [[FIRMessaging messaging] subscribeToTopic:@"/topics/ios"];
-    [[FIRMessaging messaging] subscribeToTopic:@"/topics/all"];
+    [[FIRMessaging messaging] subscribeToTopic:@"ios"];
+    [[FIRMessaging messaging] subscribeToTopic:@"all"];
 }
 // [END connect_to_fcm]
 

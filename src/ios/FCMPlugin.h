@@ -7,6 +7,7 @@
 }
 
 + (FCMPlugin *) fcmPlugin;
++ (void)notifyOfInitialToken:(NSString*) token;
 - (void)ready:(CDVInvokedUrlCommand*)command;
 - (void)hasPermission:(CDVInvokedUrlCommand*)command;
 - (void)getToken:(CDVInvokedUrlCommand*)command;

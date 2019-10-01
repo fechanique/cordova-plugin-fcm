@@ -20,8 +20,13 @@ static NSString *fcmToken = nil;
 static FCMPlugin *fcmPluginInstance;
 
 + (FCMPlugin *) fcmPlugin {
-    
     return fcmPluginInstance;
+}
+
++ (void) notifyOfInitialToken:(NSString *)token
+{
+    NSLog(@"notifyOfInitialToken token: %@", token);
+    fcmToken = token;
 }
 
 - (void) ready:(CDVInvokedUrlCommand *)command
@@ -81,7 +86,7 @@ static FCMPlugin *fcmPluginInstance;
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"subscribe To Topic %@", topic);
     [self.commandDelegate runInBackground:^{
-        if(topic != nil)[[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/%@", topic]];
+        if(topic != nil)[[FIRMessaging messaging] subscribeToTopic:topic];
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -93,7 +98,7 @@ static FCMPlugin *fcmPluginInstance;
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"unsubscribe From Topic %@", topic);
     [self.commandDelegate runInBackground:^{
-        if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:[NSString stringWithFormat:@"/topics/%@", topic]];
+        if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:topic];
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
