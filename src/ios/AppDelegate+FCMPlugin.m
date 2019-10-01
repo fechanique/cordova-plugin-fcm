@@ -44,7 +44,9 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     NSLog(@"DidFinishLaunchingWithOptions");
  
     // [START configure_firebase]
-    [FIRApp configure];
+    if([FIRApp defaultApp] == nil) {
+        [FIRApp configure];
+    }
     // [END configure_firebase]
     
     // iOS 9 or earlier Disable the deprecation warnings.
