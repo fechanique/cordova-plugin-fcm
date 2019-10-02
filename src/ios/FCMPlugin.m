@@ -16,6 +16,7 @@ static BOOL appInForeground = YES;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
+static NSString *apnsToken = nil;
 static NSString *fcmToken = nil;
 static FCMPlugin *fcmPluginInstance;
 
@@ -23,9 +24,15 @@ static FCMPlugin *fcmPluginInstance;
     return fcmPluginInstance;
 }
 
-+ (void) notifyOfInitialToken:(NSString *)token
++ (void) setInitialAPNSToken:(NSString *)token
 {
-    NSLog(@"notifyOfInitialToken token: %@", token);
+    NSLog(@"setInitialAPNSToken token: %@", token);
+    apnsToken = token;
+}
+
++ (void) setInitialFCMToken:(NSString *)token
+{
+    NSLog(@"setInitialFCMToken token: %@", token);
     fcmToken = token;
 }
 
@@ -34,12 +41,10 @@ static FCMPlugin *fcmPluginInstance;
     NSLog(@"Cordova view ready");
     fcmPluginInstance = self;
     [self.commandDelegate runInBackground:^{
-        
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-    
 }
 
 // HAS PERMISSION //
@@ -76,6 +81,17 @@ static FCMPlugin *fcmPluginInstance;
     [self.commandDelegate runInBackground:^{
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:fcmToken];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+// GET APNS TOKEN //
+- (void) getAPNSToken:(CDVInvokedUrlCommand *)command 
+{
+    NSLog(@"get APNS Token");
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult* pluginResult = nil;
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:apnsToken];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }
@@ -133,11 +149,12 @@ static FCMPlugin *fcmPluginInstance;
     }
 }
 
--(void) notifyOfTokenRefresh:(NSString *)token
+-(void) notifyFCMTokenRefresh:(NSString *)token
 {
+    NSLog(@"notifyFCMTokenRefresh token: %@", token);
+    fcmToken = token;
     NSString * notifyJS = [NSString stringWithFormat:@"%@('%@');", tokenRefreshCallback, token];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
-    fcmToken = token;
     
     if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
         [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
