@@ -12,9 +12,7 @@
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
 ## Authorship
-This is a fork from https://github.com/fechanique/cordova-plugin-fcm with improvements.
-
-This fork has its dependencies versions upgraded and newer features.
+This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has dependencies versions upgraded, jitpack and cocoapods support, and newer features.
 
 ### Version 4.0.0 (12/10/2019)
 The old `FCMPlugin.getToken` is focused on retrieving the FCM Token.
