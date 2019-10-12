@@ -16,7 +16,7 @@ This is a fork from https://github.com/fechanique/cordova-plugin-fcm with improv
 
 This fork has its google and firebase dependencies versions defined, which is necessary to avoid cordova build errors.
 
-### Version 4.0.0 (__/10/2019)
+### Version 4.0.0 (12/10/2019)
 The old `FCMPlugin.getToken` is focused on retrieving the FCM Token.
 For the IOS, APNS token can now be retrieved by the new method:
 
