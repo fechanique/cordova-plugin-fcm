@@ -14,7 +14,7 @@
 ## Authorship
 This is a fork from https://github.com/fechanique/cordova-plugin-fcm with improvements.
 
-This fork has its google and firebase dependencies versions defined, which is necessary to avoid cordova build errors.
+This fork has its dependencies versions upgraded and newer features.
 
 ### Version 4.0.0 (12/10/2019)
 The old `FCMPlugin.getToken` is focused on retrieving the FCM Token.
