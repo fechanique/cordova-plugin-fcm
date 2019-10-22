@@ -31,6 +31,10 @@ FCMPlugin.getAPNSToken(
 
 On android, it will always return `null`.
 
+The APNS token, once given, should not change for the same user (as commented on in https://stackoverflow.com/questions/6652242/does-the-apns-device-token-ever-change-once-created).
+
+Although, contrary to APNS, the FCM tokens do expire, and for this reason, `FCMPlugin.onTokenRefresh` will be called with the new one FCM token.
+
 ### Version 3.2.0 (16/09/2019)
 #### Checking for permissions
 Useful for IOS. On android, it will always return `true`.
