@@ -1,4 +1,4 @@
-interface INotificationData {
+export interface INotificationData {
   wasTapped: boolean;
   notification?: {
     title?: string;
@@ -13,7 +13,7 @@ interface INotificationData {
   [others: string]: any;
 }
 
-interface FCMPlugin {
+export interface FCMPlugin {
   hasPermission(
     onSuccess: (doesIt: boolean | null) => void,
     onError?: (error: Error) => void
