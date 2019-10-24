@@ -38,6 +38,11 @@ FCMPlugin.prototype.onTokenRefreshReceived = function(token){
 }
 
 // Analytics Plugin
+FCMPlugin.prototype.clearAllNotifications = function(success, error){
+  exec(success, error, 'FCMPlugin', 'clearAllNotifications', []);
+}
+
+// Analytics Plugin
 
 FCMPlugin.prototype.logEvent = function(eventName, eventParams, success, error){
   exec(success, error, 'FCMPlugin', 'logEvent', [eventName, eventParams || {}]);

@@ -4,6 +4,7 @@ import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaInterface;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.util.Log;
 
@@ -145,6 +146,18 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
+                        else if (action.equals("clearAllNotifications")) {
+				cordova.getThreadPool().execute(new Runnable() {
+					public void run() {
+						try{
+                                                  clearAllNotifications(callbackContext);
+							callbackContext.success();
+						}catch(Exception e){
+							callbackContext.error(e.getMessage());
+						}
+					}
+				});
+			}
 			else{
 				callbackContext.error("Method not found");
 				return false;
@@ -248,6 +261,21 @@ public class FCMPlugin extends CordovaPlugin {
             public void run() {
               try {
                 mFirebaseAnalytics.setUserProperty(name, value);
+                callbackContext.success();
+              } catch (Exception e) {
+                callbackContext.error(e.getMessage());
+              }
+            }
+          });
+        }
+
+        public void clearAllNotifications(final CallbackContext callbackContext) {
+          cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+              try {
+                Context context = cordova.getActivity();
+                NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                nm.cancelAll();
                 callbackContext.success();
               } catch (Exception e) {
                 callbackContext.error(e.getMessage());

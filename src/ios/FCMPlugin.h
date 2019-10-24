@@ -19,5 +19,6 @@
 - (void)logEvent:(CDVInvokedUrlCommand*)command;
 - (void)setUserId:(CDVInvokedUrlCommand*)command;
 - (void)setUserProperty:(CDVInvokedUrlCommand*)command;
+- (void)clearAllNotifications:(CDVInvokedUrlCommand*)command;
 
 @end
