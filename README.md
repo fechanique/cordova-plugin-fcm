@@ -14,6 +14,14 @@
 ## Authorship
 This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has dependencies versions upgraded, jitpack and cocoapods support, and newer features.
 
+### Version 4.1.0 (25/10/2019)
+
+With this version the older notifications can be cleared from notification center. Works both IOS / Android systems.
+
+```javascript
+FCMPlugin.clearAllNotifications();
+```
+
 ### Version 4.0.0 (12/10/2019)
 The old `FCMPlugin.getToken` is focused on retrieving the FCM Token.
 For the IOS, APNS token can now be retrieved by the new method:

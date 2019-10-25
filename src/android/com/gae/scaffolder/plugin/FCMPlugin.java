@@ -1,5 +1,6 @@
 package com.gae.scaffolder.plugin;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -120,6 +121,19 @@ public class FCMPlugin extends CordovaPlugin {
                     public void run() {
                         try {
                             FirebaseMessaging.getInstance().unsubscribeFromTopic(args.getString(0));
+                            callbackContext.success();
+                        } catch (Exception e) {
+                            callbackContext.error(e.getMessage());
+                        }
+                    }
+                });
+            } else if (action.equals("clearAllNotifications")) {
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try {
+                            Context context = cordova.getActivity();
+                            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                            nm.cancelAll();
                             callbackContext.success();
                         } catch (Exception e) {
                             callbackContext.error(e.getMessage());
