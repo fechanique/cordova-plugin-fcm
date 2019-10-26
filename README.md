@@ -17,7 +17,7 @@ This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has 
 ### Version 4.1.0 (26/10/2019)
 
 Older notifications can be cleared from notification center.
-Works both IOS and Android.
+Works on both IOS and Android.
 
 ```javascript
 //FCMPlugin.clearAllNotifications( successCallback(msg), errorCallback(err) );
