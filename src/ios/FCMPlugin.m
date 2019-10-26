@@ -100,9 +100,9 @@ static FCMPlugin *fcmPluginInstance;
 - (void)clearAllNotifications:(CDVInvokedUrlCommand *)command
 {
   [self.commandDelegate runInBackground:^{
+    NSLog(@"clear all notifications");
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
   }];
