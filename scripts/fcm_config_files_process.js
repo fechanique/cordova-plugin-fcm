@@ -21,7 +21,7 @@ var name = getValue(config, 'name');
 
 var IOS_DIR = 'platforms/ios';
 var ANDROID_DIR = 'platforms/android';
-var ANDROID_DIR_RES_VALUES_DIR = ANDROID_DIR + '/res/values';
+var ANDROID_DIR_RES_VALUES_DIR = ANDROID_DIR + '/app/src/main/res/values';
 
 var PLATFORM = {
     IOS: {
