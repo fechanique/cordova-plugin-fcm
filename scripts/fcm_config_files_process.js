@@ -21,6 +21,7 @@ var name = getValue(config, 'name');
 
 var IOS_DIR = 'platforms/ios';
 var ANDROID_DIR = 'platforms/android';
+var ANDROID_DIR_RES_VALUES_DIR = ANDROID_DIR + '/app/src/main/res/values';
 
 var PLATFORM = {
     IOS: {
@@ -36,14 +37,16 @@ var PLATFORM = {
     },
     ANDROID: {
         dest: [
-            ANDROID_DIR + '/google-services.json'
+            ANDROID_DIR + '/google-services.json',
+            ANDROID_DIR + '/app/google-services.json'
         ],
         src: [
-            'google-services.json',
+            ANDROID_DIR + '/google-services.json',
             ANDROID_DIR + '/assets/www/google-services.json',
-            'www/google-services.json'
+            'www/google-services.json',
+            'google-services.json'
         ],
-        stringsXml: ANDROID_DIR + '/res/values/strings.xml'
+        stringsXml: ANDROID_DIR_RES_VALUES_DIR + '/strings.xml'
     }
 };
 
@@ -56,6 +59,10 @@ if (directoryExists(ANDROID_DIR)) {
 }
 
 function updateStringsXml(contents) {
+    if(!directoryExists(ANDROID_DIR_RES_VALUES_DIR)) {
+        return;
+    }
+
     var json = JSON.parse(contents);
     var strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml).toString();
 
@@ -126,5 +133,16 @@ function directoryExists(path) {
         return fs.statSync(path).isDirectory();
     } catch (e) {
         return false;
+    }
+}
+
+function mkdir(path) {
+    var splittedPath = path.split('/'),
+        currentPath = ''
+    for(var i = 0; i < splittedPath.length; i++) {
+        currentPath += splittedPath[i] + '/'
+        if(!directoryExists(currentPath)) {
+            fs.mkdirSync(currentPath)
+        }
     }
 }
