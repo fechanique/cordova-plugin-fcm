@@ -175,10 +175,14 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenData {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+    NSString *deviceToken = [self hexadecimalStringFromData:deviceTokenData];
+#else
     NSString *deviceToken = [[[[deviceTokenData description]
-                                  stringByReplacingOccurrencesOfString: @"<" withString: @""]
-                                 stringByReplacingOccurrencesOfString: @">" withString: @""]
-                                stringByReplacingOccurrencesOfString: @" " withString: @""];
+        stringByReplacingOccurrencesOfString:@"<"withString:@""]
+        stringByReplacingOccurrencesOfString:@">" withString:@""]
+        stringByReplacingOccurrencesOfString: @" " withString: @""];
+#endif
     apnsToken = deviceToken;
     [FCMPlugin setInitialAPNSToken:deviceToken];
     NSLog(@"Device APNS Token: %@", deviceToken);
@@ -278,6 +282,21 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     NSData* returnValue = lastPush;
     lastPush = nil;
     return returnValue;
+}
+
+- (NSString *)hexadecimalStringFromData:(NSData *)data
+{
+    NSUInteger dataLength = data.length;
+    if (dataLength == 0) {
+        return nil;
+    }
+
+    const unsigned char *dataBuffer = data.bytes;
+    NSMutableString *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+    for (int i = 0; i < dataLength; ++i) {
+        [hexString appendFormat:@"%02x", dataBuffer[i]];
+    }
+    return [hexString copy];
 }
 
 
