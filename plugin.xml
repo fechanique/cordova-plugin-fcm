@@ -38,6 +38,7 @@
 		<preference name="FCM_VERSION" default="18.0.0" />
 		<preference name="GRADLE_TOOLS_VERSION" default="3.5.0" />
 		<preference name="GOOGLE_SERVICES_VERSION" default="4.2.0" />
+		<preference name="ANDROID_DEFAULT_NOTIFICATION_ICON" default="@mipmap/ic_launcher" />
 
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
@@ -53,6 +54,7 @@
 					<action android:name="com.google.firebase.MESSAGING_EVENT"/>
 				</intent-filter>
 			</service>
+			<meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="$ANDROID_DEFAULT_NOTIFICATION_ICON" />
 		</config-file>
 		<config-file target="res/xml/config.xml" parent="/*">
 			<feature name="FCMPlugin">
