@@ -4,9 +4,9 @@
 var fs = require('fs');
 var path = require('path');
 
-fs.ensureDirSync = function (dir) {
+fs.ensureDirSync = function(dir) {
     if (!fs.existsSync(dir)) {
-        dir.split(path.sep).reduce(function (currentPath, folder) {
+        dir.split(path.sep).reduce(function(currentPath, folder) {
             currentPath += folder + path.sep;
             if (!fs.existsSync(currentPath)) {
                 fs.mkdirSync(currentPath);
@@ -36,10 +36,7 @@ var PLATFORM = {
         ]
     },
     ANDROID: {
-        dest: [
-            ANDROID_DIR + '/google-services.json',
-            ANDROID_DIR + '/app/google-services.json'
-        ],
+        dest: [ANDROID_DIR + '/google-services.json', ANDROID_DIR + '/app/google-services.json'],
         src: [
             ANDROID_DIR + '/google-services.json',
             ANDROID_DIR + '/assets/www/google-services.json',
@@ -55,11 +52,11 @@ if (directoryExists(IOS_DIR)) {
     copyKey(PLATFORM.IOS);
 }
 if (directoryExists(ANDROID_DIR)) {
-    copyKey(PLATFORM.ANDROID, updateStringsXml)
+    copyKey(PLATFORM.ANDROID, updateStringsXml);
 }
 
 function updateStringsXml(contents) {
-    if(!directoryExists(ANDROID_DIR_RES_VALUES_DIR)) {
+    if (!directoryExists(ANDROID_DIR_RES_VALUES_DIR)) {
         return;
     }
 
@@ -67,19 +64,31 @@ function updateStringsXml(contents) {
     var strings = fs.readFileSync(PLATFORM.ANDROID.stringsXml).toString();
 
     // strip non-default value
-    strings = strings.replace(new RegExp('<string name="google_app_id">([^\@<]+?)</string>', 'i'), '');
+    strings = strings.replace(
+        new RegExp('<string name="google_app_id">([^@<]+?)</string>', 'i'),
+        ''
+    );
 
     // strip non-default value
-    strings = strings.replace(new RegExp('<string name="google_api_key">([^\@<]+?)</string>', 'i'), '');
+    strings = strings.replace(
+        new RegExp('<string name="google_api_key">([^@<]+?)</string>', 'i'),
+        ''
+    );
 
     // strip empty lines
     strings = strings.replace(new RegExp('(\r\n|\n|\r)[ \t]*(\r\n|\n|\r)', 'gm'), '$1');
 
     // replace the default value
-    strings = strings.replace(new RegExp('<string name="google_app_id">([^<]+?)</string>', 'i'), '<string name="google_app_id">' + json.client[0].client_info.mobilesdk_app_id + '</string>');
+    strings = strings.replace(
+        new RegExp('<string name="google_app_id">([^<]+?)</string>', 'i'),
+        '<string name="google_app_id">' + json.client[0].client_info.mobilesdk_app_id + '</string>'
+    );
 
     // replace the default value
-    strings = strings.replace(new RegExp('<string name="google_api_key">([^<]+?)</string>', 'i'), '<string name="google_api_key">' + json.client[0].api_key[0].current_key + '</string>');
+    strings = strings.replace(
+        new RegExp('<string name="google_api_key">([^<]+?)</string>', 'i'),
+        '<string name="google_api_key">' + json.client[0].api_key[0].current_key + '</string>'
+    );
 
     fs.writeFileSync(PLATFORM.ANDROID.stringsXml, strings);
 }
@@ -92,7 +101,7 @@ function copyKey(platform, callback) {
                 var contents = fs.readFileSync(file).toString();
 
                 try {
-                    platform.dest.forEach(function (destinationPath) {
+                    platform.dest.forEach(function(destinationPath) {
                         var folder = destinationPath.substring(0, destinationPath.lastIndexOf('/'));
                         fs.ensureDirSync(folder);
                         fs.writeFileSync(destinationPath, contents);
@@ -103,7 +112,7 @@ function copyKey(platform, callback) {
 
                 callback && callback(contents);
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
 
             break;
@@ -114,9 +123,9 @@ function copyKey(platform, callback) {
 function getValue(config, name) {
     var value = config.match(new RegExp('<' + name + '>(.*?)</' + name + '>', 'i'));
     if (value && value[1]) {
-        return value[1]
+        return value[1];
     } else {
-        return null
+        return null;
     }
 }
 
@@ -133,16 +142,5 @@ function directoryExists(path) {
         return fs.statSync(path).isDirectory();
     } catch (e) {
         return false;
-    }
-}
-
-function mkdir(path) {
-    var splittedPath = path.split('/'),
-        currentPath = ''
-    for(var i = 0; i < splittedPath.length; i++) {
-        currentPath += splittedPath[i] + '/'
-        if(!directoryExists(currentPath)) {
-            fs.mkdirSync(currentPath)
-        }
     }
 }
