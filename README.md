@@ -11,8 +11,15 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
-## Authorship
-This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has dependencies versions upgraded, jitpack and cocoapods support, and newer features.
+### Version 4.2.0 (24/02/2020)
+
+`ANDROID_DEFAULT_NOTIFICATION_ICON` included as a variable.
+
+To define the default icon for notifications (`com.google.firebase.messaging.default_notification_icon`), install this plugin like:
+```bash
+cordova plugin add cordova-plugin-fcm-with-dependecy-updated --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
+```
+
 
 ### Version 4.1.0 (26/10/2019)
 
@@ -188,3 +195,7 @@ Send a push notification to a single device or topic.
   1. The device displays the notification message in the device notification bar.
   2. If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
   3. If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
+
+
+## Authorship
+This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has dependencies versions upgraded, jitpack and cocoapods support, and newer features.
