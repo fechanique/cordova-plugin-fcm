@@ -1,10 +1,10 @@
 def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: rootProject.hasProperty("FCM_CORE_VERSION") ? rootProject.ext.FCM_CORE_VERSION : '16.0.9'
-def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.hasProperty("FCM_VERSION") ? rootProject.ext.FCM_VERSION : '18.0.0'
+def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.hasProperty("FCM_VERSION") ? rootProject.ext.FCM_VERSION : '19.0.0'
 
 buildscript {
     ext {
-        GRADLE_TOOLS_VERSION = System.getenv("GRADLE_TOOLS_VERSION") ?: rootProject.hasProperty("GRADLE_TOOLS_VERSION") ? rootProject.ext.GRADLE_TOOLS_VERSION : '3.5.0'
-        GOOGLE_SERVICES_VERSION = System.getenv("GOOGLE_SERVICES_VERSION") ?: rootProject.hasProperty("GOOGLE_SERVICES_VERSION") ? rootProject.ext.GOOGLE_SERVICES_VERSION : '4.2.0'
+        GRADLE_TOOLS_VERSION = System.getenv("GRADLE_TOOLS_VERSION") ?: rootProject.hasProperty("GRADLE_TOOLS_VERSION") ? rootProject.ext.GRADLE_TOOLS_VERSION : '3.5.3'
+        GOOGLE_SERVICES_VERSION = System.getenv("GOOGLE_SERVICES_VERSION") ?: rootProject.hasProperty("GOOGLE_SERVICES_VERSION") ? rootProject.ext.GOOGLE_SERVICES_VERSION : '4.3.3'
 
         ext.gradleNumberVersion = GRADLE_TOOLS_VERSION.substring(0, GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
     }
