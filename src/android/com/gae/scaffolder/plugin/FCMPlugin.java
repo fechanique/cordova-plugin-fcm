@@ -2,7 +2,7 @@ package com.gae.scaffolder.plugin;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.gae.scaffolder.plugin.interfaces.OnFinishedListener;
@@ -205,7 +205,10 @@ public class FCMPlugin extends CordovaPlugin {
                 }
             });
         } catch (Exception e) {
-            Log.d(TAG, "\tError retrieving token", e);
+            Log.w(TAG, "\tError retrieving token", e);
+            try {
+                callback.error(exceptionToJson(e));
+            } catch(JSONException je) {}
         }
     }
 

@@ -1,4 +1,3 @@
-def FCM_CORE_VERSION = System.getenv("FCM_CORE_VERSION") ?: rootProject.hasProperty("FCM_CORE_VERSION") ? rootProject.ext.FCM_CORE_VERSION : '16.0.9'
 def FCM_VERSION = System.getenv("FCM_VERSION") ?: rootProject.hasProperty("FCM_VERSION") ? rootProject.ext.FCM_VERSION : '19.0.0'
 
 buildscript {
@@ -45,10 +44,8 @@ repositories {
 }
 dependencies {
     if (gradleNumberVersion >= 3.4f) {
-        implementation "com.google.firebase:firebase-core:${FCM_CORE_VERSION}"
         implementation "com.google.firebase:firebase-messaging:${FCM_VERSION}"
     } else {
-        compile "com.google.firebase:firebase-core:${FCM_CORE_VERSION}"
         compile "com.google.firebase:firebase-messaging:${FCM_VERSION}"
     }
 }
