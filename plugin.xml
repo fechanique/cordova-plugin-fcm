@@ -100,14 +100,14 @@
 
 		<!-- FIREBASE COCOA PODS-->
 		<podspec>
-                    <config>
-                        <source url="https://cdn.cocoapods.org/"/>
-                    </config>
-                    <pods>
-                        <pod name="Firebase/Analytics" spec="~> 6.3.0" />
-                        <pod name="Firebase/Messaging" spec="~> 6.3.0" />
-                    </pods>
-                </podspec>
+			<config>
+				<source url="https://cdn.cocoapods.org/"/>
+			</config>
+			<pods>
+				<pod name="Firebase/Analytics" spec="~> 6.3.0" />
+				<pod name="Firebase/Messaging" spec="~> 6.3.0" />
+			</pods>
+		</podspec>
 
 		<!-- OTHER NEEDED LIBS -->
 		<framework src="libc++.tbd" />
