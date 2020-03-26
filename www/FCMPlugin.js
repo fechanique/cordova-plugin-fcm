@@ -30,6 +30,11 @@ FCMPlugin.prototype.onNotification = function(callback, success, error) {
   exec(success, error, "FCMPlugin", "registerNotification", []);
 };
 
+// FIREBASE DATA NOTIFICATION CALLBACK //
+FCMPlugin.prototype.onFirebaseDataNotificationIOS = function (callback) {
+    FCMPlugin.prototype.onFirebaseDataNotificationReceivedIOS = callback;
+};
+
 // TOKEN REFRESH CALLBACK //
 FCMPlugin.prototype.onTokenRefresh = function(callback) {
   FCMPlugin.prototype.onTokenRefreshReceived = callback;
@@ -58,6 +63,12 @@ FCMPlugin.prototype.clearAllNotifications = function(success, error) {
 FCMPlugin.prototype.onNotificationReceived = function(payload) {
   console.log("Received push notification");
   console.log(payload);
+};
+
+// DEFAULT FIREBASE DATA NOTIFICATION CALLBACK //
+FCMPlugin.prototype.onFirebaseDataNotificationReceivedIOS = function (payload) {
+    console.log('Received Firebase data notification');
+    console.log(payload);
 };
 
 // DEFAULT TOKEN REFRESH CALLBACK //

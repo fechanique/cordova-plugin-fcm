@@ -19,6 +19,7 @@
 - (void)unsubscribeFromTopic:(CDVInvokedUrlCommand*)command;
 - (void)registerNotification:(CDVInvokedUrlCommand*)command;
 - (void)notifyOfMessage:(NSData*) payload;
+- (void)notifyOfFirebaseDataMessage:(NSData*) payload;
 - (void)appEnterBackground;
 - (void)appEnterForeground;
 

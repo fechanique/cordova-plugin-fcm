@@ -1,4 +1,4 @@
-export interface INotificationData {
+export interface INotificationPayload {
   wasTapped: boolean;
   notification?: {
     title?: string;
@@ -11,6 +11,13 @@ export interface INotificationData {
     [others: string]: any;
   };
   [others: string]: any;
+}
+
+export interface IFirebaseDataNotificationIOSPayload {
+  messageID: string;
+  appData?: {
+    [others: string]: any;
+  };
 }
 
 export interface FCMPlugin {
@@ -32,9 +39,13 @@ export interface FCMPlugin {
   ): void;
 
   onNotification(
-    callback: (data: INotificationData) => void,
+    callback: (payload: INotificationPayload) => void,
     onSuccess?: (message: string) => void,
     onError?: (error: Error) => void
+  ): void;
+
+  onFirebaseDataNotificationIOS(
+    callback: (payload: IFirebaseDataNotificationIOSPayload) => void
   ): void;
 
   getToken(
