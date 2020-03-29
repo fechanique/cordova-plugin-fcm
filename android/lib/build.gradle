@@ -52,11 +52,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Android supported libraries
-    api "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
-    api "com.android.support:design:${rootProject.ext.supportLibraryVersion}"
-    api "com.android.support:customtabs:${rootProject.ext.supportLibraryVersion}"
-    api "com.android.support:support-media-compat:${rootProject.ext.supportLibraryVersion}"
-    api "com.android.support:support-v4:${rootProject.ext.supportLibraryVersion}"
+    api "com.android.support:appcompat-v7:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    api "com.android.support:design:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    api "com.android.support:customtabs:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    api "com.android.support:support-media-compat:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    api "com.android.support:support-v4:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.7.22'
     testImplementation 'org.robolectric:robolectric:4.2'
