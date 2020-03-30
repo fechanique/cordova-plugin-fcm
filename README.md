@@ -14,9 +14,9 @@
 
 ### Version 4.5.1 (26/10/2019)
 
-Due to a bug introduced in v4.4.3, the file `platforms/android/app/src/main/res/values/strings.xml` two tags are included on install, tags which, on build, are also included by cordova-android@8.x.x. Hence failing the build process.
+Due to a bug introduced in v4.4.3, the file `platforms/android/app/src/main/res/values/strings.xml` had two tags included on install, tags which, on build, are also included by cordova-android@8.x.x. Hence failing the build process.
 
-To apply the fix, remove these two tags from your values/strings.xml:
+To apply the fix, install the new version and remove these two tags from your values/strings.xml:
 * `<string name="google_app_id">...</string>`
 * `<string name="google_api_key">...</string>`
 
