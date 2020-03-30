@@ -11,14 +11,6 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
-### Version 4.2.0 (24/02/2020)
-
-`ANDROID_DEFAULT_NOTIFICATION_ICON` included as a variable.
-
-To define the default icon for notifications (`com.google.firebase.messaging.default_notification_icon`), install this plugin like:
-```bash
-cordova plugin add cordova-plugin-fcm-with-dependecy-updated --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
-```
 
 ### Version 4.5.1 (26/10/2019)
 
@@ -27,6 +19,15 @@ Due to a bug introduced in v4.4.3, the file `platforms/android/app/src/main/res/
 To apply the fix, remove these two tags from your values/strings.xml:
 * `<string name="google_app_id">...</string>`
 * `<string name="google_api_key">...</string>`
+
+### Version 4.2.0 (24/02/2020)
+
+`ANDROID_DEFAULT_NOTIFICATION_ICON` included as a variable.
+
+To define the default icon for notifications (`com.google.firebase.messaging.default_notification_icon`), install this plugin like:
+```bash
+cordova plugin add cordova-plugin-fcm-with-dependecy-updated --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
+```
 
 ### Version 4.1.0 (26/10/2019)
 
