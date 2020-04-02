@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-fcm-with-dependecy-updated" version="4.5.1">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-fcm-with-dependecy-updated" version="4.5.2">
 	<name>Cordova FCM Push Plugin</name>
 	<description>Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated</description>
 	<license>MIT</license>
@@ -98,14 +98,14 @@
 		<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
 		<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
 
-		<!-- FIREBASE COCOA PODS-->
+		<!-- FIREBASE COCOAPODS-->
 		<podspec>
 			<config>
-				<source url="https://cdn.cocoapods.org/"/>
+                <source url="https://github.com/CocoaPods/Specs.git"/>
 			</config>
 			<pods>
-				<pod name="Firebase/Analytics" spec="~> 6.3.0" />
-				<pod name="Firebase/Messaging" spec="~> 6.3.0" />
+				<pod name="Firebase/Analytics" spec=">= 6.3.0" />
+				<pod name="Firebase/Messaging" spec=">= 6.3.0" />
 			</pods>
 		</podspec>
 
@@ -120,5 +120,4 @@
 
 	<!-- COPY FCM CONFIG FILES TO PLATFORM BEFORE COMPILING -->
 	<hook src="scripts/copy_google_service_files.js" type="after_prepare" />
-
 </plugin>
