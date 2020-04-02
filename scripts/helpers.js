@@ -2,17 +2,25 @@
 
 var fs = require('fs');
 
-function fileExists(path) {
+exports.fileExists = function (path) {
     try {
         return fs.statSync(path).isFile();
     } catch (e) {
         return false;
     }
-}
+};
+
+exports.directoryExists = function (path) {
+    try {
+        return fs.statSync(path).isDirectory();
+    } catch (e) {
+        return false;
+    }
+};
 
 exports.findExistingFilePath = function (paths) {
     for (var i = paths.length - 1; i > -1; i--) {
-        if (fileExists(paths[i])) {
+        if (exports.fileExists(paths[i])) {
             return paths[i];
         }
     }

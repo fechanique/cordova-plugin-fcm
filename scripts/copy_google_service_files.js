@@ -23,14 +23,6 @@ function copyGoogleServiceFile(platform) {
     });
 }
 
-function directoryExists(path) {
-    try {
-        return fs.statSync(path).isDirectory();
-    } catch (e) {
-        return false;
-    }
-}
-
 function ensureFileDirExistance(filePath) {
     var dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
     ensureDirExistance(dirPath);
@@ -48,9 +40,9 @@ function ensureDirExistance(dirPath) {
     }
 }
 
-if (directoryExists(PLATFORM.ANDROID.dir)) {
+if (helpers.directoryExists(PLATFORM.ANDROID.dir)) {
     copyGoogleServiceFile(PLATFORM.ANDROID);
 }
-if (directoryExists(PLATFORM.IOS.dir)) {
+if (helpers.directoryExists(PLATFORM.IOS.dir)) {
     copyGoogleServiceFile(PLATFORM.IOS);
 }
