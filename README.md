@@ -12,6 +12,22 @@
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
 
+### Version 4.6.0 (04/04/2020)
+
+For the IOS, if app is on the foreground and the app receives a `data` push notification, the data can be retrieved by setting the callback to the new method: `FCMPlugin.onFirebaseDataNotificationIOS`.
+
+```javascript
+FCMPlugin.onFirebaseDataNotificationIOS(
+  function(payload) {
+    console.info("Message id: "+payload.messageID)
+    console.info("Data parameters: "+payload.appData)
+  }
+);
+```
+
+This method is specifically implemented on IOS due to specific payload format ([src/FCMPlugin.d.ts](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/master/src/FCMPlugin.d.ts)).
+
+
 ### Version 4.5.1 (30/03/2020)
 
 Due to a bug introduced in v4.4.3, the file `platforms/android/app/src/main/res/values/strings.xml` had two tags included on install, tags which, on build, are also included by cordova-android@8.x.x. Hence failing the build process.
