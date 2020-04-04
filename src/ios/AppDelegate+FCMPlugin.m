@@ -220,19 +220,36 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
         [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
         NSLog(@"app active");
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                           options:0
-                                                             error:&error];
+                                options:0
+                                error:&error];
         [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-        
-        // app is in background
     }
     
+    // app is in background
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
+
+// [START data_message iOS >= 10]
+// Receive data messages on iOS 10+ directly from FCM (bypassing APNs) when the app is in the foreground.
+- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage {
+    // Print message ID.
+    NSLog(@"Firebase data message ID: %@", remoteMessage.messageID);
+
+    // Pring full data message.
+    NSLog(@"%@", remoteMessage.appData);
+
+    NSError *error;
+    NSDictionary *remoteMessageMutable = [remoteMessage mutableCopy];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:remoteMessageMutable
+                            options:0
+                            error:&error];
+    [FCMPlugin.fcmPlugin notifyOfFirebaseDataMessage:jsonData];
+}
+// [END data_message iOS >= 10]
 // [END message_handling]
 
-- (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)deviceToken {
+- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)deviceToken {
     NSLog(@"Device FCM Token: %@", deviceToken);
     // Notify about received token.
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:deviceToken forKey:@"token"];
