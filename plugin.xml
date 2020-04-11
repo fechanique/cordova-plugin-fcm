@@ -94,6 +94,9 @@
 				<string>remote-notification</string>
 			</array>
 		</config-file>
+		<config-file target="*-Info.plist" parent="FirebaseAppDelegateProxyEnabled">
+			<false/>
+		</config-file>
 
 		<resource-file src="src/ios/Assets/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
 
