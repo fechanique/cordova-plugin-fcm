@@ -4,24 +4,14 @@
 #import <Foundation/Foundation.h>
 #import "Firebase.h"
 
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 @import UserNotifications;
-#endif
-
 @import Firebase;
 
 // Implement UNUserNotificationCenterDelegate to receive display notification via APNS for devices
 // running iOS 10 and above. Implement FIRMessagingDelegate to receive data message via FCM for
 // devices running iOS 10 and above.
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 @interface AppDelegate () <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
 @end
-#endif
-
-// Copied from Apple's header in case it is missing in some cases (e.g. pre-Xcode 8 builds).
-#ifndef NSFoundationVersionNumber_iOS_9_x_Max
-#define NSFoundationVersionNumber_iOS_9_x_Max 1299
-#endif
 
 @implementation AppDelegate (MCPlugin)
 
@@ -39,60 +29,41 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 }
 
 - (BOOL)application:(UIApplication *)application customDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
     [self application:application customDidFinishLaunchingWithOptions:launchOptions];
-    
+
     NSLog(@"DidFinishLaunchingWithOptions");
     
-    // [START configure_firebase]
     if([FIRApp defaultApp] == nil) {
-        [FIRApp configure];
+        [self registerForNotifications];
     }
-    // [END configure_firebase]
-    
-    // iOS 9 or earlier Disable the deprecation warnings.
-    // [START register_for_notifications]
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        UIUserNotificationType allNotificationTypes =
-        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-        UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-#pragma clang diagnostic pop
-    } else {
-        // iOS 10 or later
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-        UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            if (granted) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[UIApplication sharedApplication] registerForRemoteNotifications];
-                });
-            } else {
-                NSLog(@"User Notification permission denied: %@", error.localizedDescription);
-            }
-        }];
-        
-        // For iOS 10 display notification (sent via APNS)
-        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-        // For iOS 10 data message (sent via FCM)
-        [FIRMessaging messaging].delegate = self;
-#endif
-    }
-    // [END register_for_notifications]
+
     return YES;
+}
+
+-(void) registerForNotifications
+{
+    // [BEGIN register_for_notifications]
+    [FIRApp configure];
+    UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if (granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] registerForRemoteNotifications];
+            });
+        } else {
+            NSLog(@"User Notification permission denied: %@", error.localizedDescription);
+        }
+    }];
+    
+    // For iOS 10 display notification (sent via APNS)
+    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+    // For iOS 10 data message (sent via FCM)
+    [FIRMessaging messaging].delegate = self;
+    // [END register_for_notifications]
 }
 
 // [START message_handling]
 // Receive displayed notifications for iOS 10 devices.
-
-// Note on the pragma: When compiling with iOS 10 SDK, include methods that
-//                     handle notifications using notification center.
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 // Handle incoming notification messages while app is in the foreground.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
@@ -127,7 +98,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     }
     
     // Print full message.
-    NSLog(@"aaa%@", userInfo);
+    NSLog(@"%@", userInfo);
     
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
@@ -141,20 +112,17 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     
     completionHandler();
 }
-#endif
 
 // [START receive_message in background iOS < 10]
-
 // Include the iOS < 10 methods for handling notifications for when running on iOS < 10.
 // As in, even if you compile with iOS 10 SDK, when running on iOS 9 the only way to get
 // notifications is the didReceiveRemoteNotification.
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
-    if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
+    if (@available(iOS 10, *)) {
         return;
     }
     
@@ -175,16 +143,16 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 #pragma clang diagnostic pop
 // [END receive_message in background] iOS < 10]
 
-
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenData {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-    NSString *deviceToken = [self hexadecimalStringFromData:deviceTokenData];
-#else
-    NSString *deviceToken = [[[[deviceTokenData description]
-        stringByReplacingOccurrencesOfString:@"<"withString:@""]
-        stringByReplacingOccurrencesOfString:@">" withString:@""]
-        stringByReplacingOccurrencesOfString: @" " withString: @""];
-#endif
+    NSString *deviceToken;
+    if (@available(iOS 13, *)) {
+        deviceToken = [self hexadecimalStringFromData:deviceTokenData];
+    } else {
+        deviceToken = [[[[deviceTokenData description]
+            stringByReplacingOccurrencesOfString:@"<"withString:@""]
+            stringByReplacingOccurrencesOfString:@">" withString:@""]
+            stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }
     apnsToken = deviceToken;
     [FCMPlugin setInitialAPNSToken:deviceToken];
     NSLog(@"Device APNS Token: %@", deviceToken);
@@ -317,6 +285,5 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     }
     return [hexString copy];
 }
-
 
 @end
