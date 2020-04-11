@@ -15,7 +15,6 @@ static BOOL notificatorReceptorReady = NO;
 static BOOL appInForeground = YES;
 
 static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
-static NSString *firebaseDataNotificationCallback = @"FCMPlugin.onFirebaseDataNotificationReceivedIOS";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
 static NSString *apnsToken = nil;
 static NSString *fcmToken = nil;
@@ -153,19 +152,6 @@ static FCMPlugin *fcmPluginInstance;
 {
     NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
-    NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
-    
-    if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
-        [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
-    } else {
-        [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
-    }
-}
-
--(void) notifyOfFirebaseDataMessage:(NSData *)payload
-{
-    NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
-    NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", firebaseDataNotificationCallback, JSONString];
     NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
     
     if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
