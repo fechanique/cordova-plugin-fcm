@@ -2,7 +2,6 @@
 #import "FCMPlugin.h"
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
-#import "Firebase.h"
 
 @import UserNotifications;
 @import Firebase;
@@ -21,8 +20,7 @@ static NSString *apnsToken;
 NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
 //Method swizzling
-+ (void)load
-{
++ (void)load {
     Method original =  class_getInstanceMethod(self, @selector(application:didFinishLaunchingWithOptions:));
     Method custom =    class_getInstanceMethod(self, @selector(application:customDidFinishLaunchingWithOptions:));
     method_exchangeImplementations(original, custom);
@@ -40,8 +38,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     return YES;
 }
 
--(void) registerForNotifications
-{
+- (void) registerForNotifications {
     // [BEGIN register_for_notifications]
     [FIRApp configure];
     UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
@@ -62,8 +59,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     // [END register_for_notifications]
 }
 
-// [START message_handling]
-// Receive displayed notifications for iOS 10 devices.
+// [BEGIN message_handling]
 // Handle incoming notification messages while app is in the foreground.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
@@ -113,37 +109,8 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     completionHandler();
 }
 
-// [START receive_message in background iOS < 10]
-// Include the iOS < 10 methods for handling notifications for when running on iOS < 10.
-// As in, even if you compile with iOS 10 SDK, when running on iOS 9 the only way to get
-// notifications is the didReceiveRemoteNotification.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-    // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
-    if (@available(iOS 10, *)) {
-        return;
-    }
-    
-    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
-    
-    NSError *error;
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
-    if (application.applicationState != UIApplicationStateActive) {
-        NSLog(@"New method with push callback: %@", userInfo);
-        
-        [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
-        NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
-        lastPush = jsonData;
-    }
-}
-#pragma clang diagnostic pop
-// [END receive_message in background] iOS < 10]
-
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenData {
+    [FIRMessaging messaging].APNSToken = deviceTokenData;
     NSString *deviceToken;
     if (@available(iOS 13, *)) {
         deviceToken = [self hexadecimalStringFromData:deviceTokenData];
@@ -158,65 +125,28 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     NSLog(@"Device APNS Token: %@", deviceToken);
 }
 
-// [START receive_message iOS < 10]
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-    // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
-    if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
-        return;
-    }
-    
-    // If you are receiving a notification message while your app is in the background,
-    // this callback will not be fired till the user taps on the notification launching the application.
-    // TODO: Handle data of notification
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
     
     // Print message ID.
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
-    
+
     // Pring full message.
     NSLog(@"%@", userInfo);
-    NSError *error;
-    
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
-    // Has user tapped the notificaiton?
-    // UIApplicationStateActive   - app is currently active
-    // UIApplicationStateInactive - app is transitioning from background to
-    //                              foreground (user taps notification)
-    
-    if (application.applicationState == UIApplicationStateActive
-        || application.applicationState == UIApplicationStateInactive) {
+
+    // If the app is in the background, keep it for later, in case it's not tapped.
+    if(application.applicationState == UIApplicationStateBackground) {
+        NSError *error;
+        NSDictionary *userInfoMutable = [userInfo mutableCopy];
         [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
         NSLog(@"app active");
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                options:0
-                                error:&error];
-        [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
+        lastPush = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
     }
-    
-    // app is in background
+
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
-
-// [START data_message iOS >= 10]
-// Receive data messages on iOS 10+ directly from FCM (bypassing APNs) when the app is in the foreground.
-- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveMessage:(nonnull FIRMessagingRemoteMessage *)remoteMessage {
-    // Print message ID.
-    NSLog(@"Firebase data message ID: %@", remoteMessage.messageID);
-
-    // Pring full data message.
-    NSLog(@"%@", remoteMessage.appData);
-
-    NSError *error;
-    NSDictionary *remoteMessageMutable = [remoteMessage mutableCopy];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:remoteMessageMutable
-                            options:0
-                            error:&error];
-    [FCMPlugin.fcmPlugin notifyOfFirebaseDataMessage:jsonData];
-}
-// [END data_message iOS >= 10]
 // [END message_handling]
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)deviceToken {
@@ -230,18 +160,13 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     [self connectToFcm];
 }
 
-// [START connect_to_fcm]
+// [BEGIN connect_to_fcm]
 - (void)connectToFcm
 {
     // Won't connect since there is no token
     if (!fcmToken) {
         return;
     }
-    // Disconnect previous FCM connection if it exists.
-    [[FIRMessaging messaging] setShouldEstablishDirectChannel:NO];
-    
-    [[FIRMessaging messaging] setShouldEstablishDirectChannel:YES];
-    
     [[FIRMessaging messaging] subscribeToTopic:@"ios"];
     [[FIRMessaging messaging] subscribeToTopic:@"all"];
 }
@@ -254,11 +179,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     [self connectToFcm];
 }
 
-// [START disconnect_from_fcm]
+// [BEGIN disconnect_from_fcm]
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     NSLog(@"app entered background");
-    [[FIRMessaging messaging] setShouldEstablishDirectChannel:NO];
     [FCMPlugin.fcmPlugin appEnterBackground];
     NSLog(@"Disconnected from FCM");
 }
