@@ -13,13 +13,6 @@ export interface INotificationPayload {
   [others: string]: any;
 }
 
-export interface IFirebaseDataNotificationIOSPayload {
-  messageID: string;
-  appData?: {
-    [others: string]: any;
-  };
-}
-
 export interface FCMPlugin {
   hasPermission(
     onSuccess: (doesIt: boolean | null) => void,
@@ -42,10 +35,6 @@ export interface FCMPlugin {
     callback: (payload: INotificationPayload) => void,
     onSuccess?: (message: string) => void,
     onError?: (error: Error) => void
-  ): void;
-
-  onFirebaseDataNotificationIOS(
-    callback: (payload: IFirebaseDataNotificationIOSPayload) => void
   ): void;
 
   getToken(
