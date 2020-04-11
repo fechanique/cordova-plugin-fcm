@@ -89,6 +89,11 @@
 		<config-file parent="aps-environment" target="*/Entitlements-Release.plist">
 			<string>production</string>
 		</config-file>
+		<config-file target="*-Info.plist" parent="UIBackgroundModes">
+			<array>
+				<string>remote-notification</string>
+			</array>
+		</config-file>
 
 		<resource-file src="src/ios/Assets/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
 
