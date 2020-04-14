@@ -30,17 +30,19 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     [self application:application customDidFinishLaunchingWithOptions:launchOptions];
 
     NSLog(@"DidFinishLaunchingWithOptions");
-    
-    if([FIRApp defaultApp] == nil) {
-        [self performSelector:@selector(registerForNotifications) withObject:self afterDelay:0.3f];
-    }
+    [self performSelector:@selector(registerForNotifications) withObject:self afterDelay:0.3f];
 
     return YES;
 }
 
 - (void) registerForNotifications {
+    // [BEGIN configure_firebase]
+    if([FIRApp defaultApp] == nil) {
+        [FIRApp configure];
+    }
+    // [END configure_firebase]
+
     // [BEGIN register_for_notifications]
-    [FIRApp configure];
     UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
     [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
         if (granted) {
@@ -51,7 +53,6 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             NSLog(@"User Notification permission denied: %@", error.localizedDescription);
         }
     }];
-    
     // For iOS 10 display notification (sent via APNS)
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     // For iOS 10 data message (sent via FCM)
