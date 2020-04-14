@@ -32,7 +32,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     NSLog(@"DidFinishLaunchingWithOptions");
     
     if([FIRApp defaultApp] == nil) {
-        [self registerForNotifications];
+        [self performSelector:@selector(registerForNotifications) withObject:self afterDelay:0.3f];
     }
 
     return YES;
