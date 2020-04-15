@@ -2,7 +2,6 @@ package com.gae.scaffolder.plugin;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.gae.scaffolder.plugin.interfaces.OnFinishedListener;
@@ -173,7 +172,7 @@ public class FCMPlugin extends CordovaPlugin {
         try {
             FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                 @Override
-                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                public void onComplete(Task<InstanceIdResult> task) {
                     if (!task.isSuccessful()) {
                         Log.w(TAG, "getInstanceId failed", task.getException());
                         try {
@@ -195,7 +194,7 @@ public class FCMPlugin extends CordovaPlugin {
 
             FirebaseInstanceId.getInstance().getInstanceId().addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onFailure(@NonNull final Exception e) {
+                public void onFailure(final Exception e) {
                     try {
                         Log.e(TAG, "Error retrieving token: ", e);
                         callback.error(exceptionToJson(e));
