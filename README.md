@@ -29,7 +29,7 @@ For Android:
 
 ### Version 4.6.0 (04/04/2020)
 
-For the IOS, if app is on the foreground and the app receives a `data` push notification, the data can be retrieved by setting the callback to the new method: `FCMPlugin.onFirebaseDataNotificationIOS`.
+For the IOS, if app is on the foreground and the app receives a `data` push notification, the data can be retrieved by setting the callback to the new method: `FCMPlugin.onFirebaseDataNotificationIOS` [Deprecated].
 
 ```javascript
 FCMPlugin.onFirebaseDataNotificationIOS(
