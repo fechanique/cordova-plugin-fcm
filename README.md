@@ -11,6 +11,22 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 5.0.0 (16/04/2020)
+
+For both platforms:
+- Not only copies, from application root, the Google Services configuration files on build, but also on install;
+- `onFirebaseDataNotificationIOS` removed, as relied on upstream socket connection, which will is deprecated and will be removed in Firebase 7 (https://firebase.google.com/support/release-notes/ios#fcm, announced in February 25, 2020).
+
+For iOS:
+- On install "Remote Notification" is set as a "Background Mode" capacity automatically;
+- Firebase now is handled manually, due to complications of auto-swizzling;
+- Firebase dependencies are now set to 6.21.0;
+- Delayed Firebase registration, by 300ms, to avoid deadlock issue with Watchdog;
+- Removed support for iOS 9.
+
+For Android:
+- Demonstrative code, for custom notifications, was removed and its imports of androidx classes to improve compatibility with older cordova plugins.
+
 ### Version 4.6.0 (04/04/2020)
 
 For the IOS, if app is on the foreground and the app receives a `data` push notification, the data can be retrieved by setting the callback to the new method: `FCMPlugin.onFirebaseDataNotificationIOS`.
