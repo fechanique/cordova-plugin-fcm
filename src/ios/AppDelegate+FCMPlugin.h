@@ -13,5 +13,7 @@
 @interface AppDelegate (FCMPlugin)
 
 + (NSData*)getLastPush;
++ (NSString*)getFCMToken;
++ (NSString*)getAPNSToken;
 
 @end

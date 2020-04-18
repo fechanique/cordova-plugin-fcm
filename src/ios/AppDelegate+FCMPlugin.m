@@ -122,7 +122,6 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
             stringByReplacingOccurrencesOfString:@" " withString:@""];
     }
     apnsToken = deviceToken;
-    [FCMPlugin setInitialAPNSToken:deviceToken];
     NSLog(@"Device APNS Token: %@", deviceToken);
 }
 
@@ -156,14 +155,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:deviceToken forKey:@"token"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FCMToken" object:nil userInfo:dataDict];
     fcmToken = deviceToken;
-    [FCMPlugin setInitialFCMToken:deviceToken];
     [FCMPlugin.fcmPlugin notifyFCMTokenRefresh:deviceToken];
     [self connectToFcm];
 }
 
 // [BEGIN connect_to_fcm]
-- (void)connectToFcm
-{
+- (void)connectToFcm {
     // Won't connect since there is no token
     if (!fcmToken) {
         return;
@@ -181,23 +178,28 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 }
 
 // [BEGIN disconnect_from_fcm]
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
+- (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"app entered background");
     [FCMPlugin.fcmPlugin appEnterBackground];
     NSLog(@"Disconnected from FCM");
 }
 // [END disconnect_from_fcm]
 
-+(NSData*)getLastPush
-{
++ (NSData*)getLastPush {
     NSData* returnValue = lastPush;
     lastPush = nil;
     return returnValue;
 }
 
-- (NSString *)hexadecimalStringFromData:(NSData *)data
-{
++ (NSString*)getFCMToken {
+    return fcmToken;
+}
+
++ (NSString*)getAPNSToken {
+    return apnsToken;
+}
+
+- (NSString *)hexadecimalStringFromData:(NSData *)data {
     NSUInteger dataLength = data.length;
     if (dataLength == 0) {
         return nil;
