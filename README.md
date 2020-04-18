@@ -11,6 +11,12 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 5.1.0 (18/04/2020)
+
+Replaced UIWebView with WKWebView, as required by Apple (https://developer.apple.com/documentation/uikit/uiwebview).
+For a smooth upgrade, the changes requested for cordova support (https://cordova.apache.org/howto/2020/03/18/wkwebviewonly) are applied automatically.
+
+
 ### Version 5.0.0 (16/04/2020)
 
 For both platforms:
