@@ -13,7 +13,8 @@
 
 ### Version 5.1.0 (18/04/2020)
 
-Replaced UIWebView with WKWebView, as required by Apple (https://developer.apple.com/documentation/uikit/uiwebview).
+Replaced `UIWebView` with `WKWebView`, as required by Apple (https://developer.apple.com/documentation/uikit/uiwebview).
+
 For a smooth upgrade, the changes requested for cordova support (https://cordova.apache.org/howto/2020/03/18/wkwebviewonly) are applied automatically.
 
 
