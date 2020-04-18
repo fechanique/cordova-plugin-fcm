@@ -54,6 +54,13 @@ FCMPlugin.prototype.clearAllNotifications = function (success, error) {
   exec(success, error, "FCMPlugin", "clearAllNotifications", []);
 };
 
+// REQUEST IOS PUSH PERMISSION //
+FCMPlugin.prototype.requestPushPermissionIOS = function (success, error) {
+  if (cordova.platformId === "ios") {
+    exec(success, error, "FCMPlugin", "requestPushPermission", []);
+  }
+};
+
 // DEFAULT NOTIFICATION CALLBACK //
 FCMPlugin.prototype.onNotificationReceived = function (payload) {
   console.log("Received push notification");

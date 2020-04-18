@@ -54,4 +54,8 @@ export interface FCMPlugin {
     onSuccess?: (message: string) => void,
     onError?: (error: Error) => void
   ): void;
+
+  clearAllNotifications(onSuccess?: () => void, onError?: (error: Error) => void): void;
+
+  requestPushPermissionIOS(onSuccess?: () => void, onError?: (error: Error) => void): void;
 }

@@ -35,27 +35,21 @@ static FCMPlugin *fcmPluginInstance;
 
 // HAS PERMISSION //
 - (void)hasPermission:(CDVInvokedUrlCommand *)command {
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     __block CDVPluginResult *commandResult;
-    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings){
-        switch (settings.authorizationStatus) {
-            case UNAuthorizationStatusAuthorized: {
-                NSLog(@"has push permission: true");
-                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
-                break;
-            }
-            case UNAuthorizationStatusDenied: {
-                NSLog(@"has push permission: false");
-                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
-                break;
-            }
-            default: {
+    [self.commandDelegate runInBackground:^{
+        [AppDelegate hasPushPermission:^(NSNumber* pushPermission){
+            if (pushPermission == nil) {
                 NSLog(@"has push permission: unknown");
                 commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-                break;
+            } else if ([pushPermission boolValue] == YES) {
+                NSLog(@"has push permission: true");
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+            } else if ([pushPermission boolValue] == NO) {
+                NSLog(@"has push permission: false");
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
             }
-        }
-        [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+            [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+        }];
     }];
 }
 
@@ -71,8 +65,7 @@ static FCMPlugin *fcmPluginInstance;
 }
 
 // GET APNS TOKEN //
-- (void)getAPNSToken:(CDVInvokedUrlCommand *)command 
-{
+- (void)getAPNSToken:(CDVInvokedUrlCommand *)command  {
     NSLog(@"get APNS Token");
     [self.commandDelegate runInBackground:^{
         CDVPluginResult* pluginResult = nil;
@@ -113,6 +106,13 @@ static FCMPlugin *fcmPluginInstance;
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:topic];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)requestPushPermission:(CDVInvokedUrlCommand *)command {
+    NSLog(@"requestPushPermission");
+    [self.commandDelegate runInBackground:^{
+        [AppDelegate requestPushPermission];
     }];
 }
 
