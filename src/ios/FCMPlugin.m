@@ -35,9 +35,9 @@ static FCMPlugin *fcmPluginInstance;
 
 // HAS PERMISSION //
 - (void)hasPermission:(CDVInvokedUrlCommand *)command {
-    __block CDVPluginResult *commandResult;
     [self.commandDelegate runInBackground:^{
         [AppDelegate hasPushPermission:^(NSNumber* pushPermission){
+            __block CDVPluginResult *commandResult;
             if (pushPermission == nil) {
                 NSLog(@"has push permission: unknown");
                 commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
