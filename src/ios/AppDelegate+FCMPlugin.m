@@ -30,16 +30,19 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     [self application:application customDidFinishLaunchingWithOptions:launchOptions];
 
     NSLog(@"DidFinishLaunchingWithOptions");
+    [self performSelector:@selector(configureForNotifications) withObject:self afterDelay:0.3f];
+
+    return YES;
+}
+
+- (void)configureForNotifications {
+    if([FIRApp defaultApp] == nil) {
+        [FIRApp configure];
+    }
     // For iOS 10 display notification (sent via APNS)
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     // For iOS 10 data message (sent via FCM)
     [FIRMessaging messaging].delegate = self;
-
-    if([FIRApp defaultApp] == nil) {
-        [FIRApp performSelector:@selector(configure) withObject:self afterDelay:0.3f];
-    }
-
-    return YES;
 }
 
 + (void)requestPushPermission {
