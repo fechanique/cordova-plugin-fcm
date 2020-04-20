@@ -127,7 +127,7 @@ FCMPlugin.hasPermission(function(doesIt){
 ```
 
 ### Version 2.1.2 (03/06/2017)
-- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.1 and Cordova ios 4.3.1
+- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
 - Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
