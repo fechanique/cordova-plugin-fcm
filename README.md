@@ -11,6 +11,10 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 6.0.1 (20/04/2020)
+
+As a hotfix to avoid incompatibility with cordova-plugin-ionic-webview, the the changes requested for cordova support (https://cordova.apache.org/howto/2020/03/18/wkwebviewonly) will not be automatic applied until they can be installed only for non-ionic projects.
+
 ### Version 6.0.0 (18/04/2020)
 
 On iOS, first run doesn't automatically request Push permission.
@@ -123,7 +127,7 @@ FCMPlugin.hasPermission(function(doesIt){
 ```
 
 ### Version 2.1.2 (03/06/2017)
-- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.0 and Cordova ios 4.3.1
+- Tested on Android and iOS using Cordova cli 6.4.0, Cordova android 6.0.1 and Cordova ios 4.3.1
 - Available sdk functions: onTokenRefresh, getToken, subscribeToTopic, unsubscribeFromTopic and onNotification
 - 'google-services.json' and 'GoogleService-Info.plist' are added automatically from Cordova project root to platform folders
 - Added data payload parameter to check whether the user tapped on the notification or was received while in foreground.
