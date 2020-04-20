@@ -32,9 +32,6 @@
 		<engine name="cordova-ios" version=">=5.1.1" />
 	</engines>
 
-	<!-- For WKWebView internal support https://cordova.apache.org/howto/2020/03/18/wkwebviewonly.html -->
-	<!-- <dependency id="cordova-plugin-wkwebview-engine" version=">=1.2.1" /> -->
-
 	<!-- ANDROID CONFIGURATION -->
 	<platform name="android">
 		<preference name="FCM_VERSION" default="19.0.0" />
@@ -83,13 +80,6 @@
 			<feature name="FCMPlugin">
 				<param name="ios-package" value="FCMPlugin"/>
 			</feature>
-
-			<!-- For WKWebView internal support https://cordova.apache.org/howto/2020/03/18/wkwebviewonly.html
-			<preference name="WKWebViewOnly" value="true" />
-			<feature name="CDVWKWebViewEngine">
-				<param name="ios-package" value="CDVWKWebViewEngine" />
-			</feature>
-			<preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" /> -->
 		</config-file>
 
 		<!-- ENABLE PUSH CAPABILITY -->

@@ -13,7 +13,7 @@
 
 ### Version 6.0.1 (20/04/2020)
 
-As a hotfix to avoid incompatibility with cordova-plugin-ionic-webview, the the changes requested for cordova support (https://cordova.apache.org/howto/2020/03/18/wkwebviewonly) will not be automatic applied until they can be installed only for non-ionic projects.
+As a hotfix to avoid incompatibility with cordova-plugin-ionic-webview, the the changes requested for cordova support (https://cordova.apache.org/howto/2020/03/18/wkwebviewonly) will not be automatic applied.
 
 ### Version 6.0.0 (18/04/2020)
 
