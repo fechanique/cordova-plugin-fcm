@@ -11,6 +11,26 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 6.1.0 (24/04/2020)
+
+For Android, some notification properties are only defined programmatically, one of those is channel.
+Channel can define the default behavior for notifications on Android 8.0+.
+This feature was meant to bring the channel-only configurations like bellow:
+
+```javascript
+FCMPlugin.createNotificationChannelAndroid({
+  id: "urgent_alert", // required
+  name: "Urgent Alert", // required
+  description: "Very urgent message alert",
+  importance: "high", // https://developer.android.com/guide/topics/ui/notifiers/notifications#importance
+  visibility: "public", // https://developer.android.com/training/notify-user/build-notification#lockscreenNotification 
+});
+```
+
+! Once a channel is created, it stays unchangeable until the user uninstalls the app. !
+
+To have a notification to use the channel, you have to add to the push notification payload the key `android_channel_id` with the id given to `createNotificationChannelAndroid` (https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support)
+
 ### Version 6.0.1 (20/04/2020)
 
 As a hotfix to avoid incompatibility with cordova-plugin-ionic-webview, the the changes requested for cordova support (https://cordova.apache.org/howto/2020/03/18/wkwebviewonly) will not be automatic applied.
