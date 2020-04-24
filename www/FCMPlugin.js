@@ -61,6 +61,13 @@ FCMPlugin.prototype.requestPushPermissionIOS = function (success, error) {
   }
 };
 
+// REQUEST THE CREATION OF A NOTIFICATION CHANNEL //
+FCMPlugin.prototype.createNotificationChannelAndroid = function (channelConfig, success, error) {
+  if (cordova.platformId === "android") {
+    exec(success, error, "FCMPlugin", "createNotificationChannel", [channelConfig]);
+  }
+};
+
 // DEFAULT NOTIFICATION CALLBACK //
 FCMPlugin.prototype.onNotificationReceived = function (payload) {
   console.log("Received push notification");

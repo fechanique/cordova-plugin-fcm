@@ -32,7 +32,7 @@ public class FCMPlugin extends CordovaPlugin {
 
     protected Context context = null;
     protected static OnFinishedListener<JSONObject> notificationFn = null;
-    private static final String TAG = "FCMPlugin";
+    public static final String TAG = "FCMPlugin";
     private static CordovaPlugin instance = null;
 
     public FCMPlugin() {}
@@ -137,6 +137,12 @@ public class FCMPlugin extends CordovaPlugin {
                         } catch (Exception e) {
                             callbackContext.error(e.getMessage());
                         }
+                    }
+                });
+            } else if (action.equals("createNotificationChannel")) {
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        new FCMPluginChannelCreator(getContext()).createNotificationChannel(callbackContext, args);
                     }
                 });
             } else {

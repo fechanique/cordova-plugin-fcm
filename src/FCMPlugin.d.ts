@@ -13,6 +13,14 @@ export interface INotificationPayload {
   [others: string]: any;
 }
 
+export interface IChannelConfiguration {
+  id: string;
+  name: string;
+  description?: string;
+  importance?: "none" | "min" | "low" | "default" | "high";
+  visibility?: "public" | "private" | "secret";
+}
+
 export interface FCMPlugin {
   hasPermission(
     onSuccess: (doesIt: boolean | null) => void,
@@ -58,4 +66,10 @@ export interface FCMPlugin {
   clearAllNotifications(onSuccess?: () => void, onError?: (error: Error) => void): void;
 
   requestPushPermissionIOS(onSuccess?: () => void, onError?: (error: Error) => void): void;
+
+  createNotificationChannelAndroid(
+    channelConfig: IChannelConfiguration,
+    onSuccess?: () => void,
+    onError?: (error: Error) => void
+  ): void;
 }
