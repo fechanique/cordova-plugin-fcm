@@ -15,7 +15,7 @@
 
 For Android, some notification properties are only defined programmatically, one of those is channel.
 Channel can define the default behavior for notifications on Android 8.0+.
-This feature was meant to bring the channel-only configurations like bellow:
+This feature was meant to bring the channel-only configurations importance and visibility:
 
 ```javascript
 FCMPlugin.createNotificationChannelAndroid({
