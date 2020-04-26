@@ -129,28 +129,39 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     NSLog(@"Device APNS Token: %@", deviceToken);
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    if (@available(iOS 10, *)) {
+        return;
+    }
+    [FCMPluginIOS9Support application:application didReceiveRemoteNotification:userInfo];
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
-    
-    // Print message ID.
-    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
 
-    // Pring full message.
-    NSLog(@"%@", userInfo);
+    if (@available(iOS 10, *)) {
+        // Print message ID.
+        NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
 
-    // If the app is in the background, keep it for later, in case it's not tapped.
-    if(application.applicationState == UIApplicationStateBackground) {
-        NSError *error;
-        NSDictionary *userInfoMutable = [userInfo mutableCopy];
-        [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
-        NSLog(@"app active");
-        lastPush = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
+        // Pring full message.
+        NSLog(@"%@", userInfo);
+
+        // If the app is in the background, keep it for later, in case it's not tapped.
+        if(application.applicationState == UIApplicationStateBackground) {
+            NSError *error;
+            NSDictionary *userInfoMutable = [userInfo mutableCopy];
+            [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
+            NSLog(@"app active");
+            lastPush = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
+        }
+
+        completionHandler(UIBackgroundFetchResultNoData);
+        return;
     }
 
-    completionHandler(UIBackgroundFetchResultNoData);
+    [FCMPluginIOS9Support application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 }
-// [END receive_message iOS < 10]
 // [END message_handling]
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)deviceToken {
@@ -187,6 +198,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"Disconnected from FCM");
 }
 // [END disconnect_from_fcm]
+
++ (void)setLastPush:(NSData*)push {
+    lastPush = push;
+}
 
 + (NSData*)getLastPush {
     NSData* returnValue = lastPush;

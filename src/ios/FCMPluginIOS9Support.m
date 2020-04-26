@@ -1,5 +1,6 @@
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
+#import "FCMPlugin.h"
 #import "FCMPluginIOS9Support.h"
 #import "AppDelegate+FCMPlugin.h"
 
@@ -69,6 +70,41 @@ NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasR
     }
     BOOL alreadyRequested = [self getHasRequestedPushPermission];
     block(alreadyRequested ? [NSNumber numberWithBool:NO] : nil);
+}
+
++ (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
+    NSError *error;
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+    if (application.applicationState != UIApplicationStateActive) {
+        NSLog(@"New method with push callback: %@", userInfo);
+        [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
+        NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+        [AppDelegate setLastPush:jsonData];
+    }
+}
+
++ (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
+    NSLog(@"%@", userInfo);
+    NSError *error;
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+
+    // Has user tapped the notificaiton?
+    // UIApplicationStateActive   - app is currently active
+    // UIApplicationStateInactive - app is transitioning from background to
+    //                              foreground (user taps notification)
+    if (application.applicationState == UIApplicationStateActive
+        || application.applicationState == UIApplicationStateInactive) {
+        [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
+        NSLog(@"app active");
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                           options:0
+                                                             error:&error];
+        [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
+    }
+    completionHandler(UIBackgroundFetchResultNoData);
 }
 
 @end
