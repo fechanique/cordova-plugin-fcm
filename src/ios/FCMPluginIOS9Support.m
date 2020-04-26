@@ -11,6 +11,8 @@
 
 NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasRequestedPushPermission";
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)requestPushPermission {
     UIUserNotificationType allNotificationTypes =
     (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
@@ -22,6 +24,7 @@ NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasR
         [self setHasRequestedPushPermissionWithTimeout:10.0f];
     });
 }
+#pragma clang diagnostic pop
 
 + (void)setHasRequestedPushPermissionWithTimeout:(float) timeout {
     [self hasPushPermission:^(NSNumber* pushPermission){
@@ -53,6 +56,8 @@ NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasR
     return NO;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)hasPushPermission:(void (^)(NSNumber* yesNoOrNil))block {
     NSString* apnsToken = [AppDelegate getAPNSToken];
     if(apnsToken != nil) {
@@ -71,6 +76,7 @@ NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasR
     BOOL alreadyRequested = [self getHasRequestedPushPermission];
     block(alreadyRequested ? [NSNumber numberWithBool:NO] : nil);
 }
+#pragma clang diagnostic pop
 
 + (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);

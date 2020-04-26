@@ -129,12 +129,15 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     NSLog(@"Device APNS Token: %@", deviceToken);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     if (@available(iOS 10, *)) {
         return;
     }
     [FCMPluginIOS9Support application:application didReceiveRemoteNotification:userInfo];
 }
+#pragma clang diagnostic pop
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
