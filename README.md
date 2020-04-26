@@ -11,6 +11,11 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+
+### Version 6.2.0 (26/04/2020)
+
+IOS 9 support reintroduced.
+
 ### Version 6.1.0 (24/04/2020)
 
 For Android, some notification properties are only defined programmatically, one of those is channel.
