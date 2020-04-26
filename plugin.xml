@@ -107,6 +107,9 @@
 		<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
 		<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
 
+		<header-file src="src/ios/FCMPluginIOS9Support.h" />
+		<source-file src="src/ios/FCMPluginIOS9Support.m" />
+
 		<!-- FIREBASE COCOAPODS-->
 		<podspec>
 			<config>

@@ -1,5 +1,6 @@
 #import "AppDelegate+FCMPlugin.h"
 #import "FCMPlugin.h"
+#import "FCMPluginIOS9Support.h"
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
 
@@ -39,13 +40,18 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     if([FIRApp defaultApp] == nil) {
         [FIRApp configure];
     }
-    // For iOS 10 display notification (sent via APNS)
-    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-    // For iOS 10 data message (sent via FCM)
+    if ([UNUserNotificationCenter class] != nil) {
+        // For iOS 10 display notification (sent via APNS)
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+    }
+    // For iOS message (sent via FCM)
     [FIRMessaging messaging].delegate = self;
 }
 
 + (void)requestPushPermission {
+    if ([UNUserNotificationCenter class] == nil) {
+        return [FCMPluginIOS9Support requestPushPermission];
+    }
     UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
     [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
         if (granted) {
@@ -168,8 +174,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 }
 // [END connect_to_fcm]
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
+- (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"app become active");
     [FCMPlugin.fcmPlugin appEnterForeground];
     [self connectToFcm];
@@ -198,6 +203,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 }
 
 + (void)hasPushPermission:(void (^)(NSNumber* yesNoOrNil))block {
+    if ([UNUserNotificationCenter class] == nil) {
+        [FCMPluginIOS9Support hasPushPermission:block];
+        return;
+    }
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings){
         switch (settings.authorizationStatus) {
