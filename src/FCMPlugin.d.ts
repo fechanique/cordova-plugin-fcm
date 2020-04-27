@@ -19,6 +19,9 @@ export interface IChannelConfiguration {
   description?: string;
   importance?: "none" | "min" | "low" | "default" | "high";
   visibility?: "public" | "private" | "secret";
+  sound?: string;
+  lights?: boolean;
+  vibration?: boolean;
 }
 
 export interface FCMPlugin {

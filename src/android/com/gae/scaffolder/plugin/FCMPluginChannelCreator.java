@@ -3,9 +3,11 @@ package com.gae.scaffolder.plugin;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.media.AudioAttributes;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.net.Uri;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
@@ -27,6 +29,9 @@ public class FCMPluginChannelCreator {
         public String description;
         public int importance;
         public int visibility;
+        public String sound;
+        public boolean lights;
+        public boolean vibration;
 
         public ChannelConfig(final JSONObject channelConfigJson) throws JSONException {
             this.id = channelConfigJson.getString("id");
@@ -34,6 +39,9 @@ public class FCMPluginChannelCreator {
             this.description = channelConfigJson.optString("description");
             this.importance = convertImportanceStringToInt(channelConfigJson.optString("importance"));
             this.visibility = convertVisibilityStringToInt(channelConfigJson.optString("visibility"));
+            this.sound = channelConfigJson.optString("sound");
+            this.lights = channelConfigJson.optBoolean("lights", false);
+            this.vibration = channelConfigJson.optBoolean("vibration", false);
         }
 
         private int convertImportanceStringToInt(String importance) {
@@ -73,6 +81,9 @@ public class FCMPluginChannelCreator {
             json.put("description", this.description);
             json.put("importance", this.importance);
             json.put("visibility", this.visibility);
+            json.put("sound", this.sound);
+            json.put("lights", this.lights);
+            json.put("vibration", this.vibration);
             return json;
         }
     }
@@ -92,6 +103,16 @@ public class FCMPluginChannelCreator {
             if(!channelConfig.description.equals("")) {
                 channel.setDescription(channelConfig.description);
             }
+            if(!channelConfig.sound.equals("")) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .build();
+                channel.setSound(Uri.parse("android.resource://" + this.context.getPackageName() + "/raw/" + channelConfig.sound), audioAttributes);				
+            }
+            channel.enableLights(channelConfig.lights);
+            channel.enableVibration(channelConfig.vibration);
+
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = this.context
