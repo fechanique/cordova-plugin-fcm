@@ -30,8 +30,8 @@ public class FCMPluginChannelCreator {
         public int importance;
         public int visibility;
         public String sound;
-        public boolean lights;
-        public boolean vibration;
+        public Boolean lights;
+        public Boolean vibration;
 
         public ChannelConfig(final JSONObject channelConfigJson) throws JSONException {
             this.id = channelConfigJson.getString("id");
@@ -40,8 +40,10 @@ public class FCMPluginChannelCreator {
             this.importance = convertImportanceStringToInt(channelConfigJson.optString("importance"));
             this.visibility = convertVisibilityStringToInt(channelConfigJson.optString("visibility"));
             this.sound = channelConfigJson.optString("sound");
-            this.lights = channelConfigJson.optBoolean("lights", false);
-            this.vibration = channelConfigJson.optBoolean("vibration", false);
+            this.lights = channelConfigJson.has("lights")
+                    ? channelConfigJson.optBoolean("lights", false) : null;
+            this.vibration = channelConfigJson.has("vibration")
+                    ? channelConfigJson.optBoolean("vibration", false) : null;
         }
 
         private int convertImportanceStringToInt(String importance) {
@@ -110,8 +112,12 @@ public class FCMPluginChannelCreator {
                     .build();
                 channel.setSound(Uri.parse("android.resource://" + this.context.getPackageName() + "/raw/" + channelConfig.sound), audioAttributes);				
             }
-            channel.enableLights(channelConfig.lights);
-            channel.enableVibration(channelConfig.vibration);
+            if(channelConfig.lights != null) {
+                channel.enableLights(channelConfig.lights);
+            }
+            if(channelConfig.vibration != null) {
+                channel.enableVibration(channelConfig.vibration);
+            }
 
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
