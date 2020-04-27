@@ -11,6 +11,21 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 6.3.0 (27/04/2020)
+
+FCMPlugin.createNotificationChannelAndroid improved, now accepting three other options: "sound", "lights" and "vibration", like in:
+```javascript
+FCMPlugin.createNotificationChannelAndroid({
+  id: "urgent_alert", // required
+  name: "Urgent Alert", // required
+  description: "Very urgent message alert",
+  importance: "high", // https://developer.android.com/guide/topics/ui/notifiers/notifications#importance
+  visibility: "public", // https://developer.android.com/training/notify-user/build-notification#lockscreenNotification
+  sound: "alert_sound", // In the "alert_sound" example, the file should located as resources/raw/alert_sound.mp3
+  lights: true, // enable lights for notifications
+  vibration: true // enable vibration for notifications
+});
+```
 
 ### Version 6.2.0 (26/04/2020)
 
@@ -32,7 +47,7 @@ FCMPlugin.createNotificationChannelAndroid({
 });
 ```
 
-! Once a channel is created, it stays unchangeable until the user uninstalls the app. !
+:warning: Once a channel is created, it stays unchangeable until the user uninstalls the app.
 
 To have a notification to use the channel, you have to add to the push notification payload the key `android_channel_id` with the id given to `createNotificationChannelAndroid` (https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support)
 
