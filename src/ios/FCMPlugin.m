@@ -112,7 +112,17 @@ static FCMPlugin *fcmPluginInstance;
 - (void)requestPushPermission:(CDVInvokedUrlCommand *)command {
     NSLog(@"requestPushPermission");
     [self.commandDelegate runInBackground:^{
-        [AppDelegate requestPushPermission];
+        [AppDelegate requestPushPermission:^(BOOL pushPermission, NSError* _Nullable error){
+            if(error != nil){
+                NSLog(@"push permission request error: %@", error);
+                __block CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error description]];
+                [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+                return;
+            }
+            NSLog(@"push permission request result: %@", pushPermission ? @"Yes" : @"No");
+            __block CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:pushPermission];
+            [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+        }];
     }];
 }
 

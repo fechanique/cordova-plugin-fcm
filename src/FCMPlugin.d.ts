@@ -68,7 +68,10 @@ export interface FCMPlugin {
 
   clearAllNotifications(onSuccess?: () => void, onError?: (error: Error) => void): void;
 
-  requestPushPermissionIOS(onSuccess?: () => void, onError?: (error: Error) => void): void;
+  requestPushPermissionIOS(
+    onSuccess: (wasPermissionGiven: boolean) => void,
+    onError?: (error: Error) => void
+  ): void;
 
   createNotificationChannelAndroid(
     channelConfig: IChannelConfiguration,

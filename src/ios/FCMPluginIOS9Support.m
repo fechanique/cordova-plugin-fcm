@@ -10,41 +10,68 @@
 @implementation FCMPluginIOS9Support
 
 NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasRequestedPushPermission";
+static void (^requestPushPermissionCallback)(BOOL yesOrNo, NSError* _Nullable error);
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)requestPushPermission {
++ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* _Nullable error))block {
+    requestPushPermissionCallback = block;
     UIUserNotificationType allNotificationTypes =
-    (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
     UIUserNotificationSettings *settings =
-    [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+        [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     dispatch_async(dispatch_get_main_queue(), ^{
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-        [self setHasRequestedPushPermissionWithTimeout:10.0f];
+        [self waitForUserDecision:10.0f withInterval:0.3f];
     });
 }
 #pragma clang diagnostic pop
 
-+ (void)setHasRequestedPushPermissionWithTimeout:(float) timeout {
++ (void)callbackRequestPushPermission:(BOOL)yesOrNo {
+    [self callbackRequestPushPermission:yesOrNo withError:nil];
+}
+
++ (void)callbackRequestPushPermission:(BOOL)yesOrNo withError:(NSError* _Nullable)error {
+    [self setHasRequestedPushPermission:YES];
+    if(requestPushPermissionCallback != nil) {
+        requestPushPermissionCallback(yesOrNo, error);
+        requestPushPermissionCallback = nil;
+    }
+}
+
++ (void)waitForUserDecision:(float)timeout withInterval:(float)interval {
     [self hasPushPermission:^(NSNumber* pushPermission){
-        float tryInterval = 0.3f;
-        if (timeout > 0 && (pushPermission == nil || [pushPermission boolValue] == NO)) {
-            float remainingTimeout = timeout - tryInterval;
-            SEL thisMethodSelector = NSSelectorFromString(@"setHasRequestedPushPermissionWithTimeout:");
-            if([self respondsToSelector:thisMethodSelector]) {
-                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:thisMethodSelector]];
-                [invocation setSelector:thisMethodSelector];
-                [invocation setTarget:self];
-                [invocation setArgument:&(remainingTimeout) atIndex:2]; //arguments 0 and 1 are self and _cmd respectively, automatically set by NSInvocationion
-                [NSTimer scheduledTimerWithTimeInterval:tryInterval invocation:invocation repeats:NO];
-                return;
-            }
+        if(pushPermission != nil) {
+            // User has chosen.
+            [self callbackRequestPushPermission:[pushPermission boolValue]];
+            return;
         }
-        [[NSUserDefaults standardUserDefaults]
-            setObject:[NSNumber numberWithBool:YES] forKey:hasRequestedPushPermissionPersistenceKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        if(timeout < 0) {
+            // We have to speculate that the request was not accepted
+            [self callbackRequestPushPermission:NO];
+            return;
+        }
+        float remainingTimeout = timeout - interval;
+        float givenInterval = interval;
+        SEL thisMethodSelector = NSSelectorFromString(@"waitForUserDecision:withInterval:");
+        if([self respondsToSelector:thisMethodSelector]) {
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:thisMethodSelector]];
+            [invocation setSelector:thisMethodSelector];
+            [invocation setTarget:self];
+            [invocation setArgument:&(remainingTimeout) atIndex:2]; //arguments 0 and 1 are self and _cmd respectively, automatically set by NSInvocationion
+            [invocation setArgument:&(givenInterval) atIndex:3];
+            [NSTimer scheduledTimerWithTimeInterval:interval invocation:invocation repeats:NO];
+            return;
+        }
+        NSLog(@"waitForUserDecision:withInterval: selector not found in FCMPluginIOS9Support");
     }];
+}
+
++ (void)setHasRequestedPushPermission:(BOOL)pushPermission {
+    [[NSUserDefaults standardUserDefaults]
+        setObject:[NSNumber numberWithBool:pushPermission] forKey:hasRequestedPushPermissionPersistenceKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (BOOL)getHasRequestedPushPermission {
@@ -89,6 +116,14 @@ NSString *const hasRequestedPushPermissionPersistenceKey = @"FCMPlugin.iOS9.hasR
         NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
         [AppDelegate setLastPush:jsonData];
     }
+}
+
++ (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenData {
+    [self callbackRequestPushPermission:YES];
+}
+
++ (void)application:(UIApplication *)application didFailToRegisterForRemoteNotifications:(NSError *)error {
+    [self callbackRequestPushPermission:NO withError:error];
 }
 
 + (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {

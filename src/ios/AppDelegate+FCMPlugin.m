@@ -48,19 +48,21 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     [FIRMessaging messaging].delegate = self;
 }
 
-+ (void)requestPushPermission {
++ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* _Nullable error))block {
     if ([UNUserNotificationCenter class] == nil) {
-        return [FCMPluginIOS9Support requestPushPermission];
+        return [FCMPluginIOS9Support requestPushPermission:block];
     }
     UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError* _Nullable error) {
         if (granted) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
             });
-        } else {
-            NSLog(@"User Notification permission denied: %@", error.localizedDescription);
+            block(YES, error);
+            return;
         }
+        NSLog(@"User Notification permission denied: %@", error.localizedDescription);
+        block(NO, error);
     }];
 }
 
@@ -127,6 +129,18 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     }
     apnsToken = deviceToken;
     NSLog(@"Device APNS Token: %@", deviceToken);
+    if (@available(iOS 10, *)) {
+        return;
+    }
+    [FCMPluginIOS9Support application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceTokenData];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotifications:(NSError *)error {
+    NSLog(@"Failed to register for remote notifications: %@", error);
+    if (@available(iOS 10, *)) {
+        return;
+    }
+    [FCMPluginIOS9Support application:application didFailToRegisterForRemoteNotifications:error];
 }
 
 #pragma clang diagnostic push

@@ -8,7 +8,7 @@
 + (NSString*)getFCMToken;
 + (NSString*)getAPNSToken;
 + (void)setLastPush:(NSData*)push;
-+ (void)requestPushPermission;
++ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* error))block;
 + (void)hasPushPermission:(void (^)(NSNumber* yesNoOrNil))block;
 
 @end
