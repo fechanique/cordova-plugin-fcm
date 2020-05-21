@@ -13,7 +13,7 @@
 
 ### Version 6.4.0 (21/05/2020)
 
-The permission now, not only triggers the request alert, but also returns, as boolean, if the permission was given.
+The `FCMPlugin.requestPushPermissionIOS` function now, not only triggers the request alert, but also returns, as boolean, if the permission was given.
 
 ```javascript
 FCMPlugin.requestPushPermissionIOS(
@@ -24,7 +24,7 @@ FCMPlugin.requestPushPermissionIOS(
     console.error(error);
   },
   ios9Support: {
-    timeout: 10,  // How long it will wait for a decision from the user
+    timeout: 10,  // How long it will wait for a decision from the user before returning `false`
     interval: 0.3 // How long between each permission verification
   }
 );
