@@ -11,6 +11,30 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 6.4.0 (21/05/2020)
+
+The permission now, not only triggers the request alert, but also returns, as boolean, if the permission was given.
+
+```javascript
+FCMPlugin.requestPushPermissionIOS(
+  function(wasPermissionGiven) {
+    console.info("Was permission given: "+wasPermissionGiven);
+  },
+  function(error) {
+    console.error(error);
+  },
+  ios9Support: {
+    timeout: 10,  // How long it will wait for a decision from the user
+    interval: 0.3 // How long between each permission verification
+  }
+);
+```
+
+Note:
+On iOS 9, there is no way to know if the user has denied the permissions or he has not yet decided.
+For this reason, specifically for iOS 9, after presenting the alert, a timed loop waits until it knows that the user has either given the permissions or that the time has expired.
+On iOS 10+, the return is given as soon as the user has selected. Ignoring this options.
+
 ### Version 6.3.0 (27/04/2020)
 
 FCMPlugin.createNotificationChannelAndroid improved, now accepting three other options: "sound", "lights" and "vibration", like in:
