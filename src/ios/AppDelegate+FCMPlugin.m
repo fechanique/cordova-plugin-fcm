@@ -48,9 +48,9 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     [FIRMessaging messaging].delegate = self;
 }
 
-+ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* _Nullable error))block {
++ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* _Nullable error))block withOptions:(NSDictionary*)options {
     if ([UNUserNotificationCenter class] == nil) {
-        return [FCMPluginIOS9Support requestPushPermission:block];
+        return [FCMPluginIOS9Support requestPushPermission:block withOptions:options];
     }
     UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
         [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError* _Nullable error) {

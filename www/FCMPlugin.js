@@ -55,9 +55,20 @@ FCMPlugin.prototype.clearAllNotifications = function (success, error) {
 };
 
 // REQUEST IOS PUSH PERMISSION //
-FCMPlugin.prototype.requestPushPermissionIOS = function (success, error) {
+FCMPlugin.prototype.requestPushPermissionIOS = function (success, error, options) {
   if (cordova.platformId === "ios") {
-    exec(success, error, "FCMPlugin", "requestPushPermission", []);
+    var ios9SupportTimeout = 10;
+    var ios9SupportInterval = 0.3;
+    if (options && options.ios9Support && options.ios9Support.timeout) {
+      ios9SupportTimeout = options.ios9Support.timeout;
+    }
+    if (options && options.ios9Support && options.ios9Support.interval) {
+      ios9SupportInterval = options.ios9Support.interval;
+    }
+    exec(success, error, "FCMPlugin", "requestPushPermission", [
+      ios9SupportTimeout,
+      ios9SupportInterval
+    ]);
   }
 };
 

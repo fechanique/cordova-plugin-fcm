@@ -14,16 +14,20 @@ static void (^requestPushPermissionCallback)(BOOL yesOrNo, NSError* _Nullable er
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* _Nullable error))block {
++ (void)requestPushPermission:(void (^)(BOOL yesOrNo, NSError* _Nullable error))block withOptions:(NSDictionary*)options {
     requestPushPermissionCallback = block;
     UIUserNotificationType allNotificationTypes =
         (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
     UIUserNotificationSettings *settings =
         [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    NSNumber* ios9SupportTimeout = options[@"ios9SupportTimeout"];
+    float timeout = [ios9SupportTimeout floatValue];
+    NSNumber* ios9SupportInterval = options[@"ios9SupportInterval"];
+    float interval = [ios9SupportInterval floatValue];
     dispatch_async(dispatch_get_main_queue(), ^{
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-        [self waitForUserDecision:10.0f withInterval:0.3f];
+        [self waitForUserDecision:timeout withInterval:interval];
     });
 }
 #pragma clang diagnostic pop
@@ -52,10 +56,10 @@ static void (^requestPushPermissionCallback)(BOOL yesOrNo, NSError* _Nullable er
             [self callbackRequestPushPermission:NO];
             return;
         }
-        float remainingTimeout = timeout - interval;
-        float givenInterval = interval;
         SEL thisMethodSelector = NSSelectorFromString(@"waitForUserDecision:withInterval:");
         if([self respondsToSelector:thisMethodSelector]) {
+            float remainingTimeout = timeout - interval;
+            float givenInterval = interval;
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:thisMethodSelector]];
             [invocation setSelector:thisMethodSelector];
             [invocation setTarget:self];

@@ -1,10 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <Cordova/CDVPlugin.h>
 
-@interface FCMPlugin : CDVPlugin
-{
-    //NSString *notificationCallBack;
-}
+@interface FCMPlugin : CDVPlugin {}
 
 + (FCMPlugin *) fcmPlugin;
 - (void)notifyFCMTokenRefresh:(NSString*) token;

@@ -24,6 +24,13 @@ export interface IChannelConfiguration {
   vibration?: boolean;
 }
 
+export interface RequestPushPermissionIOSOptions {
+  ios9Support: {
+    timeout: number; // Defaults to 10
+    interval: number; // Defaults to 0.3
+  };
+}
+
 export interface FCMPlugin {
   hasPermission(
     onSuccess: (doesIt: boolean | null) => void,
@@ -70,7 +77,8 @@ export interface FCMPlugin {
 
   requestPushPermissionIOS(
     onSuccess: (wasPermissionGiven: boolean) => void,
-    onError?: (error: Error) => void
+    onError?: (error: Error) => void,
+    options?: RequestPushPermissionIOSOptions
   ): void;
 
   createNotificationChannelAndroid(
