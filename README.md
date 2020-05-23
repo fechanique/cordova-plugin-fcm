@@ -33,7 +33,7 @@ FCMPlugin.requestPushPermissionIOS(
 Note:
 On iOS 9, there is no way to know if the user has denied the permissions or he has not yet decided.
 For this reason, specifically for iOS 9, after presenting the alert, a timed loop waits until it knows that the user has either given the permissions or that the time has expired.
-On iOS 10+, the return is given as soon as the user has selected. Ignoring this options.
+On iOS 10+, the return is given as soon as the user has selected, ignoring these options.
 
 ### Version 6.3.0 (27/04/2020)
 
