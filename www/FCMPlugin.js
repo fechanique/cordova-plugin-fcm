@@ -56,20 +56,22 @@ FCMPlugin.prototype.clearAllNotifications = function (success, error) {
 
 // REQUEST IOS PUSH PERMISSION //
 FCMPlugin.prototype.requestPushPermissionIOS = function (success, error, options) {
-  if (cordova.platformId === "ios") {
-    var ios9SupportTimeout = 10;
-    var ios9SupportInterval = 0.3;
-    if (options && options.ios9Support && options.ios9Support.timeout) {
-      ios9SupportTimeout = options.ios9Support.timeout;
-    }
-    if (options && options.ios9Support && options.ios9Support.interval) {
-      ios9SupportInterval = options.ios9Support.interval;
-    }
-    exec(success, error, "FCMPlugin", "requestPushPermission", [
-      ios9SupportTimeout,
-      ios9SupportInterval
-    ]);
+  if (cordova.platformId !== "ios") {
+    success(true);
+    return;
   }
+  var ios9SupportTimeout = 10;
+  var ios9SupportInterval = 0.3;
+  if (options && options.ios9Support && options.ios9Support.timeout) {
+    ios9SupportTimeout = options.ios9Support.timeout;
+  }
+  if (options && options.ios9Support && options.ios9Support.interval) {
+    ios9SupportInterval = options.ios9Support.interval;
+  }
+  exec(success, error, "FCMPlugin", "requestPushPermission", [
+    ios9SupportTimeout,
+    ios9SupportInterval
+  ]);
 };
 
 // REQUEST THE CREATION OF A NOTIFICATION CHANNEL //
