@@ -24,7 +24,7 @@
 	<keywords>notifications, push, firebase, fcm, ios, android, cordova, plugin</keywords>
 
 	<js-module src="www/FCMPlugin.js" name="FCMPlugin">
-		<clobbers target="FCMPlugin" />
+		<clobbers target="FCM" />
 	</js-module>
 
 	<engines>

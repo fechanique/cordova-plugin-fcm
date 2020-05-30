@@ -5,10 +5,19 @@
   "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
   "license": "MIT",
   "main": "www/FCMPlugin.js",
-  "typings": "src/FCMPlugin.d.ts",
-  "repo": "",
-  "issue": "",
+  "typings": "typings/index.d.ts",
+  "repo": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
+  "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
   "author": "André Augusto Tissot",
+  "scripts": {
+    "build": "npm run build:declaration; npm run build:prod",
+    "build:prod": "tsc -p .; rollup -c rollup.config.js",
+    "build:declaration": "cp ./src/www/*.d.ts ./typings; tsc -p . --declaration true --declarationDir ./typings --removeComments false",
+    "build:loop": "while sleep 1; do npm run build; done",
+    "prettier": "find ./src/www -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs prettier --write",
+    "tslint": "npx tslint -p . --fix",
+    "tsc": "npx tsc -p . --noEmit"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
@@ -29,6 +38,18 @@
     "android",
     "ios"
   ],
-  "engines": [],
-  "englishdoc": ""
+  "englishdoc": "",
+  "devDependencies": {
+    "@types/cordova": "0.0.34",
+    "prettier": "^2.0.5",
+    "rollup": "^2.11.2",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "tslint": "^6.1.2",
+    "tslint-microsoft-contrib": "^6.2.0",
+    "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.5"
+  }
 }

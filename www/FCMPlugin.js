@@ -1,112 +1,85 @@
-var exec = require("cordova/exec");
-var cordova = require("cordova");
+var FCMPlugin = (function (exports, rxjs) {
+    'use strict';
 
-function FCMPlugin() {
-  console.log("FCMPlugin.js: is created");
-}
+    var execAsPromise = function (command, args) {
+        if (args === void 0) { args = []; }
+        return new Promise(function (resolve, reject) {
+            window.cordova.exec(resolve, reject, "FCMPlugin", command, args);
+        });
+    };
 
-// CHECK FOR PERMISSION
-FCMPlugin.prototype.hasPermission = function (success, error) {
-  if (cordova.platformId !== "ios") {
-    success(true);
-    return;
-  }
-  exec(success, error, "FCMPlugin", "hasPermission", []);
-};
+    var FCMPlugin = (function () {
+        function FCMPlugin() {
+            console.log("FCMPlugin: has been created");
+            this.logReadyStatus();
+        }
+        FCMPlugin.prototype.clearAllNotifications = function () {
+            return execAsPromise("clearAllNotifications");
+        };
+        FCMPlugin.prototype.createNotificationChannel = function (channelConfig) {
+            if (window.cordova.platformId !== "android") {
+                return Promise.resolve();
+            }
+            return execAsPromise("createNotificationChannel", [channelConfig]);
+        };
+        FCMPlugin.prototype.getAPNSToken = function () {
+            return window.cordova.platformId !== "ios"
+                ? Promise.resolve("")
+                : execAsPromise("getAPNSToken");
+        };
+        FCMPlugin.prototype.getToken = function () {
+            return execAsPromise("getToken");
+        };
+        FCMPlugin.prototype.hasPermission = function () {
+            return window.cordova.platformId !== "ios"
+                ? Promise.resolve(true)
+                : execAsPromise("hasPermission");
+        };
+        FCMPlugin.prototype.onNotification = function () {
+            if (!this.onNotificationObservable) {
+                this.onNotificationObservable = new rxjs.Observable();
+            }
+            this.triggerLastBackgroundPush();
+            return this.onNotificationObservable;
+        };
+        FCMPlugin.prototype.onTokenRefresh = function () {
+            if (!this.onTokenRefreshObservable) {
+                this.onTokenRefreshObservable = new rxjs.Observable();
+            }
+            return this.onTokenRefreshObservable;
+        };
+        FCMPlugin.prototype.requestPushPermission = function (options) {
+            var _a, _b, _c, _d;
+            if (window.cordova.platformId !== "ios") {
+                return Promise.resolve(true);
+            }
+            var ios9SupportTimeout = (_b = (_a = options === null || options === void 0 ? void 0 : options.ios9Support) === null || _a === void 0 ? void 0 : _a.timeout) !== null && _b !== void 0 ? _b : 10;
+            var ios9SupportInterval = (_d = (_c = options === null || options === void 0 ? void 0 : options.ios9Support) === null || _c === void 0 ? void 0 : _c.interval) !== null && _d !== void 0 ? _d : 0.3;
+            return execAsPromise("requestPushPermission", [ios9SupportTimeout, ios9SupportInterval]);
+        };
+        FCMPlugin.prototype.subscribeToTopic = function (topic) {
+            return execAsPromise("subscribeToTopic", [topic]);
+        };
+        FCMPlugin.prototype.unsubscribeFromTopic = function (topic) {
+            return execAsPromise("unsubscribeFromTopic", [topic]);
+        };
+        FCMPlugin.prototype.triggerLastBackgroundPush = function () {
+            return execAsPromise("registerNotification");
+        };
+        FCMPlugin.prototype.logReadyStatus = function () {
+            return execAsPromise("ready")
+                .then(function () { return console.log("FCMPlugin: Ready!"); })
+                .catch(function (error) { return console.log("FCMPlugin: Ready error: ", error); });
+        };
+        return FCMPlugin;
+    }());
 
-// SUBSCRIBE TO TOPIC //
-FCMPlugin.prototype.subscribeToTopic = function (topic, success, error) {
-  exec(success, error, "FCMPlugin", "subscribeToTopic", [topic]);
-};
+    var FCM = new FCMPlugin();
 
-// UNSUBSCRIBE FROM TOPIC //
-FCMPlugin.prototype.unsubscribeFromTopic = function (topic, success, error) {
-  exec(success, error, "FCMPlugin", "unsubscribeFromTopic", [topic]);
-};
+    exports.FCM = FCM;
+    exports.FCMPlugin = FCMPlugin;
+    exports.default = FCM;
 
-// NOTIFICATION CALLBACK //
-FCMPlugin.prototype.onNotification = function (callback, success, error) {
-  FCMPlugin.prototype.onNotificationReceived = callback;
-  exec(success, error, "FCMPlugin", "registerNotification", []);
-};
+    return exports;
 
-// TOKEN REFRESH CALLBACK //
-FCMPlugin.prototype.onTokenRefresh = function (callback) {
-  FCMPlugin.prototype.onTokenRefreshReceived = callback;
-};
-
-// GET TOKEN //
-FCMPlugin.prototype.getToken = function (success, error) {
-  exec(success, error, "FCMPlugin", "getToken", []);
-};
-
-// GET APNS TOKEN //
-FCMPlugin.prototype.getAPNSToken = function (success, error) {
-  if (cordova.platformId !== "ios") {
-    success(null);
-    return;
-  }
-  exec(success, error, "FCMPlugin", "getAPNSToken", []);
-};
-
-// CLEAR ALL NOTIFICATIONS //
-FCMPlugin.prototype.clearAllNotifications = function (success, error) {
-  exec(success, error, "FCMPlugin", "clearAllNotifications", []);
-};
-
-// REQUEST IOS PUSH PERMISSION //
-FCMPlugin.prototype.requestPushPermissionIOS = function (success, error, options) {
-  if (cordova.platformId !== "ios") {
-    if (typeof success !== "undefined") {
-      success(true);
-    }
-    return;
-  }
-  var ios9SupportTimeout = 10;
-  var ios9SupportInterval = 0.3;
-  if (options && options.ios9Support && options.ios9Support.timeout) {
-    ios9SupportTimeout = options.ios9Support.timeout;
-  }
-  if (options && options.ios9Support && options.ios9Support.interval) {
-    ios9SupportInterval = options.ios9Support.interval;
-  }
-  exec(success, error, "FCMPlugin", "requestPushPermission", [
-    ios9SupportTimeout,
-    ios9SupportInterval
-  ]);
-};
-
-// REQUEST THE CREATION OF A NOTIFICATION CHANNEL //
-FCMPlugin.prototype.createNotificationChannelAndroid = function (channelConfig, success, error) {
-  if (cordova.platformId === "android") {
-    exec(success, error, "FCMPlugin", "createNotificationChannel", [channelConfig]);
-  }
-};
-
-// DEFAULT NOTIFICATION CALLBACK //
-FCMPlugin.prototype.onNotificationReceived = function (payload) {
-  console.log("Received push notification");
-  console.log(payload);
-};
-
-// DEFAULT TOKEN REFRESH CALLBACK //
-FCMPlugin.prototype.onTokenRefreshReceived = function (token) {
-  console.log("Received token refresh");
-  console.log(token);
-};
-
-// FIRE READY //
-exec(
-  function (result) {
-    console.log("FCMPlugin Ready OK");
-  },
-  function (result) {
-    console.log("FCMPlugin Ready ERROR");
-  },
-  "FCMPlugin",
-  "ready",
-  []
-);
-
-var fcmPlugin = new FCMPlugin();
-module.exports = fcmPlugin;
+}({}, rxjs));
