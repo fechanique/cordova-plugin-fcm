@@ -118,6 +118,7 @@ static void (^requestPushPermissionCallback)(BOOL yesOrNo, NSError* _Nullable er
         [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
         NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+        [AppDelegate setInitialPushPayload:jsonData];
         [AppDelegate setLastPush:jsonData];
     }
 }

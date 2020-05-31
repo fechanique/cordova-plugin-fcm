@@ -1,8 +1,7 @@
-import { Observable } from "rxjs"
-import type { INotificationPayload } from "./INotificationPayload"
 import type { IChannelConfiguration } from "./IChannelConfiguration"
 import type { IRequestPushPermissionOptions } from "./IRequestPushPermissionOptions"
 import { execAsPromise } from "./execAsPromise.helper"
+import { INotificationPayload } from "INotificationPayload"
 
 /**
  * @name FCM
@@ -16,21 +15,24 @@ import { execAsPromise } from "./execAsPromise.helper"
  */
 export class FCMPlugin {
   /**
-   * The observable instance for onNotification
+   * EventTarget for native-sourced custom events.
    *
-   * @private
-   */
-  private onNotificationObservable?: Observable<INotificationPayload>
-
-  /**
-   * The observable instance for onTokenRefresh
+   * @event notification
+   * @type {INotificationPayload}
    *
-   * @private
+   * @event tokenRefresh
+   * @type {string}
+   *
    */
-  private onTokenRefreshObservable?: Observable<string>
+  public events: EventTarget
 
   constructor() {
     console.log("FCMPlugin: has been created")
+    try {
+      this.events = new EventTarget()
+    } catch (e) {
+      this.events = document.createElement("div")
+    }
     this.logReadyStatus()
   }
 
@@ -81,6 +83,17 @@ export class FCMPlugin {
   }
 
   /**
+   * Retrieves the message that, on tap, opened the app
+   *
+   * @private
+   *
+   * @returns {Promise<INotificationPayload | null>} Async call to native implementation
+   */
+  public getInitialPushPayload(): Promise<INotificationPayload | null> {
+    return execAsPromise("getInitialPushPayload")
+  }
+
+  /**
    * Checking for permissions on iOS. On android, it always returns `true`.
    *
    * @returns {Promise<boolean | null>} Returns a Promise of:
@@ -92,33 +105,6 @@ export class FCMPlugin {
     return window.cordova.platformId !== "ios"
       ? Promise.resolve(true)
       : execAsPromise("hasPermission")
-  }
-
-  /**
-   * Watch for incoming notifications
-   *
-   * @returns {Observable<INotificationPayload>} returns an object with data from the notification
-   */
-  public onNotification(): Observable<INotificationPayload> {
-    if (!this.onNotificationObservable) {
-      this.onNotificationObservable = new Observable<INotificationPayload>()
-    }
-    this.triggerLastBackgroundPush()
-
-    return this.onNotificationObservable
-  }
-
-  /**
-   * Event firing on the token refresh
-   *
-   * @returns {Observable<string>} Returns an Observable that notifies with the change of device's registration id
-   */
-  public onTokenRefresh(): Observable<string> {
-    if (!this.onTokenRefreshObservable) {
-      this.onTokenRefreshObservable = new Observable<string>()
-    }
-
-    return this.onTokenRefreshObservable
   }
 
   /**
@@ -158,17 +144,6 @@ export class FCMPlugin {
    */
   public unsubscribeFromTopic(topic: string): Promise<void> {
     return execAsPromise("unsubscribeFromTopic", [topic])
-  }
-
-  /**
-   * Triggers the last message retried on background
-   *
-   * @private
-   *
-   * @returns {Promise<void>} Async call to native implementation
-   */
-  private triggerLastBackgroundPush(): Promise<void> {
-    return execAsPromise("registerNotification")
   }
 
   /**

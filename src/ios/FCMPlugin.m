@@ -12,11 +12,10 @@
 
 @implementation FCMPlugin
 
-static BOOL notificatorReceptorReady = NO;
 static BOOL appInForeground = YES;
 
-static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
-static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
+static NSString *notificationEventName = @"notification";
+static NSString *tokenRefreshCallback = @"tokenRefresh";
 static FCMPlugin *fcmPluginInstance;
 
 + (FCMPlugin *)fcmPlugin {
@@ -131,32 +130,38 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
-- (void)registerNotification:(CDVInvokedUrlCommand *)command {
-    NSLog(@"view registered for notifications");
-    
-    notificatorReceptorReady = YES;
-    NSData* lastPush = [AppDelegate getLastPush];
-    if (lastPush != nil) {
-        [FCMPlugin.fcmPlugin notifyOfMessage:lastPush];
-    }
-    
-    CDVPluginResult* pluginResult = nil;
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+- (void)getInitialPushPayload:(CDVInvokedUrlCommand *)command {
+     NSLog(@"getInitialPushPayload");
+    [self.commandDelegate runInBackground:^{
+        NSData* payload = [AppDelegate getInitialPushPayload];
+        if (payload == nil) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            return;
+        }
+        NSDictionary *payloadDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:payload];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:payloadDictionary];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void)notifyOfMessage:(NSData *)payload {
+    NSLog(@"notifyOfMessage payload: %@", payload);
     NSString* JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
-    NSString* notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
-    NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
-    [self runJS:notifyJS];
+    [self dispatchJSEvent:notificationEventName withData:JSONString];
 }
 
 - (void)notifyFCMTokenRefresh:(NSString *)token {
     NSLog(@"notifyFCMTokenRefresh token: %@", token);
-    NSString* notifyJS = [NSString stringWithFormat:@"%@('%@');", tokenRefreshCallback, token];
-    NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
-    [self runJS:notifyJS];
+    NSString* jsToken = [NSString stringWithFormat:@"\"%@\"", token];
+    [self dispatchJSEvent:tokenRefreshCallback withData:jsToken];
+}
+
+- (void)dispatchJSEvent:(NSString *)eventName withData:(NSString *)jsData {
+    NSString* dispatchTemplateCall = @"window.FCM.events.dispatchEvent(new CustomEvent(\"%@\",{detail:%@}))";
+    NSString* dispatchCall = [NSString stringWithFormat:dispatchTemplateCall, eventName, jsData];
+    NSLog(@"dispatchJSEvent: %@ with %@", eventName, jsData);
+    [self runJS:dispatchCall];
 }
 
 - (void)runJS:(NSString *)jsCode {

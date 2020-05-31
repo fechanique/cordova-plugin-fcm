@@ -1,7 +1,6 @@
-import { Observable } from "rxjs";
-import type { INotificationPayload } from "./INotificationPayload";
 import type { IChannelConfiguration } from "./IChannelConfiguration";
 import type { IRequestPushPermissionOptions } from "./IRequestPushPermissionOptions";
+import { INotificationPayload } from "INotificationPayload";
 /**
  * @name FCM
  * @description
@@ -14,17 +13,16 @@ import type { IRequestPushPermissionOptions } from "./IRequestPushPermissionOpti
  */
 export declare class FCMPlugin {
     /**
-     * The observable instance for onNotification
+     * EventTarget for native-sourced custom events.
      *
-     * @private
-     */
-    private onNotificationObservable?;
-    /**
-     * The observable instance for onTokenRefresh
+     * @event notification
+     * @type {INotificationPayload}
      *
-     * @private
+     * @event tokenRefresh
+     * @type {string}
+     *
      */
-    private onTokenRefreshObservable?;
+    events: EventTarget;
     constructor();
     /**
      * Removes existing push notifications from the notifications center
@@ -55,6 +53,14 @@ export declare class FCMPlugin {
      */
     getToken(): Promise<string>;
     /**
+     * Retrieves the message that, on tap, opened the app
+     *
+     * @private
+     *
+     * @returns {Promise<INotificationPayload | null>} Async call to native implementation
+     */
+    getInitialPushPayload(): Promise<INotificationPayload | null>;
+    /**
      * Checking for permissions on iOS. On android, it always returns `true`.
      *
      * @returns {Promise<boolean | null>} Returns a Promise of:
@@ -63,18 +69,6 @@ export declare class FCMPlugin {
      * - null: still not answered, recommended checking again later.
      */
     hasPermission(): Promise<boolean>;
-    /**
-     * Watch for incoming notifications
-     *
-     * @returns {Observable<INotificationPayload>} returns an object with data from the notification
-     */
-    onNotification(): Observable<INotificationPayload>;
-    /**
-     * Event firing on the token refresh
-     *
-     * @returns {Observable<string>} Returns an Observable that notifies with the change of device's registration id
-     */
-    onTokenRefresh(): Observable<string>;
     /**
      * Request push notification permission, alerting the user if it not have yet decided
      *
@@ -99,14 +93,6 @@ export declare class FCMPlugin {
      * @returns {Promise<void>} Async call to native implementation
      */
     unsubscribeFromTopic(topic: string): Promise<void>;
-    /**
-     * Triggers the last message retried on background
-     *
-     * @private
-     *
-     * @returns {Promise<void>} Async call to native implementation
-     */
-    private triggerLastBackgroundPush;
     /**
      * Logs the cordova ready event
      *

@@ -16,6 +16,7 @@
 @implementation AppDelegate (MCPlugin)
 
 static NSData *lastPush;
+static NSData *initialPushPayload;
 static NSString *fcmToken;
 static NSString *apnsToken;
 NSString *const kGCMMessageIDKey = @"gcm.message_id";
@@ -112,7 +113,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
     NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
     lastPush = jsonData;
-    
+    [AppDelegate setInitialPushPayload:jsonData];
     completionHandler();
 }
 
@@ -171,12 +172,14 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
             NSLog(@"app active");
             lastPush = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
+            [AppDelegate setInitialPushPayload:lastPush];
         } else if(application.applicationState == UIApplicationStateInactive) {
             NSError *error;
             NSDictionary *userInfoMutable = [userInfo mutableCopy];
             [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
             NSLog(@"app opened by user tap");
             lastPush = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
+            [AppDelegate setInitialPushPayload:lastPush];
         }
 
         completionHandler(UIBackgroundFetchResultNoData);
@@ -226,10 +229,20 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     lastPush = push;
 }
 
++ (void)setInitialPushPayload:(NSData*)payload {
+    if(initialPushPayload == nil) {
+        initialPushPayload = payload;
+    }
+}
+
 + (NSData*)getLastPush {
     NSData* returnValue = lastPush;
     lastPush = nil;
     return returnValue;
+}
+
++ (NSData*)getInitialPushPayload {
+    return initialPushPayload;
 }
 
 + (NSString*)getFCMToken {

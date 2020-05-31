@@ -11,7 +11,8 @@
   "author": "André Augusto Tissot",
   "scripts": {
     "build": "npm run build:declaration; npm run build:prod",
-    "build:prod": "tsc -p .; rollup -c rollup.config.js",
+    "build:prod": "tsc -p .; rollup -c rollup.config.js; rm -rf ./www/tmp; npm run build:prod:fix-export",
+    "build:prod:fix-export": "sed 's/exports\\.default = /module\\.exports = /' www/FCMPlugin.js > www/FCMPlugin.tmp.js; mv www/FCMPlugin.tmp.js www/FCMPlugin.js",
     "build:declaration": "cp ./src/www/*.d.ts ./typings; tsc -p . --declaration true --declarationDir ./typings --removeComments false",
     "build:loop": "while sleep 1; do npm run build; done",
     "prettier": "find ./src/www -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs prettier --write",

@@ -5,8 +5,8 @@ export default {
   input: "www/tmp/index.js",
   output: {
     file: "www/FCMPlugin.js",
-    format: "iife",
-    name: "FCMPlugin",
+    format: "cjs",
+    name: "FCM",
     globals: {}
   },
   plugins: [
@@ -15,5 +15,5 @@ export default {
     }),
     nodeResolve({ browser: true })
   ],
-  external: ["rxjs"]
+  external: []
 };
