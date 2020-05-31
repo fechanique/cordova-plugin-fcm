@@ -16,5 +16,5 @@ export interface IRequestPushPermissionOptions {
      * @default 0.3
      */
     interval?: number;
-  }
+  };
 }

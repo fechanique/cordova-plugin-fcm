@@ -1,6 +1,6 @@
 import type { IChannelConfiguration } from "./IChannelConfiguration";
 import type { IRequestPushPermissionOptions } from "./IRequestPushPermissionOptions";
-import { INotificationPayload } from "INotificationPayload";
+import type { INotificationPayload } from "./INotificationPayload";
 /**
  * @name FCM
  * @description
@@ -22,7 +22,7 @@ export declare class FCMPlugin {
      * @type {string}
      *
      */
-    events: EventTarget;
+    protected readonly eventTarget: EventTarget;
     constructor();
     /**
      * Removes existing push notifications from the notifications center
@@ -47,12 +47,6 @@ export declare class FCMPlugin {
      */
     getAPNSToken(): Promise<string>;
     /**
-     * Gets device's current registration id
-     *
-     * @returns {Promise<string>} Returns a Promise that resolves with the registration id token
-     */
-    getToken(): Promise<string>;
-    /**
      * Retrieves the message that, on tap, opened the app
      *
      * @private
@@ -60,6 +54,12 @@ export declare class FCMPlugin {
      * @returns {Promise<INotificationPayload | null>} Async call to native implementation
      */
     getInitialPushPayload(): Promise<INotificationPayload | null>;
+    /**
+     * Gets device's current registration id
+     *
+     * @returns {Promise<string>} Returns a Promise that resolves with the registration id token
+     */
+    getToken(): Promise<string>;
     /**
      * Checking for permissions on iOS. On android, it always returns `true`.
      *
@@ -69,6 +69,18 @@ export declare class FCMPlugin {
      * - null: still not answered, recommended checking again later.
      */
     hasPermission(): Promise<boolean>;
+    /**
+     * Callback firing when receiving new notifications
+     *
+     * @argument {(payload: INotificationPayload) => void} callback
+     */
+    onNotification(callback: (payload: INotificationPayload) => void): void;
+    /**
+     * Callback firing when receiving a new Firebase token
+     *
+     * @argument {(token: string) => void} callback
+     */
+    onTokenRefresh(callback: (token: string) => void): void;
     /**
      * Request push notification permission, alerting the user if it not have yet decided
      *

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "es2015",
+    "moduleResolution": "node",
+    "outDir": "../../ionic"
+  },
+  "files": ["./FCMPluginOnIonic.ts"],
+  "exclude": ["node_modules"]
+}

@@ -4,21 +4,17 @@
   "cordova_name": "Cordova FCM Push Plugin",
   "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
   "license": "MIT",
-  "main": "www/FCMPlugin.js",
-  "typings": "typings/index.d.ts",
+  "main": "./FCMPluginOnIonic.js",
   "repo": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
   "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
   "author": "André Augusto Tissot",
   "scripts": {
-    "build": "npm run build:declaration;npm run build:prod;npm run build:ionic",
-    "build:prod": "tsc -p .; rollup -c rollup.config.js; rm -rf ./www/tmp; npm run build:prod:fix-export",
-    "build:prod:fix-export": "sed 's/exports\\.default = /module\\.exports = /' www/FCMPlugin.js > www/FCMPlugin.tmp.js; mv www/FCMPlugin.tmp.js www/FCMPlugin.js",
-    "build:declaration": "cp ./src/www/*.d.ts ./typings; tsc -p . --declaration true --declarationDir ./typings --removeComments false",
-    "build:loop": "while sleep 1; do npm run build; done",
-    "build:ionic": "cd ./src/ionic;npm run build",
-    "prettier": "find ./src/www -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs prettier --write",
-    "tslint": "npx tslint -p . --fix",
-    "tsc": "npx tsc -p . --noEmit"
+    "build": "npm run build:declaration;npm run build:prod;npm run build:clear",
+    "build:clear": "cd ../../ionic;rm -rf ionic;rm -rf www",
+    "build:prod": "tsc -p .  --declaration false --removeComments true;sleep 0.1;cd ../../ionic;mv ionic/FCMPluginOnIonic.js .",
+    "build:declaration": "tsc -p . --declaration true --removeComments false;sleep 0.1;npm run build:declaration:fix-typing-import;sleep 0.1;npm run build:declaration:fix-class-import",
+    "build:declaration:fix-typing-import": "cd ../../ionic;sed 's/\\.\\.\\\/\\.\\.\\\/typings\\\//\\.\\.\\\/typings\\\//' ionic/FCMPluginOnIonic.d.ts > ionic/FCMPluginOnIonic.tmp.d.ts",
+    "build:declaration:fix-class-import": "cd ../../ionic;sed 's/\\.\\.\\\/www\\\//\\.\\.\\\/typings\\\//' ionic/FCMPluginOnIonic.tmp.d.ts > FCMPluginOnIonic.d.ts"
   },
   "repository": {
     "type": "git",
@@ -34,21 +30,22 @@
     "fcm",
     "ios",
     "android",
-    "cordova"
+    "cordova",
+    "ionic"
   ],
   "platforms": [
     "android",
     "ios"
   ],
-  "englishdoc": "",
   "devDependencies": {
     "@types/cordova": "0.0.34",
     "prettier": "^2.0.5",
-    "rollup": "^2.12.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "tslint": "^6.1.2",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "@ionic-native/core": "^5.26.0",
+    "rxjs": "^6.5.5"
   }
 }

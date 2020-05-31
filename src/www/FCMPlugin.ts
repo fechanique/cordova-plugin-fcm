@@ -1,7 +1,7 @@
 import type { IChannelConfiguration } from "./IChannelConfiguration"
 import type { IRequestPushPermissionOptions } from "./IRequestPushPermissionOptions"
+import type { INotificationPayload } from "./INotificationPayload"
 import { execAsPromise } from "./execAsPromise.helper"
-import { INotificationPayload } from "INotificationPayload"
 
 /**
  * @name FCM
@@ -24,14 +24,14 @@ export class FCMPlugin {
    * @type {string}
    *
    */
-  public events: EventTarget
+  protected readonly eventTarget: EventTarget
 
   constructor() {
     console.log("FCMPlugin: has been created")
     try {
-      this.events = new EventTarget()
+      this.eventTarget = new EventTarget()
     } catch (e) {
-      this.events = document.createElement("div")
+      this.eventTarget = document.createElement("div")
     }
     this.logReadyStatus()
   }
@@ -74,15 +74,6 @@ export class FCMPlugin {
   }
 
   /**
-   * Gets device's current registration id
-   *
-   * @returns {Promise<string>} Returns a Promise that resolves with the registration id token
-   */
-  public getToken(): Promise<string> {
-    return execAsPromise("getToken")
-  }
-
-  /**
    * Retrieves the message that, on tap, opened the app
    *
    * @private
@@ -91,6 +82,15 @@ export class FCMPlugin {
    */
   public getInitialPushPayload(): Promise<INotificationPayload | null> {
     return execAsPromise("getInitialPushPayload")
+  }
+
+  /**
+   * Gets device's current registration id
+   *
+   * @returns {Promise<string>} Returns a Promise that resolves with the registration id token
+   */
+  public getToken(): Promise<string> {
+    return execAsPromise("getToken")
   }
 
   /**
@@ -105,6 +105,32 @@ export class FCMPlugin {
     return window.cordova.platformId !== "ios"
       ? Promise.resolve(true)
       : execAsPromise("hasPermission")
+  }
+
+  /**
+   * Callback firing when receiving new notifications
+   *
+   * @argument {(payload: INotificationPayload) => void} callback
+   */
+  public onNotification(callback: (payload: INotificationPayload) => void): void {
+    this.eventTarget.addEventListener(
+      "notification",
+      (event: CustomEvent<INotificationPayload>) => callback(event.detail),
+      { passive: true }
+    )
+  }
+
+  /**
+   * Callback firing when receiving a new Firebase token
+   *
+   * @argument {(token: string) => void} callback
+   */
+  public onTokenRefresh(callback: (token: string) => void): void {
+    this.eventTarget.addEventListener(
+      "tokenRefresh",
+      (event: CustomEvent<string>) => callback(event.detail),
+      { passive: true }
+    )
   }
 
   /**
