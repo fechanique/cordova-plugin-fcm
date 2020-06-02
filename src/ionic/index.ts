@@ -1,3 +1,3 @@
-export { FCMPluginOnIonic } from "./FCMPluginOnIonic"
+import { FCMPluginOnIonic } from "./FCMPluginOnIonic"
 
 export const FCM = new FCMPluginOnIonic()

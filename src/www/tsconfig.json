@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
-    "baseUrl": "./src/www",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "lib": ["dom", "es5", "es2015.promise"],
     "module": "es2015",
-    "outDir": "./www/tmp",
+    "outDir": "../../www/tmp",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "removeComments": true,
@@ -16,6 +16,6 @@
     "strictPropertyInitialization": true,
     "target": "es5"
   },
-  "include": ["src/www/**/*"],
+  "include": ["./*.ts"],
   "exclude": ["node_modules"]
 }

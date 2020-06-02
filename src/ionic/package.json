@@ -17,7 +17,8 @@
     "build:dts:fix-typing-import": "cd ../../ionic;sed 's/\\.\\.\\\/\\.\\.\\\/typings\\\//\\.\\.\\\/typings\\\//' ionic/FCMPluginOnIonic.d.ts > ionic/FCMPluginOnIonic.tmp.d.ts",
     "build:dts:fix-class-import": "cd ../../ionic;sed 's/\\.\\.\\\/www\\\//\\.\\.\\\/typings\\\//' ionic/FCMPluginOnIonic.tmp.d.ts > FCMPluginOnIonic.d.ts",
     "build:dts:mv-index": "cd ../../ionic;mv ionic/index.d.ts .",
-    "build:after": "cd ../../ionic;rm -rf ionic;rm -rf www"
+    "build:after": "cd ../../ionic;rm -rf ionic;rm -rf www",
+    "tsc": "npx tsc -p . --noEmit"
   },
   "repository": {
     "type": "git",

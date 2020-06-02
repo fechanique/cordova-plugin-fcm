@@ -10,11 +10,13 @@
   "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
   "author": "André Augusto Tissot",
   "scripts": {
-    "build": "npm run build:www;npm run build:ionic",
-    "build:www": "cd ./src/www;npm run build",
-    "build:ionic": "cd ./src/ionic;npm run build",
-    "prettier": "find ./src/www -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs prettier --write",
-    "tslint": "npx tslint -p . --fix"
+    "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
+    "build:before": "rm -rf ../../www;mkdir -p ../../www",
+    "build:js": "tsc -p .;rollup -c rollup.config.js;npm run build:js:fix-export",
+    "build:js:fix-export": "cd ../../www;sed 's/exports\\.default = /module\\.exports = /' FCMPlugin.js > FCMPlugin.tmp.js; mv FCMPlugin.tmp.js FCMPlugin.js",
+    "build:dts": "cp ./*.d.ts ../../typings; tsc -p . --declaration true --declarationDir ../../typings --removeComments false",
+    "build:after": "rm -rf ../../www/tmp",
+    "tsc": "npx tsc -p . --noEmit"
   },
   "repository": {
     "type": "git",
@@ -38,9 +40,10 @@
   ],
   "englishdoc": "",
   "devDependencies": {
-    "prettier": "^2.0.5",
-    "tslint": "^6.1.2",
-    "tslint-microsoft-contrib": "^6.2.0",
+    "@types/cordova": "0.0.34",
+    "rollup": "^2.12.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "typescript": "^3.9.3"
   }
 }

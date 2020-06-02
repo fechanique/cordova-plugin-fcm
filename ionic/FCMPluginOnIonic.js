@@ -38,4 +38,3 @@ var FCMPluginOnIonic = (function (_super) {
     return FCMPluginOnIonic;
 }(FCMPlugin));
 export { FCMPluginOnIonic };
-export var FCM = new FCMPluginOnIonic();
