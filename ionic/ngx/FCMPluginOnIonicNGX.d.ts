@@ -1,5 +1,5 @@
 import { FCMPluginOnIonic } from "../FCMPluginOnIonic";
-declare class FCMPluginOnIonicNGX extends FCMPluginOnIonic {
+export declare class FCMPluginOnIonicNGX extends FCMPluginOnIonic {
     static pluginName: string;
     static plugin: string;
     static pluginRef: string;
@@ -12,4 +12,3 @@ declare class FCMPluginOnIonicNGX extends FCMPluginOnIonic {
     static getPluginInstallName: () => string;
     static getSupportedPlatforms: () => string[];
 }
-export { FCMPluginOnIonicNGX };

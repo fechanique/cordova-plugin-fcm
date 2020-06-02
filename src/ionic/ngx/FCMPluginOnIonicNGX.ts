@@ -3,7 +3,7 @@ import { IonicNativePlugin } from "@ionic-native/core"
 import { FCMPluginOnIonic } from "../FCMPluginOnIonic"
 
 @Injectable()
-class FCMPluginOnIonicNGX extends FCMPluginOnIonic {
+export class FCMPluginOnIonicNGX extends FCMPluginOnIonic {
   public static pluginName: string = "FCM"
   public static plugin: string = "cordova-plugin-fcm-with-dependecy-updated"
   public static pluginRef: string = "FCMPlugin"
@@ -17,5 +17,3 @@ class FCMPluginOnIonicNGX extends FCMPluginOnIonic {
   public static getPluginInstallName: () => string = IonicNativePlugin.getPluginInstallName
   public static getSupportedPlatforms: () => string[] = IonicNativePlugin.getSupportedPlatforms
 }
-
-export { FCMPluginOnIonicNGX }
