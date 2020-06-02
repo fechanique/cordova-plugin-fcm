@@ -3,12 +3,19 @@ import { Observable } from "rxjs"
 import type { INotificationPayload } from "../../typings/INotificationPayload"
 import { FCMPlugin } from "../www/FCMPlugin"
 
-export class FCMPluginOnIonic extends FCMPlugin implements IonicNativePlugin {
-  public pluginName = "FCM"
-  public plugin = "cordova-plugin-fcm-with-dependecy-updated"
-  public pluginRef = "FCMPlugin"
-  public repo = "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
-  public platforms = ["Android", "iOS"]
+export class FCMPluginOnIonic extends FCMPlugin {
+  public static pluginName: string = "FCM"
+  public static plugin: string = "cordova-plugin-fcm-with-dependecy-updated"
+  public static pluginRef: string = "FCMPlugin"
+  public static repo: string =
+    "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
+  public static platforms: string[] = ["Android", "iOS"]
+  public static installed: () => boolean = IonicNativePlugin.installed
+  public static getPlugin: () => any = IonicNativePlugin.getPlugin
+  public static getPluginName: () => string = IonicNativePlugin.getPluginName
+  public static getPluginRef: () => string = IonicNativePlugin.getPluginRef
+  public static getPluginInstallName: () => string = IonicNativePlugin.getPluginInstallName
+  public static getSupportedPlatforms: () => string[] = IonicNativePlugin.getSupportedPlatforms
 
   /**
    * Event firing when receiving new notifications
@@ -38,6 +45,3 @@ export class FCMPluginOnIonic extends FCMPlugin implements IonicNativePlugin {
     )
   }
 }
-
-export const FCM = new FCMPluginOnIonic()
-export default FCM

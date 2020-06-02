@@ -4,6 +4,6 @@
     "moduleResolution": "node",
     "outDir": "../../ionic"
   },
-  "files": ["./FCMPluginOnIonic.ts"],
+  "files": ["./index.ts", "./FCMPluginOnIonic.ts"],
   "exclude": ["node_modules"]
 }

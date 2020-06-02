@@ -11,18 +11,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { cordova } from "@ionic-native/core";
+import { IonicNativePlugin, cordova } from "@ionic-native/core";
 import { FCMPlugin } from "../www/FCMPlugin";
 var FCMPluginOnIonic = (function (_super) {
     __extends(FCMPluginOnIonic, _super);
     function FCMPluginOnIonic() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.pluginName = "FCM";
-        _this.plugin = "cordova-plugin-fcm-with-dependecy-updated";
-        _this.pluginRef = "FCMPlugin";
-        _this.repo = "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated";
-        _this.platforms = ["Android", "iOS"];
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     FCMPluginOnIonic.prototype.onNotification = function () {
         return cordova(this, "onNotification", { eventObservable: true, element: this.eventTarget, event: "notification" }, arguments);
@@ -30,8 +24,18 @@ var FCMPluginOnIonic = (function (_super) {
     FCMPluginOnIonic.prototype.onTokenRefresh = function () {
         return cordova(this, "onTokenRefresh", { eventObservable: true, element: this.eventTarget, event: "tokenRefresh" }, arguments);
     };
+    FCMPluginOnIonic.pluginName = "FCM";
+    FCMPluginOnIonic.plugin = "cordova-plugin-fcm-with-dependecy-updated";
+    FCMPluginOnIonic.pluginRef = "FCMPlugin";
+    FCMPluginOnIonic.repo = "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated";
+    FCMPluginOnIonic.platforms = ["Android", "iOS"];
+    FCMPluginOnIonic.installed = IonicNativePlugin.installed;
+    FCMPluginOnIonic.getPlugin = IonicNativePlugin.getPlugin;
+    FCMPluginOnIonic.getPluginName = IonicNativePlugin.getPluginName;
+    FCMPluginOnIonic.getPluginRef = IonicNativePlugin.getPluginRef;
+    FCMPluginOnIonic.getPluginInstallName = IonicNativePlugin.getPluginInstallName;
+    FCMPluginOnIonic.getSupportedPlatforms = IonicNativePlugin.getSupportedPlatforms;
     return FCMPluginOnIonic;
 }(FCMPlugin));
 export { FCMPluginOnIonic };
 export var FCM = new FCMPluginOnIonic();
-export default FCM;
