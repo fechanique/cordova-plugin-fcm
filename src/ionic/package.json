@@ -10,13 +10,14 @@
   "author": "André Augusto Tissot",
   "scripts": {
     "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
-    "build:before": "rm -rf ../../ionic;mkdir -p ../../ionic",
-    "build:js": "tsc -p .  --declaration false --removeComments true;cd ../../ionic;mv ionic/FCMPluginOnIonic.js .;mv ionic/index.js .",
-    "build:dts": "npm run build:dts:generate;npm run build:dts:fix-typing-import;npm run build:dts:fix-class-import;npm run build:dts:mv-index",
+    "build:before": "rm -rf ../../ionic;mkdir -p ../../ionic/ngx",
+    "build:js": "tsc -p .  --declaration false --removeComments true;cd ../../ionic;mv ionic/*.js .;mv ionic/ngx/*.js ./ngx/",
+    "build:dts": "npm run build:dts:generate;npm run build:dts:fix-typing-import;npm run build:dts:fix-class-import;npm run build:dts:mv-index;npm run build:dts:mv-ngx",
     "build:dts:generate": "tsc -p . --declaration true --removeComments false",
-    "build:dts:fix-typing-import": "cd ../../ionic;sed 's/\\.\\.\\\/\\.\\.\\\/typings\\\//\\.\\.\\\/typings\\\//' ionic/FCMPluginOnIonic.d.ts > ionic/FCMPluginOnIonic.tmp.d.ts",
-    "build:dts:fix-class-import": "cd ../../ionic;sed 's/\\.\\.\\\/www\\\//\\.\\.\\\/typings\\\//' ionic/FCMPluginOnIonic.tmp.d.ts > FCMPluginOnIonic.d.ts",
+    "build:dts:fix-typing-import": "cd ../../ionic;sed 's/\\.\\.\\/\\.\\.\\/typings\\//\\.\\.\\/typings\\//' ionic/FCMPluginOnIonic.d.ts > ionic/FCMPluginOnIonic.tmp.d.ts",
+    "build:dts:fix-class-import": "cd ../../ionic;sed 's/\\.\\.\\/www\\//\\.\\.\\/typings\\//' ionic/FCMPluginOnIonic.tmp.d.ts > FCMPluginOnIonic.d.ts",
     "build:dts:mv-index": "cd ../../ionic;mv ionic/index.d.ts .",
+    "build:dts:mv-ngx": "cd ../../ionic;mv ionic/ngx/*.d.ts ./ngx/",
     "build:after": "cd ../../ionic;rm -rf ionic;rm -rf www",
     "tsc": "npx tsc -p . --noEmit"
   },
@@ -49,7 +50,9 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "@angular/core": "^9.1.9",
     "@ionic-native/core": "^5.26.0",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.5.5",
+    "tslib": "^2.0.0"
   }
 }
