@@ -19,9 +19,10 @@
     "build:dts:root:fix-class-import": "cd ../../ionic;sed 's/\\.\\.\\/www\\//\\.\\.\\/typings\\//' ionic/FCMPluginOnIonic.tmp.d.ts > FCMPluginOnIonic.d.ts",
     "build:dts:root:mv-index": "cd ../../ionic;mv ionic/index.d.ts .",
     "build:dts:ngx": "cd ../../ionic;mv ionic/ngx/*.d.ts ./ngx/",
-    "build:dts:v4": "npm run build:dts:v4:mv-files;npm run build:dts:v4:fix-typing-import",
+    "build:dts:v4": "npm run build:dts:v4:mv-files;npm run build:dts:v4:fix-typing-import;npm run build:dts:v4:cp-packageJson",
     "build:dts:v4:mv-files": "cd ../../ionic;mv ionic/v4/*.d.ts ./v4/",
-    "build:dts:v4:fix-typing-import": "cd ../../ionic/v4;sed 's/\\.\\.\\/\\.\\.\\/typings\\//\\.\\.\\/typings\\//' FCMPluginOnIonicv4.d.ts > FCMPluginOnIonicv4.tmp.d.ts;mv FCMPluginOnIonicv4.tmp.d.ts FCMPluginOnIonicv4.d.ts",
+    "build:dts:v4:fix-typing-import": "cd ../../ionic/v4;sed 's/\\.\\.\\/\\.\\.\\/typings\\//\\.\\.\\/typings\\//' FCM.d.ts > FCM.tmp.d.ts;mv FCM.tmp.d.ts FCM.d.ts",
+    "build:dts:v4:cp-packageJson": "cp ./v4/package.toCopy.json ../../ionic/v4/package.json",
     "build:after": "cd ../../ionic;rm -rf ionic;rm -rf www",
     "tsc": "npx tsc -p . --noEmit"
   },

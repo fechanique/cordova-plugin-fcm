@@ -6,7 +6,7 @@ import { FCMPlugin } from "../www/FCMPlugin"
 export class FCMPluginOnIonic extends FCMPlugin {
   public static pluginName: string = "FCM"
   public static plugin: string = "cordova-plugin-fcm-with-dependecy-updated"
-  public static pluginRef: string = "FCMPlugin"
+  public static pluginRef: string = "FCM"
   public static repo: string =
     "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
   public static platforms: string[] = ["Android", "iOS"]
@@ -26,7 +26,7 @@ export class FCMPluginOnIonic extends FCMPlugin {
     return cordova(
       this,
       "onNotification",
-      { eventObservable: true, element: this.eventTarget, event: "notification" },
+      { eventObservable: true, element: FCMPlugin.eventTarget, event: "notification" },
       arguments
     )
   }
@@ -40,7 +40,7 @@ export class FCMPluginOnIonic extends FCMPlugin {
     return cordova(
       this,
       "onTokenRefresh",
-      { eventObservable: true, element: this.eventTarget, event: "tokenRefresh" },
+      { eventObservable: true, element: FCMPlugin.eventTarget, event: "tokenRefresh" },
       arguments
     )
   }

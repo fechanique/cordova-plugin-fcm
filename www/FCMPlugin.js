@@ -12,12 +12,6 @@ var execAsPromise = function (command, args) {
 var FCMPlugin = (function () {
     function FCMPlugin() {
         console.log("FCMPlugin: has been created");
-        try {
-            this.eventTarget = new EventTarget();
-        }
-        catch (e) {
-            this.eventTarget = document.createElement("div");
-        }
         this.logReadyStatus();
     }
     FCMPlugin.prototype.clearAllNotifications = function () {
@@ -46,10 +40,10 @@ var FCMPlugin = (function () {
             : execAsPromise("hasPermission");
     };
     FCMPlugin.prototype.onNotification = function (callback) {
-        this.eventTarget.addEventListener("notification", function (event) { return callback(event.detail); }, { passive: true });
+        FCMPlugin.eventTarget.addEventListener("notification", function (event) { return callback(event.detail); }, { passive: true });
     };
     FCMPlugin.prototype.onTokenRefresh = function (callback) {
-        this.eventTarget.addEventListener("tokenRefresh", function (event) { return callback(event.detail); }, { passive: true });
+        FCMPlugin.eventTarget.addEventListener("tokenRefresh", function (event) { return callback(event.detail); }, { passive: true });
     };
     FCMPlugin.prototype.requestPushPermission = function (options) {
         var _a, _b, _c, _d;
@@ -71,6 +65,14 @@ var FCMPlugin = (function () {
             .then(function () { return console.log("FCMPlugin: Ready!"); })
             .catch(function (error) { return console.log("FCMPlugin: Ready error: ", error); });
     };
+    FCMPlugin.eventTarget = (function () {
+        try {
+            return new EventTarget();
+        }
+        catch (e) {
+            return document.createElement("div");
+        }
+    })();
     return FCMPlugin;
 }());
 
