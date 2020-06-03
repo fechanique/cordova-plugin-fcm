@@ -1,7 +1,7 @@
 import { __decorate, __extends } from "tslib";
 import { Injectable } from "@angular/core";
 import { IonicNativePlugin } from "@ionic-native/core";
-import { FCMPluginOnIonic } from "../FCMPluginOnIonic";
+import { FCMPluginOnIonic } from "../FCM";
 var FCM = (function (_super) {
     __extends(FCM, _super);
     function FCM() {

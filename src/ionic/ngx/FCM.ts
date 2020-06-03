@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import { IonicNativePlugin } from "@ionic-native/core"
-import { FCMPluginOnIonic } from "../FCMPluginOnIonic"
+import { FCMPluginOnIonic } from "../FCM"
 
 @Injectable()
 export class FCM extends FCMPluginOnIonic {

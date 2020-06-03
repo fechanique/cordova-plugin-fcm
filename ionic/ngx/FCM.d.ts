@@ -1,4 +1,4 @@
-import { FCMPluginOnIonic } from "../FCMPluginOnIonic";
+import { FCMPluginOnIonic } from "../FCM";
 export declare class FCM extends FCMPluginOnIonic {
     static pluginName: string;
     static plugin: string;
