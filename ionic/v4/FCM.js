@@ -1,69 +1,47 @@
-import { __decorate, __metadata } from "tslib";
+import { __decorate } from "tslib";
 import { Injectable } from "@angular/core";
-import { Cordova, Plugin } from "@ionic-native/core";
-import { Observable } from "rxjs";
+import { Plugin } from "@ionic-native/core";
+import { Subject } from "rxjs";
 var FCM = (function () {
     function FCM() {
-        this.logReadyStatus();
     }
-    FCM.prototype.logReadyStatus = function () {
-        console.log("FCM ionic v4: has been created");
-        return Promise.resolve();
-    };
     FCM.prototype.clearAllNotifications = function () {
-        return Promise.resolve();
+        return window.FCM.clearAllNotifications();
     };
     FCM.prototype.createNotificationChannel = function (channelConfig) {
-        return Promise.resolve();
+        return window.FCM.createNotificationChannel(channelConfig);
     };
     FCM.prototype.getAPNSToken = function () {
-        return Promise.resolve("");
+        return window.FCM.getAPNSToken();
     };
     FCM.prototype.getInitialPushPayload = function () {
-        return Promise.resolve(null);
+        return window.FCM.getInitialPushPayload();
     };
     FCM.prototype.getToken = function () {
-        return Promise.resolve("getToken");
+        return window.FCM.getToken();
     };
     FCM.prototype.hasPermission = function () {
-        return Promise.resolve(true);
-    };
-    FCM.prototype.requestPushPermission = function (options) {
-        return Promise.resolve(true);
-    };
-    FCM.prototype.subscribeToTopic = function (topic) {
-        return Promise.resolve();
-    };
-    FCM.prototype.unsubscribeFromTopic = function (topic) {
-        return Promise.resolve();
+        return window.FCM.hasPermission();
     };
     FCM.prototype.onNotification = function () {
-        return new Observable();
+        var observable = new Subject();
+        window.FCM.eventTarget.addEventListener("notification", function (event) { return observable.next(event.detail); }, { passive: true });
+        return observable;
     };
     FCM.prototype.onTokenRefresh = function () {
-        return new Observable();
+        var observable = new Subject();
+        window.FCM.eventTarget.addEventListener("notification", function (event) { return observable.next(event.detail); }, { passive: true });
+        return observable;
     };
-    FCM.decorators = [{ type: Injectable }];
-    __decorate([
-        Cordova({
-            eventObservable: true,
-            element: window.FCM.eventTarget,
-            event: "notification",
-        }),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", Observable)
-    ], FCM.prototype, "onNotification", null);
-    __decorate([
-        Cordova({
-            eventObservable: true,
-            element: window.FCM.eventTarget,
-            event: "tokenRefresh",
-        }),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", Observable)
-    ], FCM.prototype, "onTokenRefresh", null);
+    FCM.prototype.requestPushPermission = function (options) {
+        return window.FCM.requestPushPermission(options);
+    };
+    FCM.prototype.subscribeToTopic = function (topic) {
+        return window.FCM.subscribeToTopic(topic);
+    };
+    FCM.prototype.unsubscribeFromTopic = function (topic) {
+        return window.FCM.unsubscribeFromTopic(topic);
+    };
     FCM = __decorate([
         Plugin({
             pluginName: "FCM",
@@ -72,7 +50,7 @@ var FCM = (function () {
             repo: "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
             platforms: ["Android", "iOS"],
         }),
-        __metadata("design:paramtypes", [])
+        Injectable()
     ], FCM);
     return FCM;
 }());

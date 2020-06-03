@@ -24,15 +24,14 @@ export class FCMPlugin {
    * @type {string}
    *
    */
-  public static readonly eventTarget: EventTarget = (() => {
-    try {
-      return new EventTarget()
-    } catch (e) {
-      return document.createElement("div")
-    }
-  })()
+  public readonly eventTarget: EventTarget
 
   constructor() {
+    try {
+      this.eventTarget = new EventTarget()
+    } catch (e) {
+      this.eventTarget = document.createElement("div")
+    }
     console.log("FCMPlugin: has been created")
     this.logReadyStatus()
   }
@@ -114,7 +113,7 @@ export class FCMPlugin {
    * @argument {(payload: INotificationPayload) => void} callback
    */
   public onNotification(callback: (payload: INotificationPayload) => void): void {
-    FCMPlugin.eventTarget.addEventListener(
+    this.eventTarget.addEventListener(
       "notification",
       (event: CustomEvent<INotificationPayload>) => callback(event.detail),
       { passive: true }
@@ -127,7 +126,7 @@ export class FCMPlugin {
    * @argument {(token: string) => void} callback
    */
   public onTokenRefresh(callback: (token: string) => void): void {
-    FCMPlugin.eventTarget.addEventListener(
+    this.eventTarget.addEventListener(
       "tokenRefresh",
       (event: CustomEvent<string>) => callback(event.detail),
       { passive: true }

@@ -22,7 +22,7 @@ export declare class FCMPlugin {
      * @type {string}
      *
      */
-    static readonly eventTarget: EventTarget;
+    readonly eventTarget: EventTarget;
     constructor();
     /**
      * Removes existing push notifications from the notifications center

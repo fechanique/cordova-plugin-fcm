@@ -158,7 +158,7 @@ static FCMPlugin *fcmPluginInstance;
 }
 
 - (void)dispatchJSEvent:(NSString *)eventName withData:(NSString *)jsData {
-    NSString* dispatchTemplateCall = @"window.FCM.events.dispatchEvent(new CustomEvent(\"%@\",{detail:%@}))";
+    NSString* dispatchTemplateCall = @"window.FCM.eventTarget.dispatchEvent(new CustomEvent(\"%@\",{detail:%@}))";
     NSString* dispatchCall = [NSString stringWithFormat:dispatchTemplateCall, eventName, jsData];
     NSLog(@"dispatchJSEvent: %@ with %@", eventName, jsData);
     [self runJS:dispatchCall];

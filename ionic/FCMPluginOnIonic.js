@@ -7,10 +7,10 @@ var FCMPluginOnIonic = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     FCMPluginOnIonic.prototype.onNotification = function () {
-        return cordova(this, "onNotification", { eventObservable: true, element: FCMPlugin.eventTarget, event: "notification" }, arguments);
+        return cordova(this, "onNotification", { eventObservable: true, element: window.FCM.eventTarget, event: "notification" }, arguments);
     };
     FCMPluginOnIonic.prototype.onTokenRefresh = function () {
-        return cordova(this, "onTokenRefresh", { eventObservable: true, element: FCMPlugin.eventTarget, event: "tokenRefresh" }, arguments);
+        return cordova(this, "onTokenRefresh", { eventObservable: true, element: window.FCM.eventTarget, event: "tokenRefresh" }, arguments);
     };
     FCMPluginOnIonic.pluginName = "FCM";
     FCMPluginOnIonic.plugin = "cordova-plugin-fcm-with-dependecy-updated";

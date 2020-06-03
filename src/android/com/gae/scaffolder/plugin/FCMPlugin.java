@@ -250,7 +250,7 @@ public class FCMPlugin extends CordovaPlugin {
         if (gWebView == null) {
             throw new Exception("gWebView not available");
         }
-        String callBack = "javascript:window.FCM.events.dispatchEvent(new CustomEvent(\"" + eventName + "\",{detail:" + jsData + "}))";
+        String callBack = "javascript:window.FCM.eventTarget.dispatchEvent(new CustomEvent(\"" + eventName + "\",{detail:" + jsData + "}))";
         Log.d(TAG, "\tSent event: " + eventName + " with " + jsData);
         gWebView.sendJavascript(callBack);
     }

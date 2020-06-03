@@ -3,6 +3,10 @@ import { Observable } from "rxjs"
 import type { INotificationPayload } from "../../typings/INotificationPayload"
 import { FCMPlugin } from "../www/FCMPlugin"
 
+declare namespace window {
+  export let FCM: FCMPlugin
+}
+
 export class FCMPluginOnIonic extends FCMPlugin {
   public static pluginName: string = "FCM"
   public static plugin: string = "cordova-plugin-fcm-with-dependecy-updated"
@@ -26,7 +30,7 @@ export class FCMPluginOnIonic extends FCMPlugin {
     return cordova(
       this,
       "onNotification",
-      { eventObservable: true, element: FCMPlugin.eventTarget, event: "notification" },
+      { eventObservable: true, element: window.FCM.eventTarget, event: "notification" },
       arguments
     )
   }
@@ -40,7 +44,7 @@ export class FCMPluginOnIonic extends FCMPlugin {
     return cordova(
       this,
       "onTokenRefresh",
-      { eventObservable: true, element: FCMPlugin.eventTarget, event: "tokenRefresh" },
+      { eventObservable: true, element: window.FCM.eventTarget, event: "tokenRefresh" },
       arguments
     )
   }
