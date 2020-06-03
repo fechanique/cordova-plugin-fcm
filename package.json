@@ -14,7 +14,7 @@
     "build:www": "cd ./src/www;npm run build",
     "build:ionic": "cd ./src/ionic;npm run build",
     "prettier": "find ./src/www -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs prettier --write",
-    "tslint": "npx tslint -p . --fix"
+    "tslint": "npx tslint -p ./src/www --fix;npx tslint -p ./src/ionic --fix"
   },
   "repository": {
     "type": "git",
