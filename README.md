@@ -97,6 +97,8 @@ FCM.onNotification((payload: object) => {
 })
 ```
 
+:warning: This doesn't re-trigger the initial push event, as it used to do. Alternatively, you can have access of the notification that started the app by calling the `FCM.getInitialPushPayload()`.
+
 ##### FCM.onTokenRefresh()
 
 Callback firing when receiving a new Firebase token. It serves as a shortcut to listen to eventTarget's "tokenRefresh" event.
