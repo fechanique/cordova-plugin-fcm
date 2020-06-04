@@ -11,6 +11,165 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+### Version 7.0.0 Beta (04/06/2020)
+
+JS methods refactored for a more modern approach:
+- TODO
+
+#### As its own
+
+The JS functions are now as written bellow and do require Promise support. Which, for Android API 19 support, it can be fulfilled by a polyfill.
+
+##### FCM.clearAllNotifications()
+
+Removes existing push notifications from the notifications center.
+```typescript
+await FCM.clearAllNotifications();
+```
+
+##### FCM.createNotificationChannel()
+
+For Android, some notification properties are only defined programmatically.
+Channel can define the default behavior for notifications on Android 8.0+.
+Once a channel is created, it stays unchangeable until the user uninstalls the app.
+```typescript
+await FCM.createNotificationChannel({
+  id: "urgent_alert", // required
+  name: "Urgent Alert", // required
+  description: "Very urgent message alert",
+  importance: "high", // https://developer.android.com/guide/topics/ui/notifiers/notifications#importance
+  visibility: "public", // https://developer.android.com/training/notify-user/build-notification#lockscreenNotification
+  sound: "alert_sound", // In the "alert_sound" example, the file should located as resources/raw/alert_sound.mp3
+  lights: true, // enable lights for notifications
+  vibration: true // enable vibration for notifications
+});
+```
+
+##### FCM.getAPNSToken()
+
+Gets iOS device's current APNS token.
+```typescript
+const apnsToken: string = await FCM.getAPNSToken();
+```
+
+##### FCM.getInitialPushPayload()
+
+Retrieves the message that, on tap, opened the app.
+```typescript
+const pushPayload: object = await FCM.getInitialPushPayload()
+```
+
+##### FCM.getToken()
+
+Gets device's current registration id.
+```typescript
+const fcmToken: string = await FCM.getToken()
+```
+
+##### FCM.hasPermission()
+
+Checking for permissions on iOS. On android, it always returns `true`.
+```typescript
+const doesIt: boolean = await FCM.hasPermission()
+```
+
+##### FCM.onNotification()
+
+Callback firing when receiving new notifications. It serves as a shortcut to listen to eventTarget's "notification" event.
+```typescript
+FCM.onNotification((payload: object) => {
+  // ...
+})
+```
+
+##### FCM.onTokenRefresh()
+
+Callback firing when receiving a new Firebase token. It serves as a shortcut to listen to eventTarget's "tokenRefresh" event.
+```typescript
+FCM.onTokenRefresh((fcmToken: string) => {
+  // ...
+})
+```
+
+##### FCM.requestPushPermission()
+
+Request push notification permission, alerting the user if it not have yet decided.
+```typescript
+const wasPermissionGiven: boolean = await FCM.requestPushPermission({
+  ios9Support: {
+    timeout: 10,  // How long it will wait for a decision from the user before returning `false`
+    interval: 0.3 // How long between each permission verification
+  }
+})
+```
+
+##### FCM.subscribeToTopic()
+
+Subscribes you to a [topic](https://firebase.google.com/docs/notifications/android/console-topics).
+```typescript
+const topic: string
+// ...
+await FCM.subscribeToTopic(topic)
+```
+
+##### FCM.unsubscribeFromTopic()
+
+Unsubscribes you from a [topic](https://firebase.google.com/docs/notifications/android/console-topics).
+```typescript
+const topic: string
+// ...
+await FCM.unsubscribeFromTopic(topic)
+```
+
+##### FCM.eventTarget
+
+EventTarget object for native-sourced custom events. Useful for more advanced listening handling.
+```typescript
+const listener = (data) => {
+  const payload = data.detail
+  // ...
+}
+FCM.eventTarget.addEventListener("notification", listener, false);
+// ...
+FCM.eventTarget.removeEventListener("notification", listener, false);
+```
+
+#### With Ionic
+
+Ionic support was implemented as part of this plugin to allow users to have access to newer features with the type support. It is available in 3 flavors:
+- Ionic v5:
+```typescript
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic";
+```
+- Ionic ngx:
+```typescript
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+```
+- Ionic v4:
+```typescript
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/v4";
+```
+
+It brings the same behavior as the native implementation, except for `FCM.onNotification()` and `FCM.onTokenRefresh()`, which gain rxjs' Observable support.
+
+##### FCM.onNotification()
+
+Event firing when receiving new notifications.
+```typescript
+this.fcm.onNotification().subscribe((payload: object) => {
+  // ...
+});
+```
+
+##### FCM.onTokenRefresh()
+
+Event firing when receiving new notifications.
+```typescript
+this.fcm.onTokenRefresh().subscribe((token: string) => {
+  // ...
+});
+```
+
 ### Optional FCM Image Support for Cordova iOS
 
 After a lot of work, the first release of the plugin https://github.com/andrehtissot/cordova-plugin-fcm-image-support is out. Which should enable the support, just by installing it.
