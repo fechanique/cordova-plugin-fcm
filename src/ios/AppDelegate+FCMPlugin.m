@@ -1,6 +1,7 @@
 #import "AppDelegate+FCMPlugin.h"
 #import "FCMPlugin.h"
 #import "FCMPluginIOS9Support.h"
+#import "FCMNotificationCenterDelegate.h"
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
 
@@ -10,7 +11,7 @@
 // Implement UNUserNotificationCenterDelegate to receive display notification via APNS for devices
 // running iOS 10 and above. Implement FIRMessagingDelegate to receive data message via FCM for
 // devices running iOS 10 and above.
-@interface AppDelegate () <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
+@interface AppDelegate () <FIRMessagingDelegate>
 @end
 
 @implementation AppDelegate (MCPlugin)
@@ -20,6 +21,7 @@ static NSData *initialPushPayload;
 static NSString *fcmToken;
 static NSString *apnsToken;
 NSString *const kGCMMessageIDKey = @"gcm.message_id";
+FCMNotificationCenterDelegate *notificationCenterDelegate;
 
 //Method swizzling
 + (void)load {
@@ -32,6 +34,11 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     [self application:application customDidFinishLaunchingWithOptions:launchOptions];
 
     NSLog(@"DidFinishLaunchingWithOptions");
+    if ([UNUserNotificationCenter class] != nil) {
+        // For iOS 10 display notification (sent via APNS)
+        notificationCenterDelegate = [NSClassFromString(@"FCMNotificationCenterDelegate") alloc];
+        [notificationCenterDelegate configureForNotifications];
+    }
     [self performSelector:@selector(configureForNotifications) withObject:self afterDelay:0.3f];
 
     return YES;
@@ -40,10 +47,6 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 - (void)configureForNotifications {
     if([FIRApp defaultApp] == nil) {
         [FIRApp configure];
-    }
-    if ([UNUserNotificationCenter class] != nil) {
-        // For iOS 10 display notification (sent via APNS)
-        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     }
     // For iOS message (sent via FCM)
     [FIRMessaging messaging].delegate = self;
@@ -65,56 +68,6 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
         NSLog(@"User Notification permission denied: %@", error.localizedDescription);
         block(NO, error);
     }];
-}
-
-// [BEGIN message_handling]
-// Handle incoming notification messages while app is in the foreground.
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-       willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    // Print message ID.
-    NSDictionary *userInfo = notification.request.content.userInfo;
-    if (userInfo[kGCMMessageIDKey]) {
-        NSLog(@"Message ID 1: %@", userInfo[kGCMMessageIDKey]);
-    }
-    
-    // Print full message.
-    NSLog(@"%@", userInfo);
-    
-    NSError *error;
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                       options:0
-                                                         error:&error];
-    [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-    
-    // Change this to your preferred presentation option
-    completionHandler(UNNotificationPresentationOptionNone);
-}
-
-// Handle notification messages after display notification is tapped by the user.
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-didReceiveNotificationResponse:(UNNotificationResponse *)response
-         withCompletionHandler:(void (^)(void))completionHandler {
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
-    if (userInfo[kGCMMessageIDKey]) {
-        NSLog(@"Message ID 2: %@", userInfo[kGCMMessageIDKey]);
-    }
-    
-    // Print full message.
-    NSLog(@"%@", userInfo);
-    
-    NSError *error;
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
-    NSLog(@"New method with push callback: %@", userInfo);
-    
-    [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
-    NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
-    lastPush = jsonData;
-    [AppDelegate setInitialPushPayload:jsonData];
-    completionHandler();
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenData {
