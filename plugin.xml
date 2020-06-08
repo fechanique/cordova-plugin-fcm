@@ -29,7 +29,7 @@
 
 	<engines>
 		<engine name="cordova-android" version=">=8.0.0" />
-		<engine name="cordova-ios" version=">=5.1.1" />
+		<engine name="cordova-ios" version=">=5.0.0" />
 	</engines>
 
 	<!-- ANDROID CONFIGURATION -->
@@ -41,7 +41,7 @@
 		<preference name="ANDROID_DEFAULT_NOTIFICATION_ICON" default="@mipmap/ic_launcher" />
 
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<activity android:exported="true" android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
+			<activity android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
 				<intent-filter>
 					<action android:name="FCM_PLUGIN_ACTIVITY" />
 					<category android:name="android.intent.category.DEFAULT" />

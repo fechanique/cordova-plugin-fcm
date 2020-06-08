@@ -40,7 +40,7 @@ exports.logWarning = function (message) {
 
 exports.getValueFromXml = function (xmlFilePath, name, errorMessage) {
     var config = fs.readFileSync(xmlFilePath).toString();
-    var value = config.match(new RegExp('<' + name + '>(.*?)</' + name + '>', 'i'));
+    var value = config.match(new RegExp('<' + name + '[^>]*>(.*?)</' + name + '>', 'i'));
     if (value && value[1]) {
         return value[1];
     } else {
