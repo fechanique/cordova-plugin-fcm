@@ -1,7 +1,7 @@
 import { __decorate } from "tslib";
-import { Injectable } from "@angular/core";
-import { Plugin } from "@ionic-native/core";
-import { Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Plugin } from '@ionic-native/core';
+import { Subject } from 'rxjs';
 var FCM = (function () {
     function FCM() {
     }
@@ -25,12 +25,12 @@ var FCM = (function () {
     };
     FCM.prototype.onNotification = function () {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener("notification", function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.eventTarget.addEventListener('notification', function (event) { return observable.next(event.detail); }, { passive: true });
         return observable;
     };
     FCM.prototype.onTokenRefresh = function () {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener("notification", function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.eventTarget.addEventListener('notification', function (event) { return observable.next(event.detail); }, { passive: true });
         return observable;
     };
     FCM.prototype.requestPushPermission = function (options) {
@@ -44,11 +44,11 @@ var FCM = (function () {
     };
     FCM = __decorate([
         Plugin({
-            pluginName: "FCM",
-            plugin: "cordova-plugin-fcm-with-dependecy-updated",
-            pluginRef: "FCM",
-            repo: "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
-            platforms: ["Android", "iOS"],
+            pluginName: 'FCM',
+            plugin: 'cordova-plugin-fcm-with-dependecy-updated',
+            pluginRef: 'FCM',
+            repo: 'https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated',
+            platforms: ['Android', 'iOS'],
         }),
         Injectable()
     ], FCM);

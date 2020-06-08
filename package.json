@@ -13,7 +13,7 @@
         "build": "npm run build:www;npm run build:ionic",
         "build:www": "cd ./src/www;npm run build",
         "build:ionic": "cd ./src/ionic;npm run build",
-        "prettier": "find ./src/www -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs prettier --write",
+        "prettier": "find ./src/ -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | xargs npx prettier --write",
         "tslint": "npx tslint -p ./src/www --fix;npx tslint -p ./src/ionic --fix"
     },
     "repository": {
@@ -40,8 +40,10 @@
     "devDependencies": {
         "prettier": "^2.0.5",
         "tslint": "^6.1.2",
-        "tslint-microsoft-contrib": "^6.2.0",
-        "typescript": "^3.9.3",
-        "rxjs": "^6.5.5"
+        "tslint-microsoft-contrib": "^6.2.0"
+    },
+    "dependencies": {
+        "rxjs": "^6.5.5",
+        "typescript": "^3.9.5"
     }
 }

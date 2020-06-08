@@ -45,5 +45,9 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "@angular/core": "^9.1.9",
+    "@ionic-native/core": "^5.26.0"
   }
 }

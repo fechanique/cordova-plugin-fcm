@@ -1,45 +1,42 @@
 {
-  "version": "7.0.0-beta.2",
-  "name": "cordova-plugin-fcm-with-dependecy-updated",
-  "cordova_name": "Cordova FCM Push Plugin",
-  "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
-  "license": "MIT",
-  "main": "./FCM.js",
-  "repo": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
-  "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
-  "author": "André Augusto Tissot",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
-  },
-  "keywords": [
-    "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios",
-    "notifications",
-    "push",
-    "firebase",
-    "fcm",
-    "ios",
-    "android",
-    "cordova",
-    "ionic"
-  ],
-  "platforms": [
-    "android",
-    "ios"
-  ],
-  "devDependencies": {
-    "@types/cordova": "0.0.34",
-    "prettier": "^2.0.5",
-    "tslint": "^6.1.2",
-    "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.9.3"
-  },
-  "dependencies": {
-    "@angular/core": "^9.1.9",
-    "@ionic-native/core": "^5.26.0",
-    "rxjs": "^6.5.5",
-    "tslib": "^2.0.0"
-  }
+    "version": "7.0.0-beta.2",
+    "name": "cordova-plugin-fcm-with-dependecy-updated",
+    "cordova_name": "Cordova FCM Push Plugin",
+    "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
+    "license": "MIT",
+    "main": "./FCM.js",
+    "repo": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
+    "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
+    "author": "André Augusto Tissot",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
+    },
+    "keywords": [
+        "ecosystem:cordova",
+        "cordova-android",
+        "cordova-ios",
+        "notifications",
+        "push",
+        "firebase",
+        "fcm",
+        "ios",
+        "android",
+        "cordova",
+        "ionic"
+    ],
+    "platforms": ["android", "ios"],
+    "devDependencies": {
+        "@types/cordova": "0.0.34",
+        "prettier": "^2.0.5",
+        "tslint": "^6.1.2",
+        "tslint-microsoft-contrib": "^6.2.0",
+        "typescript": "^3.9.3"
+    },
+    "dependencies": {
+        "@angular/core": "^9.1.9",
+        "@ionic-native/core": "^5.26.0",
+        "rxjs": "^6.5.5",
+        "tslib": "^2.0.0"
+    }
 }
