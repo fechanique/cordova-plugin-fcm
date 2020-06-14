@@ -97,7 +97,7 @@ FCM.onNotification((payload: object) => {
 })
 ```
 
-:warning: This doesn't re-trigger the initial push event, as it used to do. Alternatively, you can have access of the notification that started the app by calling the `FCM.getInitialPushPayload()`.
+:warning: If the subscription to notification events happens after the notification has been fired, it'll be lost. As it is expected that you'd not always be able to catch the notification payload that the opened the app, the `FCM.getInitialPushPayload()` method was introduced.
 
 ##### FCM.onTokenRefresh()
 
