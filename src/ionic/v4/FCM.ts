@@ -116,7 +116,7 @@ export class FCM {
     public onTokenRefresh(): Observable<string> {
         const observable = new Subject<string>()
         window.FCM.eventTarget.addEventListener(
-            'notification',
+            'tokenRefresh',
             (event: CustomEvent<string>) => observable.next(event.detail),
             { passive: true }
         )

@@ -27,7 +27,7 @@ var FCMPluginOnIonic = (function () {
     };
     FCMPluginOnIonic.prototype.onTokenRefresh = function () {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener('notification', function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.eventTarget.addEventListener('tokenRefresh', function (event) { return observable.next(event.detail); }, { passive: true });
         return observable;
     };
     FCMPluginOnIonic.prototype.requestPushPermission = function (options) {
