@@ -11,9 +11,8 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
-### Version 7.0.0 Beta (04/06/2020)
+## Features
 
-JS methods refactored for a more modern approach:
 - [As its own](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#as-its-own)
   - [FCM.clearAllNotifications()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmclearallnotifications)
   - [FCM.createNotificationChannel()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmcreatenotificationchannel)
@@ -97,7 +96,7 @@ FCM.onNotification((payload: object) => {
 })
 ```
 
-:warning: This doesn't re-trigger the initial push event, as it used to do. Alternatively, you can have access of the notification that started the app by calling the `FCM.getInitialPushPayload()`.
+:warning: If the subscription to notification events happens after the notification has been fired, it'll be lost. As it is expected that you'd not always be able to catch the notification payload that the opened the app, the `FCM.getInitialPushPayload()` method was introduced.
 
 ##### FCM.onTokenRefresh()
 
@@ -190,6 +189,12 @@ this.fcm.onTokenRefresh().subscribe((token: string) => {
 ### Optional FCM Image Support for Cordova iOS
 
 After a lot of work, the first release of the plugin https://github.com/andrehtissot/cordova-plugin-fcm-image-support is out. Which should enable the support, just by installing it.
+
+## Changelog
+
+### Version 7.0.0 Beta (04/06/2020)
+
+JS methods refactored for a more modern approach and Ionic support included.
 
 ### Version 6.4.0 (21/05/2020)
 
@@ -464,18 +469,18 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 {
   "notification":{
     "title":"Notification title",
-    "body":"Notification body",
+    "body":"Notification body", // required
     "sound":"default",
-    "click_action":"FCM_PLUGIN_ACTIVITY",
+    "click_action":"FCM_PLUGIN_ACTIVITY", // required
     "icon":"fcm_push_icon"
   },
   "data":{
     "param1":"value1",
     "param2":"value2"
   },
-    "to":"/topics/topicExample",
-    "priority":"high",
-    "restricted_package_name":""
+  "to":"/topics/topicExample",
+  "priority":"high",
+  "restricted_package_name":""
 }
 //sound: optional field if you want sound with the notification
 //click_action: must be present with the specified value for Android
