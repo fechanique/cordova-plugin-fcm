@@ -464,18 +464,18 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 {
   "notification":{
     "title":"Notification title",
-    "body":"Notification body",
+    "body":"Notification body", // required
     "sound":"default",
-    "click_action":"FCM_PLUGIN_ACTIVITY",
+    "click_action":"FCM_PLUGIN_ACTIVITY", // required
     "icon":"fcm_push_icon"
   },
   "data":{
     "param1":"value1",
     "param2":"value2"
   },
-    "to":"/topics/topicExample",
-    "priority":"high",
-    "restricted_package_name":""
+  "to":"/topics/topicExample",
+  "priority":"high",
+  "restricted_package_name":""
 }
 //sound: optional field if you want sound with the notification
 //click_action: must be present with the specified value for Android
