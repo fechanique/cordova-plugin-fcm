@@ -11,9 +11,8 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
-### Version 7.0.0 Beta (04/06/2020)
+## Features
 
-JS methods refactored for a more modern approach:
 - [As its own](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#as-its-own)
   - [FCM.clearAllNotifications()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmclearallnotifications)
   - [FCM.createNotificationChannel()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmcreatenotificationchannel)
@@ -190,6 +189,12 @@ this.fcm.onTokenRefresh().subscribe((token: string) => {
 ### Optional FCM Image Support for Cordova iOS
 
 After a lot of work, the first release of the plugin https://github.com/andrehtissot/cordova-plugin-fcm-image-support is out. Which should enable the support, just by installing it.
+
+## Changelog
+
+### Version 7.0.0 Beta (04/06/2020)
+
+JS methods refactored for a more modern approach and Ionic support included.
 
 ### Version 6.4.0 (21/05/2020)
 
