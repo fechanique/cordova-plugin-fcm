@@ -61,20 +61,25 @@ export declare class FCMPluginOnIonic {
     /**
      * Event firing when receiving new notifications
      *
+     * @argument {{ once?: boolean }} options once defines if the listener is only trigger once
      * @returns {Observable<INotificationPayload>} An object to listen for notification data
      */
-    onNotification(): Observable<INotificationPayload>;
+    onNotification(options?: {
+        once?: boolean;
+    }): Observable<INotificationPayload>;
     /**
      * Event firing when receiving a new Firebase token
      *
+     * @argument {{ once?: boolean }} options once defines if the listener is only trigger once
      * @returns {Observable<string>} An object to listen for the token
      */
-    onTokenRefresh(): Observable<string>;
+    onTokenRefresh(options?: {
+        once?: boolean;
+    }): Observable<string>;
     /**
      * Request push notification permission, alerting the user if it not have yet decided
      *
      * @param {IRequestPushPermissionOptions} options Options for push request
-     *
      * @returns {Promise<boolean>} Returns a Promise that resolves with the permission status
      */
     requestPushPermission(options?: IRequestPushPermissionOptions): Promise<boolean>;

@@ -1,7 +1,9 @@
 import type { IChannelConfiguration } from './IChannelConfiguration'
 import type { IRequestPushPermissionOptions } from './IRequestPushPermissionOptions'
 import type { INotificationPayload } from './INotificationPayload'
+import type { IDisposable } from './IDisposable'
 import { execAsPromise } from './execAsPromise.helper'
+import { asDisposableListener } from './eventAsDisposable'
 
 /**
  * @name FCM
@@ -27,13 +29,11 @@ export class FCMPlugin {
     public readonly eventTarget: EventTarget
 
     constructor() {
-        try {
-            this.eventTarget = new EventTarget()
-        } catch (e) {
-            this.eventTarget = document.createElement('div')
-        }
-        console.log('FCMPlugin: has been created')
-        this.logReadyStatus()
+        this.eventTarget = EventTarget ? new EventTarget() : document.createElement('div')
+        execAsPromise('ready')
+            .then(() => console.log('FCM: Ready!'))
+            .catch((error: Error) => console.log('FCM: Ready error: ', error))
+        console.log('FCM: has been created')
     }
 
     /**
@@ -110,34 +110,35 @@ export class FCMPlugin {
     /**
      * Callback firing when receiving new notifications
      *
-     * @argument {(payload: INotificationPayload) => void} callback
+     * @argument {(payload: INotificationPayload) => void} callback function to be called when event is triggered
+     * @argument {{ once?: boolean }} options once defines if the listener is only trigger once
+     * @returns {IDisposable} object of which can request the listener's disposal
      */
-    public onNotification(callback: (payload: INotificationPayload) => void): void {
-        this.eventTarget.addEventListener(
-            'notification',
-            (event: CustomEvent<INotificationPayload>) => callback(event.detail),
-            { passive: true }
-        )
+    public onNotification(
+        callback: (payload: INotificationPayload) => void,
+        options?: { once?: boolean }
+    ): IDisposable {
+        return asDisposableListener(this.eventTarget, 'notification', callback, options)
     }
 
     /**
      * Callback firing when receiving a new Firebase token
      *
-     * @argument {(token: string) => void} callback
+     * @argument {(token: string) => void} callback function to be called when event is triggered
+     * @argument {{ once?: boolean }} options once defines if the listener is only trigger once
+     * @returns {IDisposable} object of which can request the listener's disposal
      */
-    public onTokenRefresh(callback: (token: string) => void): void {
-        this.eventTarget.addEventListener(
-            'tokenRefresh',
-            (event: CustomEvent<string>) => callback(event.detail),
-            { passive: true }
-        )
+    public onTokenRefresh(
+        callback: (token: string) => void,
+        options?: { once?: boolean }
+    ): IDisposable {
+        return asDisposableListener(this.eventTarget, 'tokenRefresh', callback, options)
     }
 
     /**
      * Request push notification permission, alerting the user if it not have yet decided
      *
      * @param {IRequestPushPermissionOptions} options Options for push request
-     *
      * @returns {Promise<boolean>} Returns a Promise that resolves with the permission status
      */
     public requestPushPermission(options?: IRequestPushPermissionOptions): Promise<boolean> {
@@ -170,18 +171,5 @@ export class FCMPlugin {
      */
     public unsubscribeFromTopic(topic: string): Promise<void> {
         return execAsPromise('unsubscribeFromTopic', [topic])
-    }
-
-    /**
-     * Logs the cordova ready event
-     *
-     * @private
-     *
-     * @returns {Promise<void>} Async call to native implementation
-     */
-    private logReadyStatus(): Promise<void> {
-        return execAsPromise('ready')
-            .then(() => console.log('FCMPlugin: Ready!'))
-            .catch((error: Error) => console.log('FCMPlugin: Ready error: ', error))
     }
 }

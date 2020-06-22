@@ -23,14 +23,14 @@ var FCM = (function () {
     FCM.prototype.hasPermission = function () {
         return window.FCM.hasPermission();
     };
-    FCM.prototype.onNotification = function () {
+    FCM.prototype.onNotification = function (options) {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener('notification', function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.onNotification(function (payload) { return observable.next(payload); }, options);
         return observable;
     };
-    FCM.prototype.onTokenRefresh = function () {
+    FCM.prototype.onTokenRefresh = function (options) {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener('tokenRefresh', function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.onTokenRefresh(function (token) { return observable.next(token); }, options);
         return observable;
     };
     FCM.prototype.requestPushPermission = function (options) {

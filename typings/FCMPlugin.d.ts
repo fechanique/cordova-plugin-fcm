@@ -1,6 +1,7 @@
 import type { IChannelConfiguration } from './IChannelConfiguration';
 import type { IRequestPushPermissionOptions } from './IRequestPushPermissionOptions';
 import type { INotificationPayload } from './INotificationPayload';
+import type { IDisposable } from './IDisposable';
 /**
  * @name FCM
  * @description
@@ -72,20 +73,27 @@ export declare class FCMPlugin {
     /**
      * Callback firing when receiving new notifications
      *
-     * @argument {(payload: INotificationPayload) => void} callback
+     * @argument {(payload: INotificationPayload) => void} callback function to be called when event is triggered
+     * @argument {{ once?: boolean }} options once defines if the listener is only trigger once
+     * @returns {IDisposable} object of which can request the listener's disposal
      */
-    onNotification(callback: (payload: INotificationPayload) => void): void;
+    onNotification(callback: (payload: INotificationPayload) => void, options?: {
+        once?: boolean;
+    }): IDisposable;
     /**
      * Callback firing when receiving a new Firebase token
      *
-     * @argument {(token: string) => void} callback
+     * @argument {(token: string) => void} callback function to be called when event is triggered
+     * @argument {{ once?: boolean }} options once defines if the listener is only trigger once
+     * @returns {IDisposable} object of which can request the listener's disposal
      */
-    onTokenRefresh(callback: (token: string) => void): void;
+    onTokenRefresh(callback: (token: string) => void, options?: {
+        once?: boolean;
+    }): IDisposable;
     /**
      * Request push notification permission, alerting the user if it not have yet decided
      *
      * @param {IRequestPushPermissionOptions} options Options for push request
-     *
      * @returns {Promise<boolean>} Returns a Promise that resolves with the permission status
      */
     requestPushPermission(options?: IRequestPushPermissionOptions): Promise<boolean>;
@@ -105,12 +113,4 @@ export declare class FCMPlugin {
      * @returns {Promise<void>} Async call to native implementation
      */
     unsubscribeFromTopic(topic: string): Promise<void>;
-    /**
-     * Logs the cordova ready event
-     *
-     * @private
-     *
-     * @returns {Promise<void>} Async call to native implementation
-     */
-    private logReadyStatus;
 }

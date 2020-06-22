@@ -20,14 +20,14 @@ var FCMPluginOnIonic = (function () {
     FCMPluginOnIonic.prototype.hasPermission = function () {
         return window.FCM.hasPermission();
     };
-    FCMPluginOnIonic.prototype.onNotification = function () {
+    FCMPluginOnIonic.prototype.onNotification = function (options) {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener('notification', function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.onNotification(function (payload) { return observable.next(payload); }, options);
         return observable;
     };
-    FCMPluginOnIonic.prototype.onTokenRefresh = function () {
+    FCMPluginOnIonic.prototype.onTokenRefresh = function (options) {
         var observable = new Subject();
-        window.FCM.eventTarget.addEventListener('tokenRefresh', function (event) { return observable.next(event.detail); }, { passive: true });
+        window.FCM.onTokenRefresh(function (token) { return observable.next(token); }, options);
         return observable;
     };
     FCMPluginOnIonic.prototype.requestPushPermission = function (options) {

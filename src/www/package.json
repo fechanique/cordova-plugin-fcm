@@ -12,8 +12,9 @@
     "scripts": {
         "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
         "build:before": "rm -rf ../../www;mkdir -p ../../www",
-        "build:js": "tsc -p .;rollup -c rollup.config.js;npm run build:js:fix-export",
-        "build:js:fix-export": "cd ../../www;sed 's/exports\\.default = /module\\.exports = /' FCMPlugin.js > FCMPlugin.tmp.js; mv FCMPlugin.tmp.js FCMPlugin.js",
+        "build:js": "tsc -p .;rollup -c rollup.config.js;npm run build:js:rm-exports;npm run build:js:add-default-export",
+        "build:js:rm-exports": "cd ../../www;cat FCMPlugin.js | grep -v exports > FCMPlugin.tmp.js;mv FCMPlugin.tmp.js FCMPlugin.js",
+        "build:js:add-default-export": "cd ../../www;echo 'module.exports = FCM;' >> FCMPlugin.js",
         "build:dts": "cp ./*.d.ts ../../typings; tsc -p . --declaration true --declarationDir ../../typings --removeComments false",
         "build:after": "rm -rf ../../www/tmp",
         "tsc": "npx tsc -p . --noEmit"

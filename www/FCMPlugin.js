@@ -1,6 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
 
 var execAsPromise = function (command, args) {
     if (args === void 0) { args = []; }
@@ -9,16 +8,23 @@ var execAsPromise = function (command, args) {
     });
 };
 
+var asDisposableListener = function (eventTarget, eventName, callback, options) {
+    if (options === void 0) { options = {}; }
+    var once = options.once;
+    var handler = function (event) { return callback(event.detail); };
+    eventTarget.addEventListener(eventName, handler, { passive: true, once: once });
+    return {
+        dispose: function () { return eventTarget.removeEventListener(eventName, handler); },
+    };
+};
+
 var FCMPlugin = (function () {
     function FCMPlugin() {
-        try {
-            this.eventTarget = new EventTarget();
-        }
-        catch (e) {
-            this.eventTarget = document.createElement('div');
-        }
-        console.log('FCMPlugin: has been created');
-        this.logReadyStatus();
+        this.eventTarget = EventTarget ? new EventTarget() : document.createElement('div');
+        execAsPromise('ready')
+            .then(function () { return console.log('FCM: Ready!'); })
+            .catch(function (error) { return console.log('FCM: Ready error: ', error); });
+        console.log('FCM: has been created');
     }
     FCMPlugin.prototype.clearAllNotifications = function () {
         return execAsPromise('clearAllNotifications');
@@ -45,11 +51,11 @@ var FCMPlugin = (function () {
             ? Promise.resolve(true)
             : execAsPromise('hasPermission');
     };
-    FCMPlugin.prototype.onNotification = function (callback) {
-        this.eventTarget.addEventListener('notification', function (event) { return callback(event.detail); }, { passive: true });
+    FCMPlugin.prototype.onNotification = function (callback, options) {
+        return asDisposableListener(this.eventTarget, 'notification', callback, options);
     };
-    FCMPlugin.prototype.onTokenRefresh = function (callback) {
-        this.eventTarget.addEventListener('tokenRefresh', function (event) { return callback(event.detail); }, { passive: true });
+    FCMPlugin.prototype.onTokenRefresh = function (callback, options) {
+        return asDisposableListener(this.eventTarget, 'tokenRefresh', callback, options);
     };
     FCMPlugin.prototype.requestPushPermission = function (options) {
         var _a, _b, _c, _d;
@@ -66,16 +72,9 @@ var FCMPlugin = (function () {
     FCMPlugin.prototype.unsubscribeFromTopic = function (topic) {
         return execAsPromise('unsubscribeFromTopic', [topic]);
     };
-    FCMPlugin.prototype.logReadyStatus = function () {
-        return execAsPromise('ready')
-            .then(function () { return console.log('FCMPlugin: Ready!'); })
-            .catch(function (error) { return console.log('FCMPlugin: Ready error: ', error); });
-    };
     return FCMPlugin;
 }());
 
 var FCM = new FCMPlugin();
 
-exports.FCM = FCM;
-exports.FCMPlugin = FCMPlugin;
 module.exports = FCM;
