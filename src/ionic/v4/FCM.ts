@@ -53,7 +53,8 @@ export class FCM {
     /** @copyFrom ionic/FCM.d.ts FCMPluginOnIonic onNotification */
     public onNotification(options?: { once?: boolean }): Observable<INotificationPayload> {
         const observable = new Subject<INotificationPayload>()
-        window.FCM.onNotification((payload) => observable.next(payload), options)
+        const handler = (payload: INotificationPayload) => observable.next(payload)
+        window.FCM.onNotification(handler, options)
 
         return observable
     }
@@ -61,7 +62,7 @@ export class FCM {
     /** @copyFrom ionic/FCM.d.ts FCMPluginOnIonic onTokenRefresh */
     public onTokenRefresh(options?: { once?: boolean }): Observable<string> {
         const observable = new Subject<string>()
-        window.FCM.onTokenRefresh((token) => observable.next(token), options)
+        window.FCM.onTokenRefresh((token: string) => observable.next(token), options)
 
         return observable
     }

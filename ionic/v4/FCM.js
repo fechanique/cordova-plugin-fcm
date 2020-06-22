@@ -25,7 +25,8 @@ var FCM = (function () {
     };
     FCM.prototype.onNotification = function (options) {
         var observable = new Subject();
-        window.FCM.onNotification(function (payload) { return observable.next(payload); }, options);
+        var handler = function (payload) { return observable.next(payload); };
+        window.FCM.onNotification(handler, options);
         return observable;
     };
     FCM.prototype.onTokenRefresh = function (options) {

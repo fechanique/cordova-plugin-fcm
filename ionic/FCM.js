@@ -22,7 +22,8 @@ var FCMPluginOnIonic = (function () {
     };
     FCMPluginOnIonic.prototype.onNotification = function (options) {
         var observable = new Subject();
-        window.FCM.onNotification(function (payload) { return observable.next(payload); }, options);
+        var handler = function (payload) { return observable.next(payload); };
+        window.FCM.onNotification(handler, options);
         return observable;
     };
     FCMPluginOnIonic.prototype.onTokenRefresh = function (options) {

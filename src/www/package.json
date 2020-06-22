@@ -1,5 +1,5 @@
 {
-    "version": "7.0.0-beta.3",
+    "version": "7.0.0-beta.4",
     "name": "cordova-plugin-fcm-with-dependecy-updated",
     "cordova_name": "Cordova FCM Push Plugin",
     "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
@@ -42,13 +42,9 @@
     "englishdoc": "",
     "devDependencies": {
         "@types/cordova": "0.0.34",
-        "rollup": "^2.12.0",
+        "rollup": "^2.18.0",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-node-resolve": "^5.2.0",
-        "typescript": "^3.9.3"
-    },
-    "dependencies": {
-        "@angular/core": "^9.1.9",
-        "@ionic-native/core": "^5.26.0"
+        "typescript": "^3.9.5"
     }
 }
