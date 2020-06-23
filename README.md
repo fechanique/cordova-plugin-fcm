@@ -91,9 +91,11 @@ const doesIt: boolean = await FCM.hasPermission()
 
 Callback firing when receiving new notifications. It serves as a shortcut to listen to eventTarget's "notification" event.
 ```typescript
-FCM.onNotification((payload: object) => {
+const disposable = FCM.onNotification((payload: object) => {
   // ...
 })
+// ...
+disposable.dispose() // To remove listener
 ```
 
 :warning: If the subscription to notification events happens after the notification has been fired, it'll be lost. As it is expected that you'd not always be able to catch the notification payload that the opened the app, the `FCM.getInitialPushPayload()` method was introduced.
@@ -102,9 +104,11 @@ FCM.onNotification((payload: object) => {
 
 Callback firing when receiving a new Firebase token. It serves as a shortcut to listen to eventTarget's "tokenRefresh" event.
 ```typescript
-FCM.onTokenRefresh((fcmToken: string) => {
+const disposable = FCM.onTokenRefresh((fcmToken: string) => {
   // ...
 })
+// ...
+disposable.dispose() // To remove listener
 ```
 
 ##### FCM.requestPushPermission()
