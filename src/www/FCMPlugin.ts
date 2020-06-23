@@ -2,7 +2,7 @@ import type { IChannelConfiguration } from './IChannelConfiguration'
 import type { IRequestPushPermissionOptions } from './IRequestPushPermissionOptions'
 import type { INotificationPayload } from './INotificationPayload'
 import type { IDisposable } from './IDisposable'
-import { execAsPromise } from './execAsPromise.helper'
+import { execAsPromise } from './execAsPromise'
 import { asDisposableListener } from './eventAsDisposable'
 
 /**
