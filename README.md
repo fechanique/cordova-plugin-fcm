@@ -60,7 +60,7 @@ ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
 
 ## Push Payload Configuration
 
-Besides commom FCM configuration (https://firebase.google.com/docs/cloud-messaging/ios/certs), the Push payload should contain "notification" and "data" keys and "click_action" equals to "FCM_PLUGIN_ACTIVITY" within "notification".
+Besides common FCM configuration (https://firebase.google.com/docs/cloud-messaging/ios/certs), the Push payload should contain "notification" and "data" keys and "click_action" equals to "FCM_PLUGIN_ACTIVITY" within "notification".
 
 Structure expected:
 ```js
@@ -510,7 +510,7 @@ You can also test your notifications with the free testing server: https://cordo
 
 ```javascript
 //FCMPlugin.onTokenRefresh( onTokenRefreshCallback(token) );
-//Note that this callback will be fired everytime a new token is generated, including the first time.
+//Note that this callback will be fired every time a new token is generated, including the first time.
 FCMPlugin.onTokenRefresh(function(token){
     alert( token );
 });
@@ -546,7 +546,7 @@ FCMPlugin.unsubscribeFromTopic('topicExample');
 
 ```javascript
 //FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
-//Here you define your application behaviour based on the notification data.
+//Here you define your application behavior based on the notification data.
 FCMPlugin.onNotification(function(data){
     if(data.wasTapped){
       //Notification was received on device tray and tapped by the user.
@@ -584,7 +584,7 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
 //sound: optional field if you want sound with the notification
 //click_action: must be present with the specified value for Android
 //icon: white icon resource name for Android >5.0
-//data: put any "param":"value" and retreive them in the JavaScript notification callback
+//data: put any "param":"value" and retrieve them in the JavaScript notification callback
 //to: device token or /topic/topicExample
 //priority: must be set to "high" for delivering notifications on closed iOS apps
 //restricted_package_name: optional field if you want to send only to a restricted app package (i.e: com.myapp.test)
@@ -595,13 +595,13 @@ Send a push notification to a single device or topic.
 
 + Application is in foreground:
 
-   The notification data is received in the JavaScript callback without notification bar message (this is the normal behaviour of mobile push notifications).
+   The notification data is received in the JavaScript callback without notification bar message (this is the normal behavior of mobile push notifications).
    
 + Application is in background or closed:
 
   1. The device displays the notification message in the device notification bar.
   2. If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
-  3. If the user does not tap the notification but opens the applicacion, nothing happens until the notification is tapped.
+  3. If the user does not tap the notification but opens the application, nothing happens until the notification is tapped.
 
 
 ## Authorship
