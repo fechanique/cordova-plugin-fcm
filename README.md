@@ -13,6 +13,8 @@
 
 ## Installation
 
+Make sure you have ‘google-services.json’ for Android or ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder.
+
 #### Preferences
 
 |Preference|Default Value|Description|
