@@ -15,15 +15,15 @@
 ## How it works
 Send a push notification to a single device or topic.
 
-+ Application is in foreground:
+- Application is in foreground:
 
    The notification data is received in the JavaScript callback without notification bar message (this is the normal behavior of mobile push notifications).
    
-+ Application is in background or closed:
+- Application is in background or closed:
 
-  1. The device displays the notification message in the device notification bar.
-  2. If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
-  3. If the user does not tap the notification but opens the application, nothing happens until the notification is tapped.
+  - The device displays the notification message in the device notification bar.
+  - If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
+  - If the user does not tap the notification but opens the application, nothing happens until the notification is tapped.
 
 ## Installation
 
