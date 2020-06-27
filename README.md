@@ -11,6 +11,14 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+## Summary
+- [How it works](#how-it-works)
+- [Installation](#installation)
+- [Push Payload Configuration](#push-payload-configuration)
+- [Features](#features)
+- [Companion Plugins](#companion-plugins)
+- [Changelog](#changelog)
+- [Authorship](#authorship)
 
 ## How it works
 Send a push notification to a single device or topic.
@@ -316,4 +324,4 @@ Breaking update released. Please pay atention to the changes in plugin preferenc
 Version 6 changelogs will be only reported in its specific support branch [v6 branch](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/tree/v6).
 
 ## Authorship
-This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has dependencies versions upgraded, jitpack and cocoapods support, and newer features.
+This started as a fork from https://github.com/fechanique/cordova-plugin-fcm and, gradually, had most of its implementation rewritten and improved, for newer dependency versions support, jitpack and cocoapods support, and new useful features.
