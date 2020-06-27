@@ -64,21 +64,21 @@ ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
 Besides commom FCM configuration (https://firebase.google.com/docs/cloud-messaging/ios/certs), the Push payload should contain "notification" and "data" keys and "click_action" equals to "FCM_PLUGIN_ACTIVITY" within "notification".
 
 Structure expected:
-```json
+```js
 {
-  // ...,
+  ...,
   "notification": {
-    // ...
+    ...
   },
   "data": {
-    // ...
+    ...
   },
   "android": {
     "notification": {
       "click_action": "FCM_PLUGIN_ACTIVITY"
     }
   },
-  // ...,
+  ...,
 }
 ```
 
