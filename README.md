@@ -313,7 +313,7 @@ Breaking update released. Please pay atention to the changes in plugin preferenc
 
 ### Version 6
 
-Version 6 changelogs will be only reported in its specific branch [v6 branch](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/tree/v6)
+Version 6 changelogs will be only reported in its specific support branch [v6 branch](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/tree/v6).
 
 ## Authorship
 This is a fork from https://github.com/fechanique/cordova-plugin-fcm, which has dependencies versions upgraded, jitpack and cocoapods support, and newer features.
