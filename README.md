@@ -11,6 +11,100 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
+
+## Installation
+
+#### Preferences
+
+|Preference|Default Value|Description|
+|---|---|---|
+|ANDROID_FCM_VERSION|19.0.0|Android's native Firebase Message SDK version.|
+|ANDROID_GRADLE_TOOLS_VERSION|3.5.3|Android's Gradle tools version.|
+|ANDROID_GOOGLE_SERVICES_VERSION|4.3.3|Android's native Google Services SDK version.|
+|ANDROID_DEFAULT_NOTIFICATION_ICON|@mipmap/ic_launcher|Android's default notification icon.|
+
+#### Cordova
+
+Default preferences:
+
+```
+cordova plugin add cordova-plugin-fcm-with-dependecy-updated
+```
+
+Complete:
+
+```
+cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
+  --variable ANDROID_FCM_VERSION="19.0.0" \
+  --variable ANDROID_GRADLE_TOOLS_VERSION="3.5.3" \
+  --variable ANDROID_GOOGLE_SERVICES_VERSION="4.3.3" \
+  --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
+```
+
+#### Ionic
+
+Default preferences:
+
+```
+ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated
+```
+
+Complete:
+
+```
+ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
+  --variable ANDROID_FCM_VERSION="19.0.0" \
+  --variable ANDROID_GRADLE_TOOLS_VERSION="3.5.3" \
+  --variable ANDROID_GOOGLE_SERVICES_VERSION="4.3.3" \
+  --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
+```
+
+## Push Payload Configuration
+
+Besides commom FCM configuration (https://firebase.google.com/docs/cloud-messaging/ios/certs), the Push payload should contain "notification" and "data" keys and "click_action" equals to "FCM_PLUGIN_ACTIVITY" within "notification".
+
+Structure expected:
+```json
+{
+  ...,
+  "notification": {
+    ...
+  },
+  "data": {
+    ....
+  },
+  "android": {
+    "notification": {
+      "click_action": "FCM_PLUGIN_ACTIVITY"
+    }
+  },
+  ...,
+}
+```
+
+Example:
+```json
+{
+  "token": "[FCM token]",
+  "notification":{
+    "title":"Notification title",
+    "body":"Notification body",
+    "sound":"default",
+  },
+  "data":{
+    "param1":"value1",
+    "param2":"value2"
+  },
+  "android": {
+    "notification": {
+      "icon":"fcm_push_icon",
+      "click_action": "FCM_PLUGIN_ACTIVITY"
+    }
+  }
+}
+```
+
+
 ## Features
 
 - [As its own](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#as-its-own)
