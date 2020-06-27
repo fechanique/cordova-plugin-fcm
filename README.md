@@ -66,19 +66,19 @@ Besides commom FCM configuration (https://firebase.google.com/docs/cloud-messagi
 Structure expected:
 ```json
 {
-  ...,
+  // ...,
   "notification": {
-    ...
+    // ...
   },
   "data": {
-    ....
+    // ...
   },
   "android": {
     "notification": {
       "click_action": "FCM_PLUGIN_ACTIVITY"
     }
   },
-  ...,
+  // ...,
 }
 ```
 
