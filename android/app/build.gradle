@@ -32,8 +32,8 @@ dependencies {
     implementation project(path: ':lib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    implementation "com.google.firebase:firebase-messaging:${rootProject.ext.FCM_VERSION}"
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    implementation "com.google.firebase:firebase-messaging:${rootProject.ext.ANDROID_FCM_VERSION}"
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.ANDROID_SUPPORT_LIBRARY_VERSION}"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.7.22'

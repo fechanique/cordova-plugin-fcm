@@ -42,7 +42,7 @@
     "englishdoc": "",
     "devDependencies": {
         "@types/cordova": "0.0.34",
-        "rollup": "^2.18.0",
+        "rollup": "^2.18.1",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-node-resolve": "^5.2.0",
         "typescript": "^3.9.5"

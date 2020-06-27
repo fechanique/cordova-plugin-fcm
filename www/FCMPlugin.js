@@ -20,7 +20,7 @@ var asDisposableListener = function (eventTarget, eventName, callback, options) 
 
 var FCMPlugin = (function () {
     function FCMPlugin() {
-        this.eventTarget = EventTarget ? new EventTarget() : document.createElement('div');
+        this.eventTarget = document.createElement('div');
         execAsPromise('ready')
             .then(function () { return console.log('FCM: Ready!'); })
             .catch(function (error) { return console.log('FCM: Ready error: ', error); });

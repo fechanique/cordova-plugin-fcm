@@ -2,7 +2,7 @@ def PLUGIN_CONFIG = new Object()
 try {
     PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
 } catch(Exception e) {}
-def FCM_VERSION = System.getenv('FCM_VERSION') ?: rootProject.hasProperty('FCM_VERSION') ? rootProject.ext.FCM_VERSION : PLUGIN_CONFIG.hasProperty("FCM_VERSION") ? PLUGIN_CONFIG.FCM_VERSION : null ?: '19.0.0'
+def ANDROID_FCM_VERSION = System.getenv('ANDROID_FCM_VERSION') ?: rootProject.hasProperty('ANDROID_FCM_VERSION') ? rootProject.ext.ANDROID_FCM_VERSION : PLUGIN_CONFIG.hasProperty("ANDROID_FCM_VERSION") ? PLUGIN_CONFIG.ANDROID_FCM_VERSION : null ?: '19.0.0'
 
 buildscript {
     ext {
@@ -14,10 +14,10 @@ buildscript {
             def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
             print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)
         }
-        GRADLE_TOOLS_VERSION = System.getenv('GRADLE_TOOLS_VERSION') ?: rootProject.hasProperty('GRADLE_TOOLS_VERSION') ? rootProject.ext.GRADLE_TOOLS_VERSION : PLUGIN_CONFIG.hasProperty("GRADLE_TOOLS_VERSION") ? PLUGIN_CONFIG.GRADLE_TOOLS_VERSION : null ?: '3.5.3'
-        GOOGLE_SERVICES_VERSION = System.getenv('GOOGLE_SERVICES_VERSION') ?: rootProject.hasProperty('GOOGLE_SERVICES_VERSION') ? rootProject.ext.GOOGLE_SERVICES_VERSION : PLUGIN_CONFIG.hasProperty("GOOGLE_SERVICES_VERSION") ? PLUGIN_CONFIG.GOOGLE_SERVICES_VERSION : null ?: '4.3.3'
+        ANDROID_GRADLE_TOOLS_VERSION = System.getenv('ANDROID_GRADLE_TOOLS_VERSION') ?: rootProject.hasProperty('ANDROID_GRADLE_TOOLS_VERSION') ? rootProject.ext.ANDROID_GRADLE_TOOLS_VERSION : PLUGIN_CONFIG.hasProperty("ANDROID_GRADLE_TOOLS_VERSION") ? PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION : null ?: '3.5.3'
+        ANDROID_GOOGLE_SERVICES_VERSION = System.getenv('ANDROID_GOOGLE_SERVICES_VERSION') ?: rootProject.hasProperty('ANDROID_GOOGLE_SERVICES_VERSION') ? rootProject.ext.ANDROID_GOOGLE_SERVICES_VERSION : PLUGIN_CONFIG.hasProperty("ANDROID_GOOGLE_SERVICES_VERSION") ? PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION : null ?: '4.3.3'
 
-        ext.gradleNumberVersion = GRADLE_TOOLS_VERSION.substring(0, GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
+        ext.gradleNumberVersion = ANDROID_GRADLE_TOOLS_VERSION.substring(0, ANDROID_GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
     }
     repositories {
         mavenCentral()
@@ -32,7 +32,7 @@ buildscript {
          * PS: Avoid use "GRADLE_VERSION" because jitpack
          * set this like a environment variable
          */
-        classpath "com.android.tools.build:gradle:${GRADLE_TOOLS_VERSION}"
+        classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_TOOLS_VERSION}"
 
         /**
          * Reference: https://github.com/google/play-services-plugins/issues/22
@@ -42,7 +42,7 @@ buildscript {
          *     instead of id(string)
          */
 
-        classpath "com.google.gms:google-services:${GOOGLE_SERVICES_VERSION}"
+        classpath "com.google.gms:google-services:${ANDROID_GOOGLE_SERVICES_VERSION}"
     }
 }
 repositories {
@@ -54,9 +54,9 @@ repositories {
 }
 dependencies {
     if (gradleNumberVersion >= 3.4f) {
-        implementation "com.google.firebase:firebase-messaging:${FCM_VERSION}"
+        implementation "com.google.firebase:firebase-messaging:${ANDROID_FCM_VERSION}"
     } else {
-        compile "com.google.firebase:firebase-messaging:${FCM_VERSION}"
+        compile "com.google.firebase:firebase-messaging:${ANDROID_FCM_VERSION}"
     }
 }
 // apply plugin: 'com.google.gms.google-services'
