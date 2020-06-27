@@ -283,6 +283,8 @@ this.fcm.onTokenRefresh().subscribe((token: string) => {
 });
 ```
 
+## Companion Plugins
+
 ### Optional FCM Image Support for Cordova iOS
 
 After a lot of work, the first release of the plugin https://github.com/andrehtissot/cordova-plugin-fcm-image-support is out. Which should enable the support, just by installing it.
