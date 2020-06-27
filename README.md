@@ -106,22 +106,22 @@ Example:
 
 ## Features
 
-- [As its own](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#as-its-own)
-  - [FCM.clearAllNotifications()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmclearallnotifications)
-  - [FCM.createNotificationChannel()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmcreatenotificationchannel)
-  - [FCM.getAPNSToken()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmgetapnstoken)
-  - [FCM.getInitialPushPayload()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmgetinitialpushpayload)
-  - [FCM.getToken()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmgettoken)
-  - [FCM.hasPermission()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmhaspermission)
-  - [FCM.onNotification()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmonnotification)
-  - [FCM.onTokenRefresh()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmontokenrefresh)
-  - [FCM.requestPushPermission()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmrequestpushpermission)
-  - [FCM.subscribeToTopic()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmsubscribetotopic)
-  - [FCM.unsubscribeFromTopic()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmunsubscribefromtopic)
-  - [FCM.eventTarget](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmeventtarget)
-- [With Ionic](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#with-ionic)
-  - [FCM.onNotification()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmonnotification-1)
-  - [FCM.onTokenRefresh()](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/v7.0.0-beta/README.md#fcmontokenrefresh-1)
+- [As its own](#as-its-own)
+  - [FCM.clearAllNotifications()](#fcmclearallnotifications)
+  - [FCM.createNotificationChannel()](#fcmcreatenotificationchannel)
+  - [FCM.getAPNSToken()](#fcmgetapnstoken)
+  - [FCM.getInitialPushPayload()](#fcmgetinitialpushpayload)
+  - [FCM.getToken()](#fcmgettoken)
+  - [FCM.hasPermission()](#fcmhaspermission)
+  - [FCM.onNotification()](#fcmonnotification)
+  - [FCM.onTokenRefresh()](#fcmontokenrefresh)
+  - [FCM.requestPushPermission()](#fcmrequestpushpermission)
+  - [FCM.subscribeToTopic()](#fcmsubscribetotopic)
+  - [FCM.unsubscribeFromTopic()](#fcmunsubscribefromtopic)
+  - [FCM.eventTarget](#fcmeventtarget)
+- [With Ionic](#with-ionic)
+  - [FCM.onNotification()](#fcmonnotification-1)
+  - [FCM.onTokenRefresh()](#fcmontokenrefresh-1)
 
 #### As its own
 
