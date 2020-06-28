@@ -308,6 +308,10 @@ After a lot of work, the first release of the plugin https://github.com/andrehti
 
 ## Changelog
 
+### Version 7.0.1 (28/06/2020)
+
+Replaced native to JS context messaging, from JS injection to event subscription.
+
 ### Version 7.0.0 (27/06/2020)
 
 Breaking update released. Please pay atention to the changes in plugin preferences and API methods.
