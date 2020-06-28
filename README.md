@@ -308,7 +308,7 @@ After a lot of work, the first release of the plugin https://github.com/andrehti
 
 ## Changelog
 
-### Version 7.0.0 (??/??/????)
+### Version 7.0.0 (27/06/2020)
 
 Breaking update released. Please pay atention to the changes in plugin preferences and API methods.
 
