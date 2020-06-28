@@ -4,8 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.util.Log;
 
-import com.gae.scaffolder.plugin.interfaces.OnFinishedListener;
-import com.gae.scaffolder.plugin.interfaces.TokenListeners;
+import com.gae.scaffolder.plugin.interfaces.*;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -17,6 +16,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,14 +24,13 @@ import org.json.JSONObject;
 import java.util.Map;
 
 public class FCMPlugin extends CordovaPlugin {
-    public static CordovaWebView gWebView;
     public static String notificationEventName = "notification";
     public static String tokenRefreshEventName = "tokenRefresh";
-    public static Map<String, Object> initialPushPayload = null;
-
-    protected Context context = null;
+    public static Map<String, Object> initialPushPayload;
     public static final String TAG = "FCMPlugin";
-    private static CordovaPlugin instance = null;
+    private static FCMPlugin instance;
+    protected Context context;
+    protected static CallbackContext jsEventBridgeCallbackContext;
 
     public FCMPlugin() {}
     public FCMPlugin(Context context) {
@@ -44,7 +43,7 @@ public class FCMPlugin extends CordovaPlugin {
             instance = getPlugin(instance);
         }
 
-        return (FCMPlugin) instance;
+        return instance;
     }
 
     public static synchronized FCMPlugin getInstance() {
@@ -53,12 +52,12 @@ public class FCMPlugin extends CordovaPlugin {
             instance = getPlugin(instance);
         }
 
-        return (FCMPlugin) instance;
+        return instance;
     }
 
-    public static CordovaPlugin getPlugin(CordovaPlugin plugin) {
+    public static FCMPlugin getPlugin(FCMPlugin plugin) {
         if (plugin.webView != null) {
-            instance = plugin.webView.getPluginManager().getPlugin(FCMPlugin.class.getName());
+            instance = (FCMPlugin) plugin.webView.getPluginManager().getPlugin(FCMPlugin.class.getName());
         } else {
             plugin.initialize(null, null);
             instance = plugin;
@@ -69,7 +68,6 @@ public class FCMPlugin extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        gWebView = webView;
         Log.d(TAG, "==> FCMPlugin initialize");
 
         FirebaseMessaging.getInstance().subscribeToTopic("android");
@@ -83,6 +81,10 @@ public class FCMPlugin extends CordovaPlugin {
             // READY //
             if (action.equals("ready")) {
                 callbackContext.success();
+            }
+            // START JS EVENT BRIDGE //
+            else if (action.equals("startJsEventBridge")) {
+                this.jsEventBridgeCallbackContext = callbackContext;
             }
             // GET TOKEN //
             else if (action.equals("getToken")) {
@@ -246,18 +248,23 @@ public class FCMPlugin extends CordovaPlugin {
         });
     }
 
-    private static void dispatchJSEvent(String eventName, String jsData) throws Exception {
-        if (gWebView == null) {
-            throw new Exception("gWebView not available");
+    private static void dispatchJSEvent(String eventName, String stringifiedJSONValue) throws Exception {
+        String jsEventData = "[\"" + eventName + "\"," + stringifiedJSONValue + "]";
+        PluginResult dataResult = new PluginResult(PluginResult.Status.OK, jsEventData);
+        dataResult.setKeepCallback(true);
+        if(FCMPlugin.jsEventBridgeCallbackContext == null) {
+            Log.d(TAG, "\tUnable to send event due to unreachable bridge context");
+            return;
         }
-        String callBack = "javascript:window.FCM.eventTarget.dispatchEvent(new CustomEvent(\"" + eventName + "\",{detail:" + jsData + "}))";
-        Log.d(TAG, "\tSent event: " + eventName + " with " + jsData);
-        gWebView.sendJavascript(callBack);
+        FCMPlugin.jsEventBridgeCallbackContext.sendPluginResult(dataResult);
+        Log.d(TAG, "\tSent event: " + eventName + " with " + stringifiedJSONValue);
     }
 
     public static void sendPushPayload(Map<String, Object> payload) {
         Log.d(TAG, "==> FCMPlugin sendPushPayload");
-        Log.d(TAG, "\tgWebView: " + gWebView);
+        if(initialPushPayload == null) {
+            initialPushPayload = payload;
+        }
         try {
             JSONObject jo = new JSONObject();
             for (String key : payload.keySet()) {
@@ -267,9 +274,6 @@ public class FCMPlugin extends CordovaPlugin {
             FCMPlugin.dispatchJSEvent(notificationEventName, jo.toString());
         } catch (Exception e) {
             Log.d(TAG, "\tERROR sendPushPayload: " + e.getMessage());
-            if(initialPushPayload == null) {
-                initialPushPayload = payload;
-            }
         }
     }
 
@@ -285,7 +289,7 @@ public class FCMPlugin extends CordovaPlugin {
     @Override
     public void onDestroy() {
         initialPushPayload = null;
-        gWebView = null;
+        jsEventBridgeCallbackContext = null;
     }
 
     protected Context getContext() {

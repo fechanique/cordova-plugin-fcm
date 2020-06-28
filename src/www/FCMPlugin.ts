@@ -4,6 +4,7 @@ import type { INotificationPayload } from './INotificationPayload'
 import type { IDisposable } from './IDisposable'
 import { execAsPromise } from './execAsPromise'
 import { asDisposableListener } from './eventAsDisposable'
+import { bridgeNativeEvents } from './bridgeNativeEvents'
 
 /**
  * @name FCM
@@ -29,11 +30,14 @@ export class FCMPlugin {
     public readonly eventTarget: EventTarget
 
     constructor() {
-        // EventTarget is not fully supported on ios and older Android
+        // EventTarget is not fully supported on iOS and older Android
         this.eventTarget = document.createElement('div')
         execAsPromise('ready')
-            .then(() => console.log('FCM: Ready!'))
             .catch((error: Error) => console.log('FCM: Ready error: ', error))
+            .then(() => {
+                console.log('FCM: Ready!')
+                bridgeNativeEvents(this.eventTarget)
+            })
         console.log('FCM: has been created')
     }
 

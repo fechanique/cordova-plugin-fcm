@@ -14,7 +14,6 @@
 - (void)subscribeToTopic:(CDVInvokedUrlCommand*)command;
 - (void)unsubscribeFromTopic:(CDVInvokedUrlCommand*)command;
 - (void)notifyOfMessage:(NSData*) payload;
-- (void)runJS:(NSString *)jsCode;
 - (void)appEnterBackground;
 - (void)appEnterForeground;
 

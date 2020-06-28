@@ -16,6 +16,7 @@ static BOOL appInForeground = YES;
 
 static NSString *notificationEventName = @"notification";
 static NSString *tokenRefreshCallback = @"tokenRefresh";
+static NSString *jsEventBridgeCallbackId;
 static FCMPlugin *fcmPluginInstance;
 
 + (FCMPlugin *)fcmPlugin {
@@ -50,6 +51,12 @@ static FCMPlugin *fcmPluginInstance;
             [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
         }];
     }];
+}
+
+// START JS EVENT BRIDGE //
+- (void)startJsEventBridge:(CDVInvokedUrlCommand *)command {
+    NSLog(@"start Js Event Bridge");
+    jsEventBridgeCallbackId = command.callbackId;
 }
 
 // GET TOKEN //
@@ -158,20 +165,16 @@ static FCMPlugin *fcmPluginInstance;
 }
 
 - (void)dispatchJSEvent:(NSString *)eventName withData:(NSString *)jsData {
-    NSString* dispatchTemplateCall = @"window.FCM.eventTarget.dispatchEvent(new CustomEvent(\"%@\",{detail:%@}))";
-    NSString* dispatchCall = [NSString stringWithFormat:dispatchTemplateCall, eventName, jsData];
+    if(jsEventBridgeCallbackId == nil) {
+        NSLog(@"dispatchJSEvent: Unable to send event due to unreachable bridge context: %@ with %@", eventName, jsData);
+        return;
+    }
     NSLog(@"dispatchJSEvent: %@ with %@", eventName, jsData);
-    [self runJS:dispatchCall];
-}
-
-- (void)runJS:(NSString *)jsCode {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.webView respondsToSelector:@selector(evaluateJavaScript:completionHandler:)]) {
-            [(WKWebView *)self.webView evaluateJavaScript:jsCode completionHandler:nil];
-        } else {
-            [self.webViewEngine evaluateJavaScript:jsCode completionHandler:nil];
-        }
-    });
+    NSString* eventDataTemplate = @"[\"%@\",%@]";
+    NSString* eventData = [NSString stringWithFormat:eventDataTemplate, eventName, jsData];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:eventData];
+    [pluginResult setKeepCallbackAsBool:TRUE];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:jsEventBridgeCallbackId];
 }
 
 - (void)appEnterBackground {

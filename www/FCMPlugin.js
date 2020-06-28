@@ -18,12 +18,30 @@ var asDisposableListener = function (eventTarget, eventName, callback, options) 
     };
 };
 
+var bridgeNativeEvents = function (eventTarget) {
+    var onError = function (error) { return console.log('FCM: Error listening to native events', error); };
+    var onEvent = function (data) {
+        try {
+            var _a = JSON.parse(data), eventName = _a[0], eventData = _a[1];
+            eventTarget.dispatchEvent(new CustomEvent(eventName, { detail: eventData }));
+        }
+        catch (error) {
+            console.log('FCM: Error parsing native event data', error);
+        }
+    };
+    window.cordova.exec(onEvent, onError, 'FCMPlugin', 'startJsEventBridge', []);
+};
+
 var FCMPlugin = (function () {
     function FCMPlugin() {
+        var _this = this;
         this.eventTarget = document.createElement('div');
         execAsPromise('ready')
-            .then(function () { return console.log('FCM: Ready!'); })
-            .catch(function (error) { return console.log('FCM: Ready error: ', error); });
+            .catch(function (error) { return console.log('FCM: Ready error: ', error); })
+            .then(function () {
+            console.log('FCM: Ready!');
+            bridgeNativeEvents(_this.eventTarget);
+        });
         console.log('FCM: has been created');
     }
     FCMPlugin.prototype.clearAllNotifications = function () {
