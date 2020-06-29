@@ -300,6 +300,16 @@ this.fcm.onTokenRefresh().subscribe((token: string) => {
 });
 ```
 
+## Example Apps
+
+### Cordova
+
+https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-app-example
+
+### Ionic v3
+
+https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-ionic-v3-example
+
 ## Companion Plugins
 
 ### Optional FCM Image Support for Cordova iOS
