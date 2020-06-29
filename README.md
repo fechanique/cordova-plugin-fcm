@@ -233,6 +233,8 @@ const wasPermissionGiven: boolean = await FCM.requestPushPermission({
 })
 ```
 
+:warning: Without this request, the Application won't receive any notification! Call it when you want to give the user the option for notifications.
+
 ##### FCM.subscribeToTopic()
 
 Subscribes you to a [topic](https://firebase.google.com/docs/notifications/android/console-topics).
