@@ -275,7 +275,7 @@ import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic";
 ```typescript
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 ```
-- Ionic v4:
+- Ionic v4 (also works for Ionic v3):
 ```typescript
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/v4";
 ```
