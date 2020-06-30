@@ -223,7 +223,8 @@ disposable.dispose() // To remove listener
 
 ##### FCM.requestPushPermission()
 
-Request push notification permission, alerting the user if it not have yet decided.
+Request push notification permission on iOS, alerting the user if he/she/they have not yet accepted or denied.
+For Android, it'll always return true.
 ```typescript
 const wasPermissionGiven: boolean = await FCM.requestPushPermission({
   ios9Support: {
@@ -233,7 +234,8 @@ const wasPermissionGiven: boolean = await FCM.requestPushPermission({
 })
 ```
 
-:warning: Without this request, the Application won't receive any notification! Call it when you want to give the user the option for notifications.
+:warning: Without this request, the Application won't receive any notification on iOS!
+:warning: The user will only have its permition required once, after that time, this call will only return if the permission was given that time.
 
 ##### FCM.subscribeToTopic()
 
