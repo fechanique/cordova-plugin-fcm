@@ -31,3 +31,11 @@ sed '/^[[:space:]]*$/d' ionic/ngx/FCM.d.ts > ionic/ngx/FCM.d.ts.tmp
 mv ionic/ngx/FCM.d.ts.tmp ionic/ngx/FCM.d.ts
 sed '/^[[:space:]]*$/d' ionic/v4/FCM.d.ts > ionic/v4/FCM.d.ts.tmp
 mv ionic/v4/FCM.d.ts.tmp ionic/v4/FCM.d.ts
+
+## Simplify imports
+simplifyImports() {
+    filePath="$1"
+    sed 's/import type /import /g' "$filePath" > "$filePath.tmp"
+    mv "$filePath.tmp" "$filePath"
+}
+simplifyImports ionic/v4/FCM.d.ts

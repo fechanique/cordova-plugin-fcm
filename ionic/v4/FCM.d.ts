@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import type { IChannelConfiguration } from '../../typings/IChannelConfiguration';
-import type { IRequestPushPermissionOptions } from '../../typings/IRequestPushPermissionOptions';
-import type { INotificationPayload } from '../../typings/INotificationPayload';
+import { IChannelConfiguration } from '../../typings/IChannelConfiguration';
+import { IRequestPushPermissionOptions } from '../../typings/IRequestPushPermissionOptions';
+import { INotificationPayload } from '../../typings/INotificationPayload';
 /**
  * @name FCM
  * @description

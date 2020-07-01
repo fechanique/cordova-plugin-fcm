@@ -15,7 +15,7 @@
         "build:js": "tsc -p .;rollup -c rollup.config.js;npm run build:js:rm-exports;npm run build:js:add-default-export",
         "build:js:rm-exports": "cd ../../www;cat FCMPlugin.js | grep -v exports > FCMPlugin.tmp.js;mv FCMPlugin.tmp.js FCMPlugin.js",
         "build:js:add-default-export": "cd ../../www;echo 'module.exports = FCM;' >> FCMPlugin.js",
-        "build:dts": "cp ./*.d.ts ../../typings; tsc -p . --declaration true --declarationDir ../../typings --removeComments false",
+        "build:dts": "./scripts/build.dts.sh",
         "build:after": "rm -rf ../../www/tmp",
         "tsc": "npx tsc -p . --noEmit"
     },

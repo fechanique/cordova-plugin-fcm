@@ -1,4 +1,4 @@
-import type { IDisposable } from './IDisposable';
+import { IDisposable } from './IDisposable';
 /**
  * This is a simple helper to wrapp the event handler into a IDisposable
  *

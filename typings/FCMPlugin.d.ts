@@ -1,7 +1,7 @@
-import type { IChannelConfiguration } from './IChannelConfiguration';
-import type { IRequestPushPermissionOptions } from './IRequestPushPermissionOptions';
-import type { INotificationPayload } from './INotificationPayload';
-import type { IDisposable } from './IDisposable';
+import { IChannelConfiguration } from './IChannelConfiguration';
+import { IRequestPushPermissionOptions } from './IRequestPushPermissionOptions';
+import { INotificationPayload } from './INotificationPayload';
+import { IDisposable } from './IDisposable';
 /**
  * @name FCM
  * @description
