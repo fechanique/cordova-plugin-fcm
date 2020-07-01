@@ -11,7 +11,7 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
-[How it works](#how-it-works) | [Installation](#installation) | [Push Payload Configuration](#push-payload-configuration) |  [Features](#features) | [Companion Plugins](#companion-plugins) | [Changelog](#changelog) | [Authorship](#authorship)
+[How it works](#how-it-works) | [Installation](#installation) | [Push Payload Configuration](#push-payload-configuration) |  [Features](#features) | [Example Apps](#example-apps) | [Companion Plugins](#companion-plugins) | [Changelog](#changelog) | [Authorship](#authorship)
 
 ## How it works
 Send a push notification to a single device or topic.
@@ -223,7 +223,8 @@ disposable.dispose() // To remove listener
 
 ##### FCM.requestPushPermission()
 
-Request push notification permission, alerting the user if it not have yet decided.
+Request push notification permission on iOS, alerting the user if he/she/they have not yet accepted or denied.
+For Android, it'll always return true.
 ```typescript
 const wasPermissionGiven: boolean = await FCM.requestPushPermission({
   ios9Support: {
@@ -232,6 +233,9 @@ const wasPermissionGiven: boolean = await FCM.requestPushPermission({
   }
 })
 ```
+
+:warning: Without this request, the Application won't receive any notification on iOS!
+:warning: The user will only have its permition required once, after that time, this call will only return if the permission was given that time.
 
 ##### FCM.subscribeToTopic()
 
@@ -275,7 +279,7 @@ import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic";
 ```typescript
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 ```
-- Ionic v4:
+- Ionic v4 (also works for Ionic v3):
 ```typescript
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/v4";
 ```
@@ -299,6 +303,16 @@ this.fcm.onTokenRefresh().subscribe((token: string) => {
   // ...
 });
 ```
+
+## Example Apps
+
+### Cordova
+
+https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-app-example
+
+### Ionic v3
+
+https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-ionic-v3-example
 
 ## Companion Plugins
 
