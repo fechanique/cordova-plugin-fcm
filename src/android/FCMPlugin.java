@@ -6,6 +6,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaInterface;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -18,6 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 
@@ -46,6 +48,24 @@ public class FCMPlugin extends CordovaPlugin {
                   public void run() {
                     Log.d(TAG, "Starting Analytics");
                     mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+                    Log.d(TAG, "==> Check if there are notifications");
+                    Bundle extras = cordova.getActivity().getIntent().getExtras();
+                    if (extras != null && extras.size() > 1) {
+                      if (extras.containsKey("google.message_id")) {
+                        Log.d(TAG, "==> Set wasTapped true (closed app)");
+                        extras.putString("wasTapped", "true");
+                        Map<String, Object> data = new HashMap<String, Object>();
+                        for (String key : extras.keySet()) {
+                          if (extras.get(key) instanceof String) {
+                            String value = extras.getString(key);
+                            Log.d(TAG, "\tKey: " + key + " Value: " + value);
+                            data.put(key, value);
+                          }
+                        }
+                        FCMPlugin.sendPushPayload(data);
+                      }
+                    }
                   }
                 });
         }
@@ -289,4 +309,22 @@ public class FCMPlugin extends CordovaPlugin {
 		gWebView = null;
 		notificationCallBackReady = false;
 	}
+
+  @Override public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    final Bundle extras = intent.getExtras();
+    Log.d(TAG, "==> FCMPlugin onNewIntent (App is running in Background)");
+    Map<String, Object> data = new HashMap<String, Object>();
+    if (extras != null) {
+      Log.d(TAG, "==> FCMPlugin Set wasTapped true");
+      data.put("wasTapped", true);
+      for (String key : extras.keySet()) {
+        if (extras.get(key) instanceof String) {
+          String value = extras.getString(key);
+          data.put(key, value);
+        }
+      }
+      FCMPlugin.sendPushPayload(data);
+    }
+  }
 } 
