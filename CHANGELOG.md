@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 7.0.0 (07/06/2020)
+- Requires `cordova-android` >= 8.1.0.
+
 ### Version 6.0.3 (07/03/2020)
 - Allow receiving push notifications from Firebase Console (without `click_action` param).
 
