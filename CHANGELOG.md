@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 7.0.1 (07/06/2020)
+- Fix build `cordova-android` 8.1.0.
+
 ### Version 7.0.0 (07/06/2020)
 - Requires `cordova-android` >= 8.1.0.
 
