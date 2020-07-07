@@ -325,6 +325,10 @@ After a lot of work, the first release of the plugin https://github.com/andrehti
 
 ## Changelog
 
+### Version 7.0.3 (07/07/2020)
+
+Simplified ionic/v4/FCM.js file by setting the FCM function in the global context.
+
 ### Version 7.0.2 (01/07/2020)
 
 Simplified .d.ts files by removing the new "type" from imports and exports.

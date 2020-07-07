@@ -1,5 +1,5 @@
 {
-  "version": "7.0.2",
+  "version": "7.0.3",
   "name": "cordova-plugin-fcm-with-dependecy-updated",
   "cordova_name": "Cordova FCM Push Plugin",
   "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
@@ -11,7 +11,7 @@
   "scripts": {
     "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
     "build:before": "rm -rf ../../ionic;mkdir -p ../../ionic/ngx;mkdir -p ../../ionic/v4",
-    "build:js": "tsc -p . --declaration false --removeComments true;cd ../../ionic;mv ionic/*.js .;mv ionic/ngx/*.js ./ngx/;mv ionic/v4/*.js ./v4/",
+    "build:js": "./scripts/build.js.sh",
     "build:dts": "./scripts/build.dts.sh",
     "build:after": "cd ../../ionic;rm -rf ionic;rm -rf www",
     "tsc": "npx tsc -p . --noEmit"
