@@ -133,7 +133,7 @@ Example:
   - [FCM.hasPermission()](#fcmhaspermission)
   - [FCM.onNotification()](#fcmonnotification)
   - [FCM.onTokenRefresh()](#fcmontokenrefresh)
-  - [FCM.requestPushPermission() ❗](#fcmrequestpushpermission)
+  - [**FCM.requestPushPermission()**](#fcmrequestpushpermission)
   - [FCM.subscribeToTopic()](#fcmsubscribetotopic)
   - [FCM.unsubscribeFromTopic()](#fcmunsubscribefromtopic)
   - [FCM.eventTarget](#fcmeventtarget)
