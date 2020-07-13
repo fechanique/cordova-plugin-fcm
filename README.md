@@ -325,6 +325,10 @@ After a lot of work, the first release of the plugin https://github.com/andrehti
 
 ## Changelog
 
+### Version 7.0.5 (13/07/2020)
+
+Renamed extension scripts/install_ionic_dependencies.sh to .bat, to have it running on windows.
+
 ### Version 7.0.4 (13/07/2020)
 
 Simplified ionic/FCM.js and ionic/ngx/FCM.js files to ease building with them.
