@@ -135,6 +135,6 @@
 	<!-- COPY FCM CONFIG FILES TO PLATFORM BEFORE COMPILING -->
 	<hook src="scripts/copy_google_service_files.js" type="after_prepare" />
 	<hook src="scripts/copy_google_service_files.js" type="after_plugin_add" />
-	<hook src="scripts/install_ionic_dependencies.sh" type="after_plugin_add" />
+	<hook src="scripts/install_ionic_dependencies.bat" type="after_plugin_add" />
 	<hook src="scripts/cdnfy_podfile.js" type="before_plugin_install" />
 </plugin>
