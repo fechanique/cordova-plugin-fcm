@@ -38,15 +38,15 @@
     "ios"
   ],
   "dependencies": {
-    "@angular/core": "^10.0.1",
+    "@angular/core": "^10.0.3",
     "@ionic-native/core": "^5.27.0",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.6.0"
   },
   "devDependencies": {
     "@types/cordova": "0.0.34",
     "prettier": "^2.0.5",
     "tslint": "^6.1.2",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.6"
   }
 }
