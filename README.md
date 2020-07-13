@@ -325,6 +325,11 @@ After a lot of work, the first release of the plugin https://github.com/andrehti
 
 ## Changelog
 
+### Version 7.0.4 (13/07/2020)
+
+Simplified ionic/FCM.js and ionic/ngx/FCM.js files to ease building with them.
+Improved scripts/install_ionic_dependencies.sh windows support.
+
 ### Version 7.0.3 (07/07/2020)
 
 Simplified ionic/v4/FCM.js file by setting the FCM function in the global context.
