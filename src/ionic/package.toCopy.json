@@ -25,7 +25,10 @@
         "cordova",
         "ionic"
     ],
-    "platforms": ["android", "ios"],
+    "platforms": [
+        "android",
+        "ios"
+    ],
     "devDependencies": {
         "@types/cordova": "0.0.34",
         "prettier": "^2.0.5",

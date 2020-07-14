@@ -39,3 +39,4 @@ simplifyImports() {
     mv "$filePath.tmp" "$filePath"
 }
 simplifyImports ionic/v4/FCM.d.ts
+simplifyImports ionic/ngx/FCM.d.ts
