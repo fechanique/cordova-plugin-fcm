@@ -8,7 +8,7 @@ sed 's/\.\.\/www\//\.\.\/typings\//' ionic/FCM.tmp.d.ts > FCM.d.ts
 cp ../src/ionic/package.toCopy.json package.json
 
 ## Fix ngx .d.ts files
-mv ionic/ngx/*.d.ts ./ngx/
+sed 's/\.\.\/www\//\.\.\/typings\//' ionic/ngx/FCM.d.ts > ngx/FCM.d.ts
 cp ../src/ionic/package.toCopy.json ngx/package.json
 
 ## Fix v4 .d.ts files
