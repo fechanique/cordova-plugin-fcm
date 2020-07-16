@@ -327,6 +327,7 @@ After a lot of work, the first release of the plugin https://github.com/andrehti
 ### Version 7.0.7 (17/07/2020)
 
 Removed auto-cdnfy due to service issues;
+
 Set AndroidXEnabled for cordova-android-9.0.0 (https://cordova.apache.org/announcements/2020/06/29/cordova-android-9.0.0.html).
 
 ### Version 7.0.6 (14/07/2020)
