@@ -61,6 +61,11 @@
 				<param name="onload" value="true" />
 			</feature>
 		</config-file>
+		<config-file target="config.xml" parent="/*">
+			<platform name="android">
+				<preference name="AndroidXEnabled" value="true" />
+			</platform>
+		</config-file>
 
 		<framework src="com.google.firebase:firebase-messaging:$ANDROID_FCM_VERSION" />
 
@@ -136,5 +141,4 @@
 	<hook src="scripts/copy_google_service_files.js" type="after_prepare" />
 	<hook src="scripts/copy_google_service_files.js" type="after_plugin_add" />
 	<hook src="scripts/install_ionic_dependencies.bat" type="after_plugin_add" />
-	<hook src="scripts/cdnfy_podfile.js" type="before_plugin_install" />
 </plugin>
