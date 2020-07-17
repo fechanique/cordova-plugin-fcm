@@ -19,8 +19,9 @@ Send a push notification to a single device or topic.
 
 - Application is in foreground:
 
-   The notification data is received in the JavaScript callback without notification bar message (this is the normal behavior of mobile push notifications).
-   
+  - The notification data is received in the JavaScript callback without notification bar message (this is the normal behavior of mobile push notifications).
+  - To show the notification received on the foreground, it's recommended to use [cordova-plugin-local-notification](https://github.com/katzer/cordova-plugin-local-notifications#readme) as it provides many presentation and interaction features.
+
 - Application is in background or closed:
 
   - The device displays the notification message in the device notification bar.
