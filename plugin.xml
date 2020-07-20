@@ -127,14 +127,6 @@
 				<pod name="Firebase/Messaging" spec=">= 6.21.0" />
 			</pods>
 		</podspec>
-
-		<!-- OTHER NEEDED LIBS -->
-		<framework src="libc++.tbd" />
-		<framework src="libz.tbd" />
-		<framework src="AddressBook.framework" />
-		<framework src="libsqlite3.0.tbd" />
-		<framework src="libz.tbd" />
-		<framework src="Security.framework" />
 	</platform>
 
 	<!-- COPY FCM CONFIG FILES TO PLATFORM BEFORE COMPILING -->
