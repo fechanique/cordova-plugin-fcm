@@ -318,6 +318,10 @@ https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-app-ex
 
 https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-ionic-v3-example
 
+### Ionic v5
+
+https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-ionic-v5-example
+
 ## Companion Plugins
 
 ### Optional FCM Image Support for Cordova iOS
