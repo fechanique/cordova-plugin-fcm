@@ -224,7 +224,7 @@ public class FCMPlugin extends CordovaPlugin {
         }
     }
 
-    private JSONObject exceptionToJson(Exception exception) throws JSONException {
+    private JSONObject exceptionToJson(final Exception exception) throws JSONException {
         return new JSONObject() {
             {
                 put("message", exception.getMessage());
