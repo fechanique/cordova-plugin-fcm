@@ -203,7 +203,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 }
 
 + (NSString*)getAPNSToken {
-    NSLog(@"getAPNSToken: %@", apnsToken);
     return apnsToken;
 }
 
