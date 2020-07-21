@@ -329,11 +329,15 @@ https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-ionic-
 After a lot of work, the first release of the plugin https://github.com/andrehtissot/cordova-plugin-fcm-image-support is out. Which should enable the support, just by installing it.
 
 ## Changelog
+### Version 7.0.9 (21/07/2020)
+
+getInitialPushPayload: Conversion of NSData* into NSDictonary* fix -- Thanks to @medeirosrafael for debugging and fixing it!
+
 ### Version 7.0.8 (20/07/2020)
 
 Avoided execution of install_ionic_dependencies.bat after the app is installed;
 
-Removed old framework dependencies (Thanks for @QuentinFarizon, for pointing it out).
+Removed old framework dependencies -- Thanks for @QuentinFarizon, for pointing it out!
 
 ### Version 7.0.7 (17/07/2020)
 
@@ -352,6 +356,7 @@ Renamed extension scripts/install_ionic_dependencies.sh to .bat, to have it runn
 ### Version 7.0.4 (13/07/2020)
 
 Simplified ionic/FCM.js and ionic/ngx/FCM.js files to ease building with them.
+
 Improved scripts/install_ionic_dependencies.sh windows support.
 
 ### Version 7.0.3 (07/07/2020)
