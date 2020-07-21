@@ -138,15 +138,26 @@ static FCMPlugin *fcmPluginInstance;
 }
 
 - (void)getInitialPushPayload:(CDVInvokedUrlCommand *)command {
-     NSLog(@"getInitialPushPayload");
+    NSLog(@"getInitialPushPayload");
     [self.commandDelegate runInBackground:^{
-        NSData* payload = [AppDelegate getInitialPushPayload];
-        if (payload == nil) {
+        NSData* dataPayload = [AppDelegate getInitialPushPayload];
+        if (dataPayload == nil) {
             CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             return;
         }
-        NSDictionary *payloadDictionary = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:payload];
+        NSString *strISOLatin = [[NSString alloc] initWithData:dataPayload encoding:NSISOLatin1StringEncoding];
+        NSData *dataPayloadUTF8 = [strISOLatin dataUsingEncoding:NSUTF8StringEncoding];
+        NSError* error = nil;
+        NSDictionary *payloadDictionary = [NSJSONSerialization JSONObjectWithData:dataPayloadUTF8 options:0 error:&error];
+        if (error) {
+            NSString* errorMessage = [NSString stringWithFormat:@"%@ => '%@'", [error localizedDescription], strISOLatin];
+            NSLog(@"getInitialPushPayload error: %@", errorMessage);
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:errorMessage];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            return;
+        }
+        NSLog(@"getInitialPushPayload value: %@", payloadDictionary);
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:payloadDictionary];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
