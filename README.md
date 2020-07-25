@@ -138,7 +138,7 @@ Example:
   - [FCM.subscribeToTopic()](#fcmsubscribetotopic)
   - [FCM.unsubscribeFromTopic()](#fcmunsubscribefromtopic)
   - [FCM.eventTarget](#fcmeventtarget)
-- [With Ionic](#with-ionic)
+- [**With Ionic**](#with-ionic)
   - [FCM.onNotification()](#fcmonnotification-1)
   - [FCM.onTokenRefresh()](#fcmontokenrefresh-1)
 
