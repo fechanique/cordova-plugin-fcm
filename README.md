@@ -324,9 +324,17 @@ https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated-ionic-
 
 ## Companion Plugins
 
-### Optional FCM Image Support for Cordova iOS
+### Optional standalone FCM Image Support for Cordova iOS
 
-After a lot of work, the first release of the plugin https://github.com/andrehtissot/cordova-plugin-fcm-image-support is out. Which should enable the support, just by installing it.
+After a lot of work, the first release of the plugin is out. Which should enable the support, just by installing it.
+
+Link: https://github.com/andrehtissot/cordova-plugin-fcm-image-support 
+
+### Optional standalone Cocoapods CDN source switcher
+
+When the environment supports, the cocoapods source is automatically set to the official CDN instead of the slow Github repository.
+
+Link: https://github.com/andrehtissot/cordova-plugin-cocoapods-cdn
 
 ## Changelog
 ### Version 7.0.9 (21/07/2020)
