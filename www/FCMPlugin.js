@@ -56,6 +56,16 @@ FCMPlugin.prototype.setUserProperty = function(name, value, success, error){
   exec(success, error, 'FCMPlugin', 'setUserProperty', [name, value]);
 }
 
+// Dynamic Link Plugin
+
+FCMPlugin.prototype.onDynamicLink = function(success, error) {
+  exec(success, error, 'FCMPlugin', 'onDynamicLink', []);
+}
+
+FCMPlugin.prototype.createDynamicLink = function(params, success, error) {
+  exec(success, error, 'FCMPlugin', 'createDynamicLink', [params, 0]);
+}
+
 // FIRE READY //
 exec(function(result){ console.log("FCMPlugin NG Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
 

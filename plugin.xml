@@ -32,6 +32,8 @@
       <engine name="cordova-android" version=">=8.1.0" />
     </engines>
 
+    <preference name="PAGE_LINK_DOMAIN" />
+
     <!-- ANDROID CONFIGURATION -->
     <platform name="android">
       <config-file target="AndroidManifest.xml" parent="/manifest/application">
@@ -39,6 +41,13 @@
           <intent-filter>
             <action android:name="FCM_PLUGIN_ACTIVITY" />
             <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
+          <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+            <category android:name="android.intent.category.BROWSABLE"/>
+            <data android:host="$PAGE_LINK_DOMAIN" android:scheme="http"/>
+            <data android:host="$PAGE_LINK_DOMAIN" android:scheme="https"/>
           </intent-filter>
         </activity>
         <service android:name="com.gae.scaffolder.plugin.MyFirebaseMessagingService">
@@ -53,6 +62,7 @@
         </service>
       </config-file>
       <config-file target="res/xml/config.xml" parent="/*">
+        <preference name="DYNAMIC_LINK_URIPREFIX" value="https://$PAGE_LINK_DOMAIN"/>
         <feature name="FCMPlugin" >
           <param name="android-package" value="com.gae.scaffolder.plugin.FCMPlugin"/>
           <param name="onload" value="true" />
@@ -64,6 +74,7 @@
       <framework src="com.google.firebase:firebase-messaging:17.5.0" />
       <framework src="com.google.firebase:firebase-config:16.4.1" />
       <framework src="com.google.firebase:firebase-perf:16.2.4" />
+      <framework src="com.google.firebase:firebase-dynamic-links:16.1.8" />
 
       <framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
@@ -91,8 +102,8 @@
 		
 		<resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
 		
-        <header-file src="src/ios/FCMPlugin.h" />
-        <source-file src="src/ios/FCMPlugin.m" />
+    <header-file src="src/ios/FCMPlugin.h" />
+    <source-file src="src/ios/FCMPlugin.m" />
 		
 		<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
 		<source-file src="src/ios/AppDelegate+FCMPlugin.m" />

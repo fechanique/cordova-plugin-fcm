@@ -23,11 +23,36 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 
+// Dynamic Link
+import android.net.Uri;
+
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.DynamicLink.AndroidParameters;
+import com.google.firebase.dynamiclinks.DynamicLink.GoogleAnalyticsParameters;
+import com.google.firebase.dynamiclinks.DynamicLink.IosParameters;
+import com.google.firebase.dynamiclinks.DynamicLink.ItunesConnectAnalyticsParameters;
+import com.google.firebase.dynamiclinks.DynamicLink.NavigationInfoParameters;
+import com.google.firebase.dynamiclinks.DynamicLink.SocialMetaTagParameters;
+
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+
+import org.apache.cordova.PluginResult;
+
 public class FCMPlugin extends CordovaPlugin {
  
 	private static final String TAG = "FCMPlugin";
 
-        private FirebaseAnalytics mFirebaseAnalytics;
+  private FirebaseAnalytics mFirebaseAnalytics;
+
+  private FirebaseDynamicLinks firebaseDynamicLinks;
+  private String domainUriPrefix;
+  private CallbackContext dynamicLinkCallback;
 	
 	public static CordovaWebView gWebView;
 	public static String notificationCallBack = "FCMPlugin.onNotificationReceived";
@@ -48,6 +73,10 @@ public class FCMPlugin extends CordovaPlugin {
                   public void run() {
                     Log.d(TAG, "Starting Analytics");
                     mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+                    Log.d(TAG, "Starting DynamicLink");
+                    firebaseDynamicLinks = FirebaseDynamicLinks.getInstance();
+                    domainUriPrefix = preferences.getString("DYNAMIC_LINK_URIPREFIX", "");
 
                     Log.d(TAG, "==> Check if there are notifications");
                     Bundle extras = cordova.getActivity().getIntent().getExtras();
@@ -130,7 +159,7 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
-                        else if (action.equals("logEvent")) {
+      else if (action.equals("logEvent")) {
 				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
@@ -141,12 +170,12 @@ public class FCMPlugin extends CordovaPlugin {
 						}
 					}
 				});
-                        }
-                        else if (action.equals("setUserId")) {
+      }
+      else if (action.equals("setUserId")) {
 				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
-                                                  setUserId(callbackContext, args.getString(0));
+              setUserId(callbackContext, args.getString(0));
 							callbackContext.success();
 						}catch(Exception e){
 							callbackContext.error(e.getMessage());
@@ -154,11 +183,11 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
-                        else if (action.equals("setUserProperty")) {
+      else if (action.equals("setUserProperty")) {
 				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
-                                                  setUserProperty(callbackContext, args.getString(0), args.getString(1));
+              setUserProperty(callbackContext, args.getString(0), args.getString(1));
 							callbackContext.success();
 						}catch(Exception e){
 							callbackContext.error(e.getMessage());
@@ -166,7 +195,7 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
-                        else if (action.equals("clearAllNotifications")) {
+      else if (action.equals("clearAllNotifications")) {
 				cordova.getThreadPool().execute(new Runnable() {
 					public void run() {
 						try{
@@ -178,7 +207,31 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
-			else{
+      else if (action.equals("onDynamicLink")) {
+        cordova.getThreadPool().execute(new Runnable() {
+          public void run() {
+            try{
+              onDynamicLink(callbackContext);
+              callbackContext.success();
+            }catch(Exception e){
+              callbackContext.error(e.getMessage());
+            }
+          }
+        });
+      }
+      else if (action.equals("createDynamicLink")) {
+        cordova.getThreadPool().execute(new Runnable() {
+          public void run() {
+            try{
+              createDynamicLink(args.getJSONObject(0), args.getInt(1), callbackContext);
+              callbackContext.success();
+            }catch(Exception e){
+              callbackContext.error(e.getMessage());
+            }
+          }
+        });
+      }
+			else {
 				callbackContext.error("Method not found");
 				return false;
 			}
@@ -303,6 +356,160 @@ public class FCMPlugin extends CordovaPlugin {
             }
           });
         }
+
+  private void onDynamicLink(CallbackContext callbackContext) {
+    dynamicLinkCallback = callbackContext;
+
+    respondWithDynamicLink(cordova.getActivity().getIntent());
+  }
+
+  private void createDynamicLink(JSONObject params, int linkType, final CallbackContext callbackContext) throws JSONException {
+    DynamicLink.Builder builder = createDynamicLinkBuilder(params);
+    if (linkType == 0) {
+      callbackContext.success(builder.buildDynamicLink().getUri().toString());
+    } else {
+      builder.buildShortDynamicLink(linkType)
+        .addOnCompleteListener(cordova.getActivity(), new OnCompleteListener<ShortDynamicLink>() {
+          @Override
+          public void onComplete(Task<ShortDynamicLink> task) {
+            if (task.isSuccessful()) {
+              callbackContext.success(task.getResult().getShortLink().toString());
+            } else {
+              callbackContext.error(task.getException().getMessage());
+            }
+          }
+        });
+    }
+  }
+
+  private void respondWithDynamicLink(Intent intent) {
+    this.firebaseDynamicLinks.getDynamicLink(intent)
+      .continueWith(new Continuation<PendingDynamicLinkData, JSONObject>() {
+        @Override
+        public JSONObject then(Task<PendingDynamicLinkData> task) throws JSONException {
+          PendingDynamicLinkData data = task.getResult();
+
+          JSONObject result = new JSONObject();
+          result.put("deepLink", data.getLink());
+          result.put("clickTimestamp", data.getClickTimestamp());
+          result.put("minimumAppVersion", data.getMinimumAppVersion());
+
+          if (dynamicLinkCallback != null) {
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+            pluginResult.setKeepCallback(true);
+            dynamicLinkCallback.sendPluginResult(pluginResult);
+          }
+
+          return result;
+        }
+      });
+  }
+
+  private DynamicLink.Builder createDynamicLinkBuilder(JSONObject params) throws JSONException {
+    DynamicLink.Builder builder = this.firebaseDynamicLinks.createDynamicLink();
+    builder.setDomainUriPrefix(params.optString("domainUriPrefix", this.domainUriPrefix));
+    builder.setLink(Uri.parse(params.getString("link")));
+
+    JSONObject androidInfo = params.optJSONObject("androidInfo");
+    if (androidInfo != null) {
+      builder.setAndroidParameters(getAndroidParameters(androidInfo));
+    }
+
+    JSONObject iosInfo = params.optJSONObject("iosInfo");
+    if (iosInfo != null) {
+      builder.setIosParameters(getIosParameters(iosInfo));
+    }
+
+    JSONObject navigationInfo = params.optJSONObject("navigationInfo");
+    if (navigationInfo != null) {
+      builder.setNavigationInfoParameters(getNavigationInfoParameters(navigationInfo));
+    }
+
+    JSONObject analyticsInfo = params.optJSONObject("analyticsInfo");
+    if (analyticsInfo != null) {
+      JSONObject googlePlayAnalyticsInfo = analyticsInfo.optJSONObject("googlePlayAnalytics");
+      if (googlePlayAnalyticsInfo != null) {
+        builder.setGoogleAnalyticsParameters(getGoogleAnalyticsParameters(googlePlayAnalyticsInfo));
+      }
+      JSONObject itunesConnectAnalyticsInfo = analyticsInfo.optJSONObject("itunesConnectAnalytics");
+      if (itunesConnectAnalyticsInfo != null) {
+        builder.setItunesConnectAnalyticsParameters(getItunesConnectAnalyticsParameters(itunesConnectAnalyticsInfo));
+      }
+    }
+
+    JSONObject socialMetaTagInfo = params.optJSONObject("socialMetaTagInfo");
+    if (socialMetaTagInfo != null) {
+      builder.setSocialMetaTagParameters(getSocialMetaTagParameters(socialMetaTagInfo));
+    }
+
+    return builder;
+  }
+
+  private AndroidParameters getAndroidParameters(JSONObject androidInfo) throws JSONException {
+    AndroidParameters.Builder androidInfoBuilder;
+    if (androidInfo.has("androidPackageName")) {
+      androidInfoBuilder = new AndroidParameters.Builder(androidInfo.getString("androidPackageName"));
+    } else {
+      androidInfoBuilder = new AndroidParameters.Builder();
+    }
+    if (androidInfo.has("androidFallbackLink")) {
+      androidInfoBuilder.setFallbackUrl(Uri.parse(androidInfo.getString("androidFallbackLink")));
+    }
+    if (androidInfo.has("androidMinPackageVersionCode")) {
+      androidInfoBuilder.setMinimumVersion(androidInfo.getInt("androidMinPackageVersionCode"));
+    }
+    return androidInfoBuilder.build();
+  }
+
+  private IosParameters getIosParameters(JSONObject iosInfo) throws JSONException {
+    IosParameters.Builder iosInfoBuilder = new IosParameters.Builder(iosInfo.getString("iosBundleId"));
+    iosInfoBuilder.setAppStoreId(iosInfo.optString("iosAppStoreId"));
+    iosInfoBuilder.setIpadBundleId(iosInfo.optString("iosIpadBundleId"));
+    iosInfoBuilder.setMinimumVersion(iosInfo.optString("iosMinPackageVersion"));
+    if (iosInfo.has("iosFallbackLink")) {
+      iosInfoBuilder.setFallbackUrl(Uri.parse(iosInfo.getString("iosFallbackLink")));
+    }
+    if (iosInfo.has("iosIpadFallbackLink")) {
+      iosInfoBuilder.setIpadFallbackUrl(Uri.parse(iosInfo.getString("iosIpadFallbackLink")));
+    }
+    return iosInfoBuilder.build();
+  }
+
+  private NavigationInfoParameters getNavigationInfoParameters(JSONObject navigationInfo) throws JSONException {
+    NavigationInfoParameters.Builder navigationInfoBuilder = new NavigationInfoParameters.Builder();
+    if (navigationInfo.has("enableForcedRedirect")) {
+      navigationInfoBuilder.setForcedRedirectEnabled(navigationInfo.getBoolean("enableForcedRedirect"));
+    }
+    return navigationInfoBuilder.build();
+  }
+
+  private GoogleAnalyticsParameters getGoogleAnalyticsParameters(JSONObject googlePlayAnalyticsInfo) {
+    GoogleAnalyticsParameters.Builder gaInfoBuilder = new GoogleAnalyticsParameters.Builder();
+    gaInfoBuilder.setSource(googlePlayAnalyticsInfo.optString("utmSource"));
+    gaInfoBuilder.setMedium(googlePlayAnalyticsInfo.optString("utmMedium"));
+    gaInfoBuilder.setCampaign(googlePlayAnalyticsInfo.optString("utmCampaign"));
+    gaInfoBuilder.setContent(googlePlayAnalyticsInfo.optString("utmContent"));
+    gaInfoBuilder.setTerm(googlePlayAnalyticsInfo.optString("utmTerm"));
+    return gaInfoBuilder.build();
+  }
+
+  private ItunesConnectAnalyticsParameters getItunesConnectAnalyticsParameters(JSONObject itunesConnectAnalyticsInfo) {
+    ItunesConnectAnalyticsParameters.Builder iosAnalyticsInfo = new ItunesConnectAnalyticsParameters.Builder();
+    iosAnalyticsInfo.setAffiliateToken(itunesConnectAnalyticsInfo.optString("at"));
+    iosAnalyticsInfo.setCampaignToken(itunesConnectAnalyticsInfo.optString("ct"));
+    iosAnalyticsInfo.setProviderToken(itunesConnectAnalyticsInfo.optString("pt"));
+    return iosAnalyticsInfo.build();
+  }
+
+  private SocialMetaTagParameters getSocialMetaTagParameters(JSONObject socialMetaTagInfo) throws JSONException {
+    SocialMetaTagParameters.Builder socialInfoBuilder = new SocialMetaTagParameters.Builder();
+    socialInfoBuilder.setTitle(socialMetaTagInfo.optString("socialTitle"));
+    socialInfoBuilder.setDescription(socialMetaTagInfo.optString("socialDescription"));
+    if (socialMetaTagInfo.has("socialImageLink")) {
+      socialInfoBuilder.setImageUrl(Uri.parse(socialMetaTagInfo.getString("socialImageLink")));
+    }
+    return socialInfoBuilder.build();
+  }
   
   @Override
 	public void onDestroy() {
@@ -314,6 +521,9 @@ public class FCMPlugin extends CordovaPlugin {
     super.onNewIntent(intent);
     final Bundle extras = intent.getExtras();
     Log.d(TAG, "==> FCMPlugin onNewIntent (App is running in Background)");
+    if (dynamicLinkCallback != null) {
+      respondWithDynamicLink(intent);
+    }
     Map<String, Object> data = new HashMap<String, Object>();
     if (extras != null) {
       Log.d(TAG, "==> FCMPlugin Set wasTapped true");
