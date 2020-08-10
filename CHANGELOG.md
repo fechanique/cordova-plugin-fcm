@@ -1,5 +1,11 @@
 # Changelog
 
+### Version 8.0.0 (10/08/2020)
+- New Dynamic Links support for iOS
+- New Dynamic Links support for Android
+- Requires `cordova` >= 9.0.0 and `cordova-android` >= 9.0.0
+- Latest version of Firebase using Cocoapods
+
 ### Version 7.0.1 (07/06/2020)
 - Fix build `cordova-android` 8.1.0.
 

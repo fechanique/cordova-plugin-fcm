@@ -78,6 +78,11 @@ FCMPluginNG.onNotification(function(data){
 });
 ```
 
+#### Clear push notifications badge
+```javascript
+FCMPluginNG.clearAllNotifications();
+```
+
 #### Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 ```javascript
@@ -124,7 +129,7 @@ Every method returns a promise that fulfills when a call was successful.
 ### logEvent(_name_, _params_)
 Logs an app event.
 ```js
-FCMPluginNG.analytics.logEvent("my_event", {param1: "value1"});
+FCMPluginNG.logEvent("my_event", {param1: "value1"});
 ```
 
 Be aware of [automatically collected events](https://support.google.com/firebase/answer/6317485).
@@ -140,6 +145,18 @@ This feature must be used in accordance with [Google's Privacy Policy](https://w
 Sets a user property to a given value.
 ```js
 FCMPluginNG.setUserProperty("name1", "value1");
+```
+
+## Dynamic Links
+
+### onDynamicLink
+```js
+FCMPluginNG.onDynamicLink();
+```
+
+### createDynamicLink
+```js
+FCMPluginNG.createDynamicLink({params});
 ```
 
 ## License
