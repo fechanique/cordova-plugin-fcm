@@ -1,6 +1,8 @@
 #import <UIKit/UIKit.h>
 #import <Cordova/CDVPlugin.h>
 
+#import "Firebase.h"
+
 @interface FCMPlugin : CDVPlugin
 {
     //NSString *notificationCallBack;
@@ -20,5 +22,8 @@
 - (void)setUserId:(CDVInvokedUrlCommand*)command;
 - (void)setUserProperty:(CDVInvokedUrlCommand*)command;
 - (void)clearAllNotifications:(CDVInvokedUrlCommand*)command;
+- (void)onDynamicLink:(CDVInvokedUrlCommand *)command;
+- (void)createDynamicLink:(CDVInvokedUrlCommand *)command;
+- (void)postDynamicLink:(FIRDynamicLink*) dynamicLink;
 
 @end

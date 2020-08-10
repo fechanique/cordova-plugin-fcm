@@ -16,8 +16,7 @@
 @import UserNotifications;
 #endif
 
-@import FirebaseInstanceID;
-@import FirebaseMessaging;
+@import Firebase;
 
 // Implement UNUserNotificationCenterDelegate to receive display notification via APNS for devices
 // running iOS 10 and above. Implement FIRMessagingDelegate to receive data message via FCM for
@@ -43,7 +42,73 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     Method original =  class_getInstanceMethod(self, @selector(application:didFinishLaunchingWithOptions:));
     Method custom =    class_getInstanceMethod(self, @selector(application:customDidFinishLaunchingWithOptions:));
     method_exchangeImplementations(original, custom);
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self swizzleMethod:@selector(application:openURL:options:)];
+        [self swizzleMethod:@selector(application:continueUserActivity:restorationHandler:)];
+    });
 }
+
+// ------------ DYNAMIC LINKS
+
++ (void)swizzleMethod:(SEL)originalSelector {
+    Class class = [self class];
+    NSString *selectorString = NSStringFromSelector(originalSelector);
+    SEL newSelector = NSSelectorFromString([@"swizzled_" stringByAppendingString:selectorString]);
+    SEL defaultSelector = NSSelectorFromString([@"default_" stringByAppendingString:selectorString]);
+    Method originalMethod = class_getInstanceMethod(class, originalSelector);
+    Method newMethod = class_getInstanceMethod(class, newSelector);
+    Method noopMethod = class_getInstanceMethod(class, defaultSelector);
+    if (class_addMethod(class, originalSelector, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
+        class_replaceMethod(class, newSelector, method_getImplementation(originalMethod ?: noopMethod), method_getTypeEncoding(originalMethod));
+    } else {
+        method_exchangeImplementations(originalMethod, newMethod);
+    }
+}
+
+- (BOOL)default_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *, id> *)options {
+    return FALSE;
+}
+
+- (BOOL)swizzled_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *, id> *)options {
+    // always call original method implementation first
+    BOOL handled = [self swizzled_application:app openURL:url options:options];
+    FCMPlugin* dl = [self.viewController getCommandInstance:@"FirebaseDynamicLinks"];
+    // parse firebase dynamic link
+    FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
+    if (dynamicLink) {
+        [dl postDynamicLink:dynamicLink];
+        handled = TRUE;
+    }
+    return handled;
+}
+
+- (BOOL)default_application:(UIApplication *)app continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
+    return FALSE;
+}
+
+- (BOOL)swizzled_application:(UIApplication *)app continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
+    // always call original method implementation first
+    BOOL handled = [self swizzled_application:app continueUserActivity:userActivity restorationHandler:restorationHandler];
+    FCMPlugin* dl = [self.viewController getCommandInstance:@"FirebaseDynamicLinks"];
+    // handle firebase dynamic link
+    return [[FIRDynamicLinks dynamicLinks]
+        handleUniversalLink:userActivity.webpageURL
+        completion:^(FIRDynamicLink * _Nullable dynamicLink, NSError * _Nullable error) {
+            // Try this method as some dynamic links are not recognize by handleUniversalLink
+            // ISSUE: https://github.com/firebase/firebase-ios-sdk/issues/743
+            dynamicLink = dynamicLink ? dynamicLink
+                : [[FIRDynamicLinks dynamicLinks]
+                   dynamicLinkFromUniversalLinkURL:userActivity.webpageURL];
+
+            if (dynamicLink) {
+                [dl postDynamicLink:dynamicLink];
+            }
+        }] || handled;
+}
+
+// ------------ END DYNAMIC LINKS
 
 - (BOOL)application:(UIApplication *)application customDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
@@ -86,7 +151,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             // For iOS 10 display notification (sent via APNS)
             [UNUserNotificationCenter currentNotificationCenter].delegate = self;
             // For iOS 10 data message (sent via FCM)
-            [FIRMessaging messaging].remoteMessageDelegate = self;
+            [FIRMessaging messaging].delegate = self;
 #endif
         }
         
@@ -240,43 +305,45 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 // [END receive_message iOS < 10]
 // [END message_handling]
 
+- (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)fcmToken {
+    NSLog(@"FCM registration token: %@", fcmToken);
+    // Notify about received token.
+    NSDictionary *dataDict = [NSDictionary dictionaryWithObject:fcmToken forKey:@"token"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:
+     @"FCMToken" object:nil userInfo:dataDict];
+    // TODO: If necessary send token to application server.
+    // Note: This callback is fired at each app startup and whenever a new token is generated.
+}
 
 // [START refresh_token]
 - (void)tokenRefreshNotification:(NSNotification *)notification
 {
-    // Note that this callback will be fired everytime a new token is generated, including the first
-    // time. So if you need to retrieve the token as soon as it is available this is where that
-    // should be done.
-    NSString *refreshedToken = [[FIRInstanceID instanceID] token];
-    NSLog(@"InstanceID token: %@", refreshedToken);
-    [FCMPlugin.fcmPlugin notifyOfTokenRefresh:refreshedToken];
-    // Connect to FCM since connection may have failed when attempted before having a token.
-    [self connectToFcm];
-
-    // TODO: If necessary send token to appliation server.
+    [[FIRInstanceID instanceID] instanceIDWithHandler:^(FIRInstanceIDResult * _Nullable result,
+                                                    NSError * _Nullable error) {
+    if (error != nil) {
+        NSLog(@"Error fetching remote instance ID: %@", error);
+    } else {
+        NSLog(@"Remote instance ID token REFRESH ##### : %@", result.token);
+        [FCMPlugin.fcmPlugin notifyOfTokenRefresh:result.token];
+        // Connect to FCM since connection may have failed when attempted before having a token.
+        [self connectToFcm];
+    }
+    }];
 }
 // [END refresh_token]
 
 // [START connect_to_fcm]
 - (void)connectToFcm
 {
-    
-    // Won't connect since there is no token
-    if (![[FIRInstanceID instanceID] token]) {
-        return;
+    [[FIRInstanceID instanceID] instanceIDWithHandler:^(FIRInstanceIDResult * _Nullable result,
+                                                    NSError * _Nullable error) {
+    if (error != nil) {
+        NSLog(@"Error fetching remote instance ID: %@", error);
+    } else {
+        NSLog(@"Remote instance ID token: %@", result.token);
+        [[FIRMessaging messaging] subscribeToTopic:@"ios"];
+        [[FIRMessaging messaging] subscribeToTopic:@"all"];
     }
-    
-    // Disconnect previous FCM connection if it exists.
-    [[FIRMessaging messaging] disconnect];
-    
-    [[FIRMessaging messaging] connectWithCompletion:^(NSError * _Nullable error) {
-        if (error != nil) {
-            NSLog(@"Unable to connect to FCM. %@", error);
-        } else {
-            NSLog(@"Connected to FCM.");
-            [[FIRMessaging messaging] subscribeToTopic:@"/topics/ios"];
-            [[FIRMessaging messaging] subscribeToTopic:@"/topics/all"];
-        }
     }];
 }
 // [END connect_to_fcm]
@@ -292,7 +359,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     NSLog(@"app entered background");
-    [[FIRMessaging messaging] disconnect];
     [FCMPlugin.fcmPlugin appEnterBackground];
     NSLog(@"Disconnected from FCM");
 }

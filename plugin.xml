@@ -87,11 +87,40 @@
     <!-- IOS CONFIGURATION -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
+          <preference name="DYNAMIC_LINK_URIPREFIX" value="https://$PAGE_LINK_DOMAIN"/>
             <feature name="FCMPlugin">
                 <param name="ios-package" value="FCMPlugin"/>
             </feature>
         </config-file>
-		
+
+        <!-- DYNAMIC LINKS -->
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+          <array>
+            <dict>
+              <key>CFBundleTypeRole</key>
+              <string>Editor</string>
+              <key>CFBundleURLName</key>
+              <string>BUNDLE_ID</string>
+              <key>CFBundleURLSchemes</key>
+              <array>
+                <string>$PACKAGE_NAME</string>
+              </array>
+            </dict>
+          </array>
+        </config-file>
+
+        <config-file target="*-Debug.plist" parent="com.apple.developer.associated-domains">
+          <array>
+            <string>applinks:$PAGE_LINK_DOMAIN</string>
+          </array>
+        </config-file>
+
+        <config-file target="*-Release.plist" parent="com.apple.developer.associated-domains">
+          <array>
+            <string>applinks:$PAGE_LINK_DOMAIN</string>
+          </array>
+        </config-file>
+
 		<!-- ENABLE PUSH CAPABILITY -->
 		<config-file parent="aps-environment" target="*/Entitlements-Debug.plist">
 		    <string>development</string>
@@ -99,36 +128,52 @@
 		<config-file parent="aps-environment" target="*/Entitlements-Release.plist">
 			<string>production</string>
 		</config-file>
-		
-		<resource-file src="src/ios/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
-		
-    <header-file src="src/ios/FCMPlugin.h" />
-    <source-file src="src/ios/FCMPlugin.m" />
-		
+
+    <resource-file src="src/ios/Assets/GoogleService-Info.plist" target="Resources/GoogleService-Info.plist" />
+
+		<header-file src="src/ios/FCMPlugin.h" />
+		<source-file src="src/ios/FCMPlugin.m" />
+
 		<header-file src="src/ios/AppDelegate+FCMPlugin.h" />
 		<source-file src="src/ios/AppDelegate+FCMPlugin.m" />
-		
+
 		<!-- FIREBASE COCOA PODS (not for the moment)-->
 		<!-- <framework src="Firebase/Messaging" type="podspec" spec="~> 0"/> -->
+    <podspec>
+			<config>
+        <source url="https://github.com/CocoaPods/Specs.git"/>
+			</config>
+			<pods>
+				<pod name="Firebase/Analytics" spec=">= 6.21.0" />
+				<pod name="Firebase/Messaging" spec=">= 6.21.0" />
+				<pod name="Firebase/DynamicLinks" spec=">= 6.21.0" />
+			</pods>
+		</podspec>
 		
 		<!-- FIREBASE LIBS -->
+    <!--
 		<header-file src="src/ios/firebase/Firebase.h" />
 		<framework src="src/ios/firebase/FirebaseAnalytics.framework" custom="true" />
 		<framework src="src/ios/firebase/FirebaseCore.framework" custom="true" />
 		<framework src="src/ios/firebase/FirebaseInstanceID.framework" custom="true" />
 		<framework src="src/ios/firebase/FirebaseMessaging.framework" custom="true" />
+		<framework src="src/ios/firebase/FirebaseDynamicLinks.framework" custom="true" />
 		<framework src="src/ios/firebase/GoogleInterchangeUtilities.framework" custom="true" />
 		<framework src="src/ios/firebase/GoogleIPhoneUtilities.framework" custom="true" />
 		<framework src="src/ios/firebase/GoogleSymbolUtilities.framework" custom="true" />
 		<framework src="src/ios/firebase/GoogleUtilities.framework" custom="true" />
+    -->
 			
 		<!-- OTHER NEEDED LIBS -->
+    <!--
 		<framework src="libc++.tbd" />
 		<framework src="libz.tbd" />
 		<framework src="AddressBook.framework" />
 		<framework src="libsqlite3.0.tbd" />
 		<framework src="libz.tbd" />
 		<framework src="Security.framework" />
+    -->
+
     </platform>
 	
 	<!-- COPY FCM CONFIG FILES TO PLATFORM AFTER PLUGIN INSTALL OR PLATFORM PREPARE -->
