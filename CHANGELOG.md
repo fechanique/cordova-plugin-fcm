@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 8.0.1 (14/08/2020)
+- Refactor on Dynamic Links
+- Bug fixes on ClearAllNotifications
+
 ### Version 8.0.0 (10/08/2020)
 - New Dynamic Links support for iOS
 - New Dynamic Links support for Android
