@@ -19,10 +19,6 @@ static NSString *notificationCallback = @"FCMPlugin.onNotificationReceived";
 static NSString *tokenRefreshCallback = @"FCMPlugin.onTokenRefreshReceived";
 static FCMPlugin *fcmPluginInstance;
 
-NSString* domainUriPrefix;
-NSString* dynamicLinkCallbackId;
-NSDictionary* lastDynamicLinkData;
-
 + (FCMPlugin *) fcmPlugin {
     
     return fcmPluginInstance;
@@ -30,9 +26,10 @@ NSDictionary* lastDynamicLinkData;
 
 - (void) ready:(CDVInvokedUrlCommand *)command
 {
-    NSLog(@"Cordova view ready");
+    NSLog(@"FCM -> Cordova view ready");
     fcmPluginInstance = self;
-    domainUriPrefix = [self.commandDelegate.settings objectForKey:[@"DYNAMIC_LINK_URIPREFIX" lowercaseString]];
+    self.domainUriPrefix = [self.commandDelegate.settings objectForKey:[@"DYNAMIC_LINK_URIPREFIX" lowercaseString]];
+    NSLog(@"FCM -> Dynamic Link: %@", self.domainUriPrefix);
     [self.commandDelegate runInBackground:^{
         
         CDVPluginResult* pluginResult = nil;
@@ -184,14 +181,14 @@ NSDictionary* lastDynamicLinkData;
 // Dynamic Links
 
 - (void)onDynamicLink:(CDVInvokedUrlCommand *)command {
-    dynamicLinkCallbackId = command.callbackId;
+    self.dynamicLinkCallbackId = command.callbackId;
 
-    if (lastDynamicLinkData) {
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:lastDynamicLinkData];
+    if (self.lastDynamicLinkData) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:self.lastDynamicLinkData];
         [pluginResult setKeepCallbackAsBool:YES];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:dynamicLinkCallbackId];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
 
-        lastDynamicLinkData = nil;
+        self.lastDynamicLinkData = nil;
     }
 }
 
@@ -225,9 +222,9 @@ NSDictionary* lastDynamicLinkData;
 
 - (FIRDynamicLinkComponents*) createDynamicLinkBuilder:(NSDictionary*) params {
     NSURL* link = [[NSURL alloc] initWithString:params[@"link"]];
-    NSString* domainUriPrefix2 = params[@"domainUriPrefix"];
-    if (!domainUriPrefix2) {
-        domainUriPrefix = domainUriPrefix2;
+    NSString* domainUriPrefix = params[@"domainUriPrefix"];
+    if (!domainUriPrefix) {
+        domainUriPrefix = self.domainUriPrefix;
     }
 
     FIRDynamicLinkComponents *linkBuilder = [[FIRDynamicLinkComponents alloc]
@@ -341,12 +338,12 @@ NSDictionary* lastDynamicLinkData;
     [data setObject:(minimumAppVersion ? minimumAppVersion : @"") forKey:@"minimumAppVersion"];
     [data setObject:(weakConfidence ? @"Weak" : @"Strong") forKey:@"matchType"];
 
-    if (dynamicLinkCallbackId) {
+    if (self.dynamicLinkCallbackId) {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
         [pluginResult setKeepCallbackAsBool:YES];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:dynamicLinkCallbackId];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
     } else {
-        lastDynamicLinkData = data;
+        self.lastDynamicLinkData = data;
     }
 }
 
