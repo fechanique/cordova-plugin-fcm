@@ -341,6 +341,14 @@ When the environment supports, the cocoapods source is automatically set to the 
 Link: https://github.com/andrehtissot/cordova-plugin-cocoapods-cdn
 
 ## Changelog
+### Version 7.1.0 (16/08/2020)
+
+For iOS: Added "title", "subtitle", "body" and "badge" to the data given to JS.
+
+This data is coming from notification part of the push payload, instead of only from data.
+
+Android has been responding this way for a long time with "title" and "body".
+
 ### Version 7.0.10 (16/08/2020)
 
 Defined minimal version of "cordova" package supported as version 9. Due to issues of supporting lower versions and "cordova-ios@5+" without deprecated configuration.
