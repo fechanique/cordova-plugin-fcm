@@ -301,7 +301,7 @@ this.fcm.onNotification().subscribe((payload: object) => {
 
 ##### FCM.onTokenRefresh()
 
-Event firing when receiving new notifications.
+Event firing when receiving a new Firebase token.
 ```typescript
 this.fcm.onTokenRefresh().subscribe((token: string) => {
   // ...
