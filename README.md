@@ -12,7 +12,7 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andrehtissot/cordova-plugin-fcm-with-dependecy-updated?targetFile=package.json)
 [![DeepScan grade](https://deepscan.io/api/teams/3417/projects/5068/branches/39495/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=3417&pid=5068&bid=39495)
 
-[How it works](#how-it-works) | [Installation](#installation) | [Push Payload Configuration](#push-payload-configuration) |  [Features](#features) | [Example Apps](#example-apps) | [Companion Plugins](#companion-plugins) | [Changelog](#changelog) | [Authorship](#authorship)
+[How it works](#how-it-works) | [Installation](#installation) | [Push Payload Configuration](#push-payload-configuration) |  [Features](#features) | [Example Apps](#example-apps) | [Companion Plugins](#companion-plugins) | [Changelog](https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/blob/master/CHANGELOG.md) | [Authorship](#authorship)
 
 ## How it works
 Send a push notification to a single device or topic.
