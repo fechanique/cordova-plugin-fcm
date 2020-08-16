@@ -11,8 +11,7 @@
     "outDir": "../../ionic",
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "target": "es5",
-    "importHelpers": true
+    "target": "es5"
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules"]

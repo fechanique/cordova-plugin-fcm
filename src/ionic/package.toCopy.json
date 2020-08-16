@@ -36,7 +36,6 @@
     "dependencies": {
         "@angular/core": "^9.1.9",
         "@ionic-native/core": "^5.26.0",
-        "rxjs": "^6.5.5",
-        "tslib": "^2.0.0"
+        "rxjs": "^6.5.5"
     }
 }
