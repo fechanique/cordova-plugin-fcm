@@ -100,11 +100,11 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
           content.title, content.subtitle, content.body, content.badge);
     NSLog(@"Push data received: %@", content.userInfo);
     NSDictionary *notificationData = [content.userInfo mutableCopy];
-    [notificationData setValue:@(wasTapped) forKey:@"wasTapped"];
-    [notificationData setValue:content.title forKey:@"title"];
-    [notificationData setValue:content.subtitle forKey:@"subtitle"];
-    [notificationData setValue:content.body forKey:@"body"];
-    [notificationData setValue:content.badge forKey:@"badge"];
+    if([notificationData objectForKey:@"wasTapped"] == nil) { [notificationData setValue:@(wasTapped) forKey:@"wasTapped"]; }
+    if([notificationData objectForKey:@"title"] == nil) { [notificationData setValue:content.title forKey:@"title"]; }
+    if([notificationData objectForKey:@"subtitle"] == nil) { [notificationData setValue:content.subtitle forKey:@"subtitle"]; }
+    if([notificationData objectForKey:@"body"] == nil) { [notificationData setValue:content.body forKey:@"body"]; }
+    if([notificationData objectForKey:@"badge"] == nil) { [notificationData setValue:content.badge forKey:@"badge"]; }
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:notificationData options:0 error:&error];
     if(error != NULL) {
