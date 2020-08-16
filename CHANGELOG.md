@@ -8,6 +8,8 @@ iOS: Values sent as notification on push payload should never overwrite values s
 
 Android: tapping action small refactor.
 
+Ionic: Removed tslib dependency due to reported incompatibility.
+
 ### Version 7.1.0 (16/08/2020)
 
 For iOS: Added `title`, `subtitle`, `body` and `badge` to the data given to JS.
