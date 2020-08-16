@@ -341,6 +341,12 @@ When the environment supports, the cocoapods source is automatically set to the 
 Link: https://github.com/andrehtissot/cordova-plugin-cocoapods-cdn
 
 ## Changelog
+### Version 7.0.10 (16/08/2020)
+
+Defined minimal version of "cordova" package supported as version 9. Due to issues of supporting lower versions and "cordova-ios@5+" without deprecated configuration.
+
+Removed explicit definition of "Firebase/Analytics" and "Firebase/Messaging" due to lack of matching “>=” definitions between plugins.
+
 ### Version 7.0.9 (21/07/2020)
 
 getInitialPushPayload: Conversion of NSData* into NSDictonary* fix -- Thanks to @medeirosrafael for debugging and fixing it!
