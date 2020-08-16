@@ -2,6 +2,12 @@
 
 ## Version 7
 
+### Version 7.1.1 (16/08/2020)
+
+iOS: Values sent as notification on push payload should never overwrite values sent as data.
+
+Android: tapping action small refactor.
+
 ### Version 7.1.0 (16/08/2020)
 
 For iOS: Added `title`, `subtitle`, `body` and `badge` to the data given to JS.
