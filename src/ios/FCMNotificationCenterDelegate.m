@@ -57,42 +57,21 @@ NSMutableArray<NSObject<UNUserNotificationCenterDelegate>*> *subNotificationCent
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    NSDictionary *userInfo = notification.request.content.userInfo;
-
-    // Print full message.
-    NSLog(@"willPresentNotification: %@", userInfo);
-
-    NSError *error;
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                       options:0
-                                                         error:&error];
+    NSLog(@"FCMNotificationCenterDelegate.willPresentNotification!");
+    NSData *jsonData = [self extractJSONData:notification withWasTapped:NO];
     [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-
-    if(subNotificationCenterDelegates.count == 0){
-        // No subNotificationCenterDelegates to work with
-        // Change this to your preferred presentation option
-        completionHandler(UNNotificationPresentationOptionNone);
-    }
-
-    // Change this to your preferred presentation option
     __block UNNotificationPresentationOptions notificationPresentationOptions = UNNotificationPresentationOptionNone;
-    void (^subDelegateCompletionHandler)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions possibleNotificationPresentationOptions)
-    {
+    void (^subDelegateCompletionHandler)(UNNotificationPresentationOptions) = ^(UNNotificationPresentationOptions possibleNotificationPresentationOptions) {
         if(notificationPresentationOptions < possibleNotificationPresentationOptions) {
-            notificationPresentationOptions = possibleNotificationPresentationOptions;
+            notificationPresentationOptions |= possibleNotificationPresentationOptions;
         }
     };
     SEL thisMethodSelector = NSSelectorFromString(@"userNotificationCenter:willPresentNotification:withCompletionHandler:");
     for (NSObject<UNUserNotificationCenterDelegate>* subNotificationCenterDelegate in subNotificationCenterDelegates) {
         if([subNotificationCenterDelegate respondsToSelector:thisMethodSelector]) {
             [subNotificationCenterDelegate userNotificationCenter:center willPresentNotification:notification withCompletionHandler:subDelegateCompletionHandler];
-        // } else {
-        //     NSLog(@"subNotificationCenterDelegates[i] not found willPresentNotification: %@", subNotificationCenterDelegate );
         }
     }
-
     completionHandler(notificationPresentationOptions);
 }
 
@@ -100,23 +79,10 @@ NSMutableArray<NSObject<UNUserNotificationCenterDelegate>*> *subNotificationCent
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
 didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void (^)(void))completionHandler {
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
-
-    // Print full message.
-    NSLog(@"didReceiveNotificationResponse: %@", userInfo);
-
-    NSError *error;
-    NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable options:0 error:&error];
+    NSLog(@"FCMNotificationCenterDelegate.didReceiveNotificationResponse!");
+    NSData *jsonData = [self extractJSONData:response.notification withWasTapped:YES];
     [AppDelegate setInitialPushPayload:jsonData];
     [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-
-    if(subNotificationCenterDelegates.count == 0){
-        // No subNotificationCenterDelegates to work with
-        completionHandler();
-    }
-
     void (^noopCompletionHandler)(void) = ^(){};
     SEL thisMethodSelector = NSSelectorFromString(@"userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:");
     for (NSObject<UNUserNotificationCenterDelegate>* subNotificationCenterDelegate in subNotificationCenterDelegates) {
@@ -125,6 +91,27 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
         }
     }
     completionHandler();
+}
+
+- (NSData*)extractJSONData:(UNNotification*)notification
+             withWasTapped:(BOOL)wasTapped {
+    UNNotificationContent *content = notification.request.content;
+    NSLog(@"Push notification received: title=\"%@\" subtitle=\"%@\" body=\"%@\" badge=\"%@\"",
+          content.title, content.subtitle, content.body, content.badge);
+    NSLog(@"Push data received: %@", content.userInfo);
+    NSDictionary *notificationData = [content.userInfo mutableCopy];
+    [notificationData setValue:@(wasTapped) forKey:@"wasTapped"];
+    [notificationData setValue:content.title forKey:@"title"];
+    [notificationData setValue:content.subtitle forKey:@"subtitle"];
+    [notificationData setValue:content.body forKey:@"body"];
+    [notificationData setValue:content.badge forKey:@"badge"];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:notificationData options:0 error:&error];
+    if(error != NULL) {
+        NSLog(@"Error on converting to JSON: %@", notificationData);
+        return NULL;
+    }
+    return jsonData;
 }
 
 @end

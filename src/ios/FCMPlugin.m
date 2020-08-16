@@ -33,7 +33,6 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
-// HAS PERMISSION //
 - (void)hasPermission:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
         [AppDelegate hasPushPermission:^(NSNumber* pushPermission){
@@ -53,13 +52,11 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
-// START JS EVENT BRIDGE //
 - (void)startJsEventBridge:(CDVInvokedUrlCommand *)command {
     NSLog(@"start Js Event Bridge");
     jsEventBridgeCallbackId = command.callbackId;
 }
 
-// GET TOKEN //
 - (void)getToken:(CDVInvokedUrlCommand *)command {
     NSLog(@"get Token");
     [self.commandDelegate runInBackground:^{
@@ -70,7 +67,6 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
-// GET APNS TOKEN //
 - (void)getAPNSToken:(CDVInvokedUrlCommand *)command  {
     NSLog(@"get APNS Token");
     [self.commandDelegate runInBackground:^{
@@ -82,7 +78,6 @@ static FCMPlugin *fcmPluginInstance;
     }];
 }
 
-// CLEAR ALL NOTIFICATONS //
 - (void)clearAllNotifications:(CDVInvokedUrlCommand *)command {
   [self.commandDelegate runInBackground:^{
     NSLog(@"clear all notifications");
@@ -93,7 +88,6 @@ static FCMPlugin *fcmPluginInstance;
   }];
 }
 
-// UN/SUBSCRIBE TOPIC //
 - (void)subscribeToTopic:(CDVInvokedUrlCommand *)command {
     NSString* topic = [command.arguments objectAtIndex:0];
     NSLog(@"subscribe To Topic %@", topic);
