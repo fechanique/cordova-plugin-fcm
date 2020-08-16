@@ -46,12 +46,14 @@ Make sure you have ‘google-services.json’ for Android or ‘GoogleService-In
 Default preferences:
 
 ```
+npm install -g cordova@latest # Minimal version 9 or higher required
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 ```
 
 Complete:
 
 ```
+npm install -g cordova@latest # Minimal version 9 or higher required 
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
   --variable ANDROID_FCM_VERSION="19.0.0" \
   --variable ANDROID_GRADLE_TOOLS_VERSION="3.5.3" \
@@ -64,12 +66,14 @@ cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
 Default preferences:
 
 ```
+npm install -g cordova@latest # Minimal version 9 or higher required
 ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 ```
 
 Complete:
 
 ```
+npm install -g cordova@latest # Minimal version 9 or higher required
 ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
   --variable ANDROID_FCM_VERSION="19.0.0" \
   --variable ANDROID_GRADLE_TOOLS_VERSION="3.5.3" \
