@@ -145,6 +145,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)deviceToken {
     NSLog(@"Device FCM Token: %@", deviceToken);
+    if(deviceToken == nil) {
+        fcmToken = nil;
+        [FCMPlugin.fcmPlugin notifyFCMTokenRefresh:nil];
+        return;
+    }
     // Notify about received token.
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:deviceToken forKey:@"token"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FCMToken" object:nil userInfo:dataDict];
@@ -204,6 +209,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
 + (NSString*)getAPNSToken {
     return apnsToken;
+}
+
++ (void)deleteInstanceId:(void (^)(NSError *error))handler {
+    [[FIRInstanceID instanceID] deleteIDWithHandler:handler];
 }
 
 + (void)hasPushPermission:(void (^)(NSNumber* yesNoOrNil))block {

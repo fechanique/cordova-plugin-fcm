@@ -30,6 +30,12 @@ export declare class FCM {
      */
     createNotificationChannel(channelConfig: IChannelConfiguration): Promise<void>;
     /**
+     * This method deletes the InstanceId, revoking all tokens.
+     *
+     * @returns {Promise<void>} Async call to native implementation
+     */
+    deleteInstanceId(): Promise<void>;
+    /**
      * Gets ios device's current APNS token
      *
      * @returns {Promise<string>} Returns a Promise that resolves with the APNS token

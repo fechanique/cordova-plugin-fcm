@@ -28,6 +28,9 @@ FCM.prototype.clearAllNotifications = function () {
 FCM.prototype.createNotificationChannel = function (channelConfig) {
     return window.FCM.createNotificationChannel(channelConfig)
 }
+FCM.prototype.deleteInstanceId = function () {
+    return window.FCM.deleteInstanceId()
+}
 FCM.prototype.getAPNSToken = function () {
     return window.FCM.getAPNSToken()
 }

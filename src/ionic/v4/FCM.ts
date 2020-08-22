@@ -30,6 +30,11 @@ export class FCM {
         return window.FCM.createNotificationChannel(channelConfig)
     }
 
+    /** @copyFrom typings/FCMPlugin.d.ts FCMPlugin deleteInstanceId */
+    public deleteInstanceId(): Promise<void> {
+        return window.FCM.deleteInstanceId()
+    }
+
     /** @copyFrom typings/FCMPlugin.d.ts FCMPlugin getAPNSToken */
     public getAPNSToken(): Promise<string> {
         return window.FCM.getAPNSToken()

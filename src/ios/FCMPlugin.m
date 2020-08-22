@@ -5,7 +5,7 @@
 #import <Cordova/CDV.h>
 #import <WebKit/WebKit.h>
 #import "FCMPlugin.h"
-#import "Firebase.h"
+#import <Firebase.h>
 
 @interface FCMPlugin () {}
 @end
@@ -155,6 +155,22 @@ static FCMPlugin *fcmPluginInstance;
         NSLog(@"getInitialPushPayload value: %@", payloadDictionary);
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:payloadDictionary];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)deleteInstanceId:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        [AppDelegate deleteInstanceId:^(NSError *error) {
+            __block CDVPluginResult *commandResult;
+            if(error == nil) {
+                NSLog(@"InstanceID deleted");
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            } else {
+                NSLog(@"InstanceID deletion error: %@", error);
+                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error description]];
+            }
+            [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+        }];
     }];
 }
 

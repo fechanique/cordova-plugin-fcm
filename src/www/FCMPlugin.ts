@@ -68,6 +68,15 @@ export class FCMPlugin {
     }
 
     /**
+     * This method deletes the InstanceId, revoking all tokens.
+     *
+     * @returns {Promise<void>} Async call to native implementation
+     */
+    public deleteInstanceId(): Promise<void> {
+        return execAsPromise('deleteInstanceId')
+    }
+
+    /**
      * Gets ios device's current APNS token
      *
      * @returns {Promise<string>} Returns a Promise that resolves with the APNS token

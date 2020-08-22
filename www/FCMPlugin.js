@@ -53,6 +53,9 @@ var FCMPlugin = (function () {
         }
         return execAsPromise('createNotificationChannel', [channelConfig]);
     };
+    FCMPlugin.prototype.deleteInstanceId = function () {
+        return execAsPromise('deleteInstanceId');
+    };
     FCMPlugin.prototype.getAPNSToken = function () {
         return window.cordova.platformId !== 'ios'
             ? Promise.resolve('')
