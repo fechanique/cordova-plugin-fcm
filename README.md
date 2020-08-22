@@ -147,7 +147,7 @@ Example:
 - [As its own](#as-its-own)
   - [FCM.clearAllNotifications()](#fcmclearallnotifications)
   - [FCM.createNotificationChannel()](#fcmcreatenotificationchannel)
-  - [FCM.deleteInstanceId()]
+  - [FCM.deleteInstanceId()](#fcmdeleteinstanceid)
   - [FCM.getAPNSToken()](#fcmgetapnstoken)
   - [FCM.getInitialPushPayload()](#fcmgetinitialpushpayload)
   - [FCM.getToken()](#fcmgettoken)
