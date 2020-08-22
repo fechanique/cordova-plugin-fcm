@@ -32,7 +32,7 @@ Send a push notification to a single device or topic.
 
 On Android, push notifications don't require any special permission and can be tested from emulators freely.
 
-Unfortunatelly, Apple is not as nice to work with, requiring:
+Unfortunately, Apple is not as nice to work with, requiring:
 - The running device to be a real device, no simulators allowed;
 - Application has require the `UIBackgroundModes=[remote-notification]` permission (automatically configured by this plugin);
 - The user running the application has to manually allow the application to receive push notifications;
