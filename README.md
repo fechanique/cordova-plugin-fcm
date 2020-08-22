@@ -147,6 +147,7 @@ Example:
 - [As its own](#as-its-own)
   - [FCM.clearAllNotifications()](#fcmclearallnotifications)
   - [FCM.createNotificationChannel()](#fcmcreatenotificationchannel)
+  - [FCM.deleteInstanceId()]
   - [FCM.getAPNSToken()](#fcmgetapnstoken)
   - [FCM.getInitialPushPayload()](#fcmgetinitialpushpayload)
   - [FCM.getToken()](#fcmgettoken)
@@ -188,6 +189,13 @@ await FCM.createNotificationChannel({
   lights: true, // enable lights for notifications
   vibration: true // enable vibration for notifications
 });
+```
+
+##### FCM.deleteInstanceId()
+
+Deletes the InstanceId, revoking all tokens.
+```typescript
+await FCM.deleteInstanceId();
 ```
 
 ##### FCM.getAPNSToken()
