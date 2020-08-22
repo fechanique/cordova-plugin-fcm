@@ -27,6 +27,17 @@ Send a push notification to a single device or topic.
   - The device displays the notification message in the device notification bar.
   - If the user taps the notification, the application comes to foreground and the notification data is received in the JavaScript callback.
   - If the user does not tap the notification but opens the application, nothing happens until the notification is tapped.
+  
+### Push Notifications on iOS
+
+On Android, push notifications don't require any special permission and can be tested from emulators freely.
+
+Unfortunatelly, Apple is not as nice to work with, requiring:
+- The running device to be a real device, no simulators allowed;
+- Application has require the `UIBackgroundModes=[remote-notification]` permission (automatically configured by this plugin);
+- The user running the application has to manually allow the application to receive push notifications;
+- The application must be build with credentials created from a paid account (or team) that is allowed to receive push notifications;
+- The build installed has to have come from either Apple Store or TestFlight; Or, be build with a special certificate (https://customersupport.doubledutch.me/hc/en-us/articles/229495568-iOS-How-to-Create-a-Push-Notification-Certificate)
 
 ## Installation
 
