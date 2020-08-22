@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.2.0 (23/08/2020)
+
+Added deleteInstanceId to allow user's "resetting" Firebase session (https://firebase.google.com/support/privacy/manage-iids#delete_an_instance_id).
+
 ### Version 7.1.1 (16/08/2020)
 
 iOS: Values sent as notification on push payload should never overwrite values sent as data.
