@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.3.0 (30/08/2020)
+
+Removed optional Firebase/Analytics iOS dependency.
+
 ### Version 7.2.0 (23/08/2020)
 
 Added deleteInstanceId to allow user's "resetting" Firebase session (https://firebase.google.com/support/privacy/manage-iids#delete_an_instance_id).
