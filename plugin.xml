@@ -124,7 +124,6 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
 			</config>
 			<pods>
-				<pod name="Firebase/Analytics" />
 				<pod name="Firebase/Messaging" />
 			</pods>
 		</podspec>
