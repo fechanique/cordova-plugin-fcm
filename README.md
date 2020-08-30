@@ -57,7 +57,7 @@ Make sure you have ‘google-services.json’ for Android or ‘GoogleService-In
 Default preferences:
 
 ```
-npm install -g cordova@latest # Minimal version 9 or higher required
+npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 ```
@@ -65,7 +65,7 @@ cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 Complete:
 
 ```
-npm install -g cordova@latest # Minimal version 9 or higher required
+npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
   --variable ANDROID_FCM_VERSION="19.0.0" \
@@ -79,7 +79,7 @@ cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
 Default preferences:
 
 ```
-npm install -g cordova@latest # Minimal version 9 or higher required
+npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 ```
@@ -87,7 +87,7 @@ ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 Complete:
 
 ```
-npm install -g cordova@latest # Minimal version 9 or higher required
+npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
   --variable ANDROID_FCM_VERSION="19.0.0" \
