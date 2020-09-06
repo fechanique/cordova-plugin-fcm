@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.3.1 (06/09/2020)
+
+Android: Avoided setting initialPushPayload from a non-tapped notification.
+
 ### Version 7.3.0 (30/08/2020)
 
 Removed optional Firebase/Analytics iOS dependency.
