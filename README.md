@@ -207,7 +207,7 @@ const apnsToken: string = await FCM.getAPNSToken();
 
 ##### FCM.getInitialPushPayload()
 
-Retrieves the message that, on tap, opened the app.
+Retrieves the message that, on tap, opened the app. And `null`, if the app was open normally.
 ```typescript
 const pushPayload: object = await FCM.getInitialPushPayload()
 ```
