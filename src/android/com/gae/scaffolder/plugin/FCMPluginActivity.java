@@ -42,6 +42,7 @@ public class FCMPluginActivity extends Activity {
             Log.d(TAG, "\tKey: " + key + " Value: " + value);
             data.put(key, value);
         }
+        FCMPlugin.setInitialPushPayload(data);
         FCMPlugin.sendPushPayload(data);
     }
 

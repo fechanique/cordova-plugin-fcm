@@ -266,11 +266,14 @@ public class FCMPlugin extends CordovaPlugin {
         Log.d(TAG, "\tSent event: " + eventName + " with " + stringifiedJSONValue);
     }
 
-    public static void sendPushPayload(Map<String, Object> payload) {
-        Log.d(TAG, "==> FCMPlugin sendPushPayload");
+    public static void setInitialPushPayload(Map<String, Object> payload) {
         if(initialPushPayload == null) {
             initialPushPayload = payload;
         }
+    }
+
+    public static void sendPushPayload(Map<String, Object> payload) {
+        Log.d(TAG, "==> FCMPlugin sendPushPayload");
         try {
             JSONObject jo = new JSONObject();
             for (String key : payload.keySet()) {
