@@ -143,7 +143,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 }
 // [END message_handling]
 
-- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)deviceToken {
+- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)deviceToken {
     NSLog(@"Device FCM Token: %@", deviceToken);
     if(deviceToken == nil) {
         fcmToken = nil;
