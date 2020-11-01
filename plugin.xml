@@ -35,10 +35,11 @@
 
 	<!-- ANDROID CONFIGURATION -->
 	<platform name="android">
-		<preference name="ANDROID_FCM_VERSION" default="19.0.0" />
-		<preference name="ANDROID_GRADLE_TOOLS_VERSION" default="3.5.3" />
-		<preference name="ANDROID_GOOGLE_SERVICES_VERSION" default="4.3.3" />
 		<preference name="ANDROID_DEFAULT_NOTIFICATION_ICON" default="@mipmap/ic_launcher" />
+		<preference name="ANDROID_FCM_VERSION" default="21.0.0" />
+		<preference name="ANDROID_FIREBASE_BOM_VERSION" default="26.0.0" />
+		<preference name="ANDROID_GOOGLE_SERVICES_VERSION" default="4.3.4" />
+		<preference name="ANDROID_GRADLE_TOOLS_VERSION" default="4.1.0" />
 
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<activity android:name="com.gae.scaffolder.plugin.FCMPluginActivity" android:launchMode="singleTop">
@@ -67,9 +68,6 @@
 				<preference name="AndroidXEnabled" value="true" />
 			</platform>
 		</config-file>
-
-		<framework src="com.google.firebase:firebase-messaging:$ANDROID_FCM_VERSION" />
-
 		<framework src="src/android/FCMPlugin.gradle" custom="true" type="gradleReference"/>
 
 		<source-file src="src/android/com/gae/scaffolder/plugin/FCMPlugin.java" target-dir="src/com/gae/scaffolder/plugin" />
