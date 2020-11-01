@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.4.0 (06/09/2020)
+
+Upgraded Android and Node depenencies.
+
 ### Version 7.3.1 (06/09/2020)
 
 Android: Avoided setting initialPushPayload from a non-tapped notification.
