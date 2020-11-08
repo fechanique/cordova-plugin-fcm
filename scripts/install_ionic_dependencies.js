@@ -34,6 +34,16 @@ const shouldInstallIonicDependencies = function () {
 
 const installIonicDependencies = function () {
     const path = require('path');
+    const fullDestPath = `${path.dirname(process.cwd())}/${DEST_PATH}`;
+    try {
+        process.chdir(fullDestPath);
+    } catch (error) {
+        helpers.logError(`Failed change directory to ${fullDestPath}!`, error);
+        helpers.logError(
+            `Please run \`cd node_modules/cordova-plugin-fcm-with-dependecy-updated/${DEST_PATH}; npm install\` manually`
+        );
+        return;
+    }
 
     helpers
         .execute('npm', ['install', '--loglevel', 'error', '--no-progress'])
