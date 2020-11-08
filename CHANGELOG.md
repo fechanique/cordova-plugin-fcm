@@ -2,11 +2,15 @@
 
 ## Version 7
 
-### Version 7.5.0 (06/09/2020)
+### Version 7.6.0 (08/11/2020)
+
+Added IOS_FIREBASE_MESSAGING_VERSION plugin variable to force a fixed Firebase/Messaging pod version.
+
+### Version 7.5.0 (08/11/2020)
 
 For pure Cordova projects, ionic dependencies are skipped for "ionic", "ionic/ngx" and "ionic/v4".
 
-### Version 7.4.0 (06/09/2020)
+### Version 7.4.0 (01/11/2020)
 
 Upgraded Android and Node depenencies.
 
