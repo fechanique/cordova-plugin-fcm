@@ -41,7 +41,7 @@ Unfortunately, Apple is not as nice to work with, requiring:
 
 ## Installation
 
-Make sure you have ‘google-services.json’ for Android or ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder.
+Make sure you have ‘google-services.json’ for Android and/or ‘GoogleService-Info.plist’ for iOS in your Cordova project root folder.
 
 #### Preferences
 
@@ -52,6 +52,7 @@ Make sure you have ‘google-services.json’ for Android or ‘GoogleService-In
 |ANDROID_FIREBASE_BOM_VERSION|26.0.0|[Firebase BoM](https://firebase.google.com/docs/android/learn-more#bom) version.|
 |ANDROID_GOOGLE_SERVICES_VERSION|4.3.4|Native Google Services SDK version.|
 |ANDROID_GRADLE_TOOLS_VERSION|4.1.0|Gradle tools version.|
+|IOS_FIREBASE_MESSAGING_VERSION|~> 7.0.0|Native Firebase Message SDK version|
 
 #### Cordova
 
@@ -69,17 +70,18 @@ Complete:
 npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
-  --variable ANDROID_FCM_VERSION="19.0.0" \
-  --variable ANDROID_GRADLE_TOOLS_VERSION="3.5.3" \
-  --variable ANDROID_GOOGLE_SERVICES_VERSION="4.3.3" \
-  --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
+  --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/ic_launcher" \
+  --variable ANDROID_FIREBASE_BOM_VERSION="26.0.0" \
+  --variable ANDROID_GOOGLE_SERVICES_VERSION="4.3.4" \
+  --variable ANDROID_GRADLE_TOOLS_VERSION="4.1.0" \
+  --variable IOS_FIREBASE_MESSAGING_VERSION="~> 7.0.0"
 ```
 
 #### Ionic
 
 Default preferences:
 
-```
+```sh
 npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated
@@ -87,14 +89,15 @@ ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 
 Complete:
 
-```
+```sh
 npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 ionic cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
-  --variable ANDROID_FCM_VERSION="19.0.0" \
-  --variable ANDROID_GRADLE_TOOLS_VERSION="3.5.3" \
-  --variable ANDROID_GOOGLE_SERVICES_VERSION="4.3.3" \
-  --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/notification_icon"
+  --variable ANDROID_DEFAULT_NOTIFICATION_ICON="@mipmap/ic_launcher" \
+  --variable ANDROID_FIREBASE_BOM_VERSION="26.0.0" \
+  --variable ANDROID_GOOGLE_SERVICES_VERSION="4.3.4" \
+  --variable ANDROID_GRADLE_TOOLS_VERSION="4.1.0" \
+  --variable IOS_FIREBASE_MESSAGING_VERSION="~> 7.0.0"
 ```
 
 ## Push Payload Configuration
