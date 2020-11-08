@@ -32,12 +32,20 @@ const shouldInstallIonicDependencies = function () {
 };
 
 const installIonicDependencies = function () {
-    helpers.execute('npm', ['install', '--loglevel', 'error', '--no-progress']).catch(function (e) {
-        helpers.logError('Failed to auto install Ionic dependencies!', e);
-        helpers.logError(
-            `Please run \`cd node_modules/cordova-plugin-fcm-with-dependecy-updated/${process.argv[2]}; npm install\` manually`
-        );
-    });
+    const path = require('path');
+    const destPath = process.argv[2];
+    helpers
+        .execute('npm', ['install', '--loglevel', 'error', '--no-progress'])
+        .catch(function (e) {
+            helpers.logError('Failed to auto install Ionic dependencies!', e);
+            helpers.logError(
+                `Please run \`cd node_modules/cordova-plugin-fcm-with-dependecy-updated/${destPath}; npm install\` manually`
+            );
+        })
+        .then(function (output) {
+            console.log(`Ionic dependencies installed for ${destPath}:`);
+            console.log(output);
+        });
 };
 
 if (shouldInstallIonicDependencies()) {

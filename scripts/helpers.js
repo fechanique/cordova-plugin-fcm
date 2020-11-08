@@ -83,7 +83,7 @@ exports.execute = function (command, args) {
                 }
             });
             child.stdout.on('end', function () {
-                resolve(stdout);
+                resolve(stdout.join('\n'));
             });
         } catch (e) {
             reject(e);
