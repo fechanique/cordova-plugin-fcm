@@ -67,3 +67,26 @@ exports.getGoogleServiceContent = function (platform) {
         return null;
     }
 };
+
+exports.execute = function (command, args) {
+    return new Promise(function (resolve, reject) {
+        try {
+            const spawn = require('child_process').spawn;
+            const child = spawn(command, args);
+            const stdout = [];
+            child.stdout.on('data', function (buffer) {
+                const lines = buffer.toString().split('\n');
+                for (const line of lines) {
+                    if (line !== '') {
+                        stdout.push(line);
+                    }
+                }
+            });
+            child.stdout.on('end', function () {
+                resolve(stdout.join('\n'));
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
