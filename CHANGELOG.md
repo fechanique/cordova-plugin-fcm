@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.5.0 (06/09/2020)
+
+For pure Cordova projects, ionic dependencies are skipped for "ionic", "ionic/ngx" and "ionic/v4".
+
 ### Version 7.4.0 (06/09/2020)
 
 Upgraded Android and Node depenencies.
