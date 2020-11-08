@@ -6,7 +6,7 @@ const shouldInstallIonicDependencies = function () {
     const packageFilePath = `${process.cwd()}/../../../package.json`;
     if (!helpers.fileExists(packageFilePath)) {
         helpers.logWarning('package.json was not found.');
-        helpers.logWarning('Ionic dependencies omission cannot be safelly skipped.');
+        helpers.logWarning('Ionic dependencies omission cannot be safely skipped.');
         return true;
     }
     let packageDataString;
@@ -14,7 +14,7 @@ const shouldInstallIonicDependencies = function () {
         packageDataString = fs.readFileSync(packageFilePath);
     } catch (e) {
         helpers.logWarning('package.json found is unreadable.', e);
-        helpers.logWarning('Ionic dependencies omission cannot be safelly skipped.');
+        helpers.logWarning('Ionic dependencies omission cannot be safely skipped.');
         return true;
     }
     let packageData;
@@ -22,7 +22,7 @@ const shouldInstallIonicDependencies = function () {
         packageData = JSON.parse(packageDataString);
     } catch (e) {
         helpers.logWarning('package.json could not be parsed.', e);
-        helpers.logWarning('Ionic dependencies omission cannot be safelly skipped.');
+        helpers.logWarning('Ionic dependencies omission cannot be safely skipped.');
         return true;
     }
     return !!(
