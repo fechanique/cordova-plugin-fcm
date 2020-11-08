@@ -58,7 +58,7 @@ Make sure you have ‘google-services.json’ for Android and/or ‘GoogleServic
 
 Default preferences:
 
-```
+```sh
 npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated
@@ -66,7 +66,7 @@ cordova plugin add cordova-plugin-fcm-with-dependecy-updated
 
 Complete:
 
-```
+```sh
 npm install -g cordova@latest # Version 9 or higher required
 npm uninstall @ionic-native/fcm # Ionic support is included and conflicts with @ionic-native's implementation.
 cordova plugin add cordova-plugin-fcm-with-dependecy-updated \
