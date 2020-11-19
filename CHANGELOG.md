@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 8.1.0 (19/11/2020)
+- Adds getDynamicLink function
+
 ### Version 8.0.1 (14/08/2020)
 - Refactor on Dynamic Links
 - Bug fixes on ClearAllNotifications

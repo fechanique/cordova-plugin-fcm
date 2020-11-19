@@ -149,6 +149,11 @@ FCMPluginNG.setUserProperty("name1", "value1");
 
 ## Dynamic Links
 
+### getDynamicLink
+```js
+FCMPluginNG.getDynamicLink();
+```
+
 ### onDynamicLink
 ```js
 FCMPluginNG.onDynamicLink();
