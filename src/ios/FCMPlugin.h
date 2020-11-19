@@ -22,6 +22,7 @@
 - (void)setUserId:(CDVInvokedUrlCommand*)command;
 - (void)setUserProperty:(CDVInvokedUrlCommand*)command;
 - (void)clearAllNotifications:(CDVInvokedUrlCommand*)command;
+- (void)getDynamicLink:(CDVInvokedUrlCommand *)command;
 - (void)onDynamicLink:(CDVInvokedUrlCommand *)command;
 - (void)createDynamicLink:(CDVInvokedUrlCommand *)command;
 - (void)postDynamicLink:(FIRDynamicLink*) dynamicLink;

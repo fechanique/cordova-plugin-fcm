@@ -207,6 +207,18 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
+      else if (action.equals("getDynamicLink")) {
+        cordova.getThreadPool().execute(new Runnable() {
+          public void run() {
+            try{
+              getDynamicLink(callbackContext);
+              callbackContext.success();
+            }catch(Exception e){
+              callbackContext.error(e.getMessage());
+            }
+          }
+        });
+      }
       else if (action.equals("onDynamicLink")) {
         cordova.getThreadPool().execute(new Runnable() {
           public void run() {
@@ -357,10 +369,12 @@ public class FCMPlugin extends CordovaPlugin {
           });
         }
 
+  private void getDynamicLink(CallbackContext callbackContext) {
+    respondWithDynamicLink(cordova.getActivity().getIntent(), callbackContext);
+  }
+
   private void onDynamicLink(CallbackContext callbackContext) {
     dynamicLinkCallback = callbackContext;
-
-    respondWithDynamicLink(cordova.getActivity().getIntent());
   }
 
   private void createDynamicLink(JSONObject params, int linkType, final CallbackContext callbackContext) throws JSONException {

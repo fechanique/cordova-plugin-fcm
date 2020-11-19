@@ -180,7 +180,7 @@ static FCMPlugin *fcmPluginInstance;
 
 // Dynamic Links
 
-- (void)onDynamicLink:(CDVInvokedUrlCommand *)command {
+- (void)getDynamicLink:(CDVInvokedUrlCommand *)command {
     self.dynamicLinkCallbackId = command.callbackId;
 
     if (self.lastDynamicLinkData) {
@@ -190,6 +190,10 @@ static FCMPlugin *fcmPluginInstance;
 
         self.lastDynamicLinkData = nil;
     }
+}
+
+- (void)onDynamicLink:(CDVInvokedUrlCommand *)command {
+  self.dynamicLinkCallbackId = command.callbackId;
 }
 
 - (void)createDynamicLink:(CDVInvokedUrlCommand *)command {

@@ -58,12 +58,23 @@ FCMPlugin.prototype.setUserProperty = function(name, value, success, error){
 
 // Dynamic Link Plugin
 
-FCMPlugin.prototype.onDynamicLink = function(success, error) {
-  exec(success, error, 'FCMPlugin', 'onDynamicLink', []);
+// GET DYNAMIC LINK CALLBACK //
+FCMPlugin.prototype.getDynamicLink = function(callback, success, error){
+	FCMPlugin.prototype.getDynamicLinkReceived = callback;
+	exec(success, error, "FCMPlugin", 'getDynamicLink',[]);
+}
+// DEFAULT GET DYNAMIC LINK CALLBACK //
+FCMPlugin.prototype.getDynamicLinkReceived = function(payload){
+	console.log("Received dynamic link")
+	console.log(payload)
 }
 
 FCMPlugin.prototype.createDynamicLink = function(params, success, error) {
   exec(success, error, 'FCMPlugin', 'createDynamicLink', [params, 0]);
+}
+
+FCMPlugin.prototype.onDynamicLink = function(success, error) {
+  exec(success, error, 'FCMPlugin', 'getDynamicLink', []);
 }
 
 // FIRE READY //
