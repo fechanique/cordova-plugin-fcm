@@ -74,7 +74,6 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 - (BOOL)swizzled_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *, id> *)options {
     // always call original method implementation first
     BOOL handled = [self swizzled_application:app openURL:url options:options];
-    FCMPlugin* dl = [self.viewController getCommandInstance:@"FirebaseDynamicLinks"];
     // parse firebase dynamic link
     FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
     if (dynamicLink) {
@@ -82,7 +81,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
         // Handle the deep link. For example, show the deep-linked content,
         // apply a promotional offer to the user's account or show customized onboarding view.
         // ...
-        [dl postDynamicLink:dynamicLink];
+        [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
       } else {
         // Dynamic link has empty deep link. This situation will happens if
         // Firebase Dynamic Links iOS SDK tried to retrieve pending dynamic link,
@@ -101,7 +100,6 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 - (BOOL)swizzled_application:(UIApplication *)app continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
     // always call original method implementation first
     BOOL handled = [self swizzled_application:app continueUserActivity:userActivity restorationHandler:restorationHandler];
-    FCMPlugin* dl = [self.viewController getCommandInstance:@"FirebaseDynamicLinks"];
     // handle firebase dynamic link
     return [[FIRDynamicLinks dynamicLinks]
         handleUniversalLink:userActivity.webpageURL
@@ -113,7 +111,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
                    dynamicLinkFromUniversalLinkURL:userActivity.webpageURL];
 
             if (dynamicLink) {
-                [dl postDynamicLink:dynamicLink];
+                [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
             }
         }] || handled;
 }
