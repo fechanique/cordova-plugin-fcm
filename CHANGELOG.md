@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 8.1.2 (23/11/2020)
+- Fixed Dynamic link callback on Android
+
 ### Version 8.1.1 (23/11/2020)
 - Fixed Objective-C function
 
