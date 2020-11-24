@@ -71,12 +71,13 @@ public class FCMPlugin extends CordovaPlugin {
 		FirebaseMessaging.getInstance().subscribeToTopic("all");
                 cordova.getThreadPool().execute(new Runnable() {
                   public void run() {
-                    Log.d(TAG, "Starting Analytics");
+                    Log.d(TAG, "==> FCMPlugin Starting Analytics");
                     mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
-                    Log.d(TAG, "Starting DynamicLink");
+                    Log.d(TAG, "==> FCMPlugin Starting DynamicLink");
                     firebaseDynamicLinks = FirebaseDynamicLinks.getInstance();
                     domainUriPrefix = preferences.getString("DYNAMIC_LINK_URIPREFIX", "");
+                    Log.d(TAG, "==> FCMPlugin domainUriPrefix: " + domainUriPrefix);
 
                     Log.d(TAG, "==> Check if there are notifications");
                     Bundle extras = cordova.getActivity().getIntent().getExtras();
@@ -207,11 +208,11 @@ public class FCMPlugin extends CordovaPlugin {
 					}
 				});
 			}
-      else if (action.equals("getDynamicLink")) {
-        cordova.getThreadPool().execute(new Runnable() {
+      else if (action.equals("onDynamicLink")) {
+        cordova.getActivity().runOnUiThread(new Runnable() {
           public void run() {
             try{
-              getDynamicLink(callbackContext);
+              onDynamicLink(callbackContext);
               callbackContext.success();
             }catch(Exception e){
               callbackContext.error(e.getMessage());
@@ -219,11 +220,11 @@ public class FCMPlugin extends CordovaPlugin {
           }
         });
       }
-      else if (action.equals("onDynamicLink")) {
+      else if (action.equals("getDynamicLink")) {
         cordova.getThreadPool().execute(new Runnable() {
           public void run() {
             try{
-              onDynamicLink(callbackContext);
+              getDynamicLink(callbackContext);
               callbackContext.success();
             }catch(Exception e){
               callbackContext.error(e.getMessage());
@@ -370,13 +371,11 @@ public class FCMPlugin extends CordovaPlugin {
         }
 
   private void getDynamicLink(CallbackContext callbackContext) {
-    dynamicLinkCallback = callbackContext;
-    respondWithDynamicLink(cordova.getActivity().getIntent());
+    respondWithDynamicLink(cordova.getActivity().getIntent(), , callbackContext);
   }
 
   private void onDynamicLink(CallbackContext callbackContext) {
     dynamicLinkCallback = callbackContext;
-    respondWithDynamicLink(cordova.getActivity().getIntent());
   }
 
   private void createDynamicLink(JSONObject params, int linkType, final CallbackContext callbackContext) throws JSONException {
@@ -398,32 +397,41 @@ public class FCMPlugin extends CordovaPlugin {
     }
   }
 
-  private void respondWithDynamicLink(Intent intent) {
-    this.firebaseDynamicLinks.getDynamicLink(intent)
+  private void respondWithDynamicLink(Intent intent, final CallbackContext callbackContext) {
+    firebaseDynamicLinks.getDynamicLink(intent)
       .continueWith(new Continuation<PendingDynamicLinkData, JSONObject>() {
         @Override
         public JSONObject then(Task<PendingDynamicLinkData> task) throws JSONException {
           PendingDynamicLinkData data = task.getResult();
+          Log.d(TAG, "==> FCMPlugin Link DATA: " + data.getLink());
 
           JSONObject result = new JSONObject();
           result.put("deepLink", data.getLink());
           result.put("clickTimestamp", data.getClickTimestamp());
           result.put("minimumAppVersion", data.getMinimumAppVersion());
 
-          if (dynamicLinkCallback != null) {
+          if (callbackContext != null) {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
-            pluginResult.setKeepCallback(true);
-            dynamicLinkCallback.sendPluginResult(pluginResult);
+            pluginResult.setKeepCallback(callbackContext == dynamicLinkCallback);
+            callbackContext.sendPluginResult(pluginResult);
           }
 
           return result;
+        }
+      })
+      .addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(Exception e) {
+          if (callbackContext != null && callbackContext != dynamicLinkCallback) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String)null));
+          }
         }
       });
   }
 
   private DynamicLink.Builder createDynamicLinkBuilder(JSONObject params) throws JSONException {
-    DynamicLink.Builder builder = this.firebaseDynamicLinks.createDynamicLink();
-    builder.setDomainUriPrefix(params.optString("domainUriPrefix", this.domainUriPrefix));
+    DynamicLink.Builder builder = firebaseDynamicLinks.createDynamicLink();
+    builder.setDomainUriPrefix(params.optString("domainUriPrefix", domainUriPrefix));
     builder.setLink(Uri.parse(params.getString("link")));
 
     JSONObject androidInfo = params.optJSONObject("androidInfo");
@@ -538,7 +546,7 @@ public class FCMPlugin extends CordovaPlugin {
     final Bundle extras = intent.getExtras();
     Log.d(TAG, "==> FCMPlugin onNewIntent (App is running in Background)");
     if (dynamicLinkCallback != null) {
-      respondWithDynamicLink(intent);
+      respondWithDynamicLink(intent, dynamicLinkCallback);
     }
     Map<String, Object> data = new HashMap<String, Object>();
     if (extras != null) {
