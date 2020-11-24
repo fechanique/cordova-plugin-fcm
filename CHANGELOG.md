@@ -1,6 +1,6 @@
 # Changelog
 
-### Version 8.1.3 (24/11/2020)
+### Version 8.1.5 (24/11/2020)
 - Fixed Dynamic link callback on Android (2)
 
 ### Version 8.1.2 (23/11/2020)
