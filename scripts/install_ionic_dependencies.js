@@ -45,8 +45,9 @@ const installIonicDependencies = function () {
         return;
     }
 
+    const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
     helpers
-        .execute('npm', ['install', '--loglevel', 'error', '--no-progress'])
+        .execute(npm, ['install', '--loglevel', 'error', '--no-progress'])
         .catch(function (e) {
             helpers.logError('Failed to auto install Ionic dependencies!', e);
             helpers.logError(
