@@ -150,18 +150,19 @@ FCMPluginNG.setUserProperty("name1", "value1");
 ## Dynamic Links
 
 ### getDynamicLink
+
+Only works on Android.
+
 ```js
 FCMPluginNG.getDynamicLink();
 ```
 
 ### onDynamicLink
+
+Only works on iOS
+
 ```js
 FCMPluginNG.onDynamicLink();
-```
-
-### createDynamicLink
-```js
-FCMPluginNG.createDynamicLink({params});
 ```
 
 ## License

@@ -1,5 +1,10 @@
 # Changelog
 
+### Version 8.2.0 (10/12/2020)
+- Fixed Dynamic Link. New function getDynamicLink. Fixed open link on
+  background, foreground and non-installed app
+- Big code refactor
+
 ### Version 8.1.5 (24/11/2020)
 - Fixed Dynamic link callback on Android (2)
 
