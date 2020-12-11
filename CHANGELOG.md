@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.7.0 (11/12/2020)
+
+Downgraded Cordova and Cordova-Android minimal required versions.
+
 ### Version 7.6.1 (11/12/2020)
 
 Fixed auto install of ionic-specific dependencies on Windows
