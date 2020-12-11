@@ -1,19 +1,25 @@
 buildscript {
     ext {
-        def PLUGIN_CONFIG = new Object()
+        // Load system enviroment defined values, or, if unavailable, plugin defaults
+        def ANDROID_GRADLE_TOOLS_VERSION = System.getenv('ANDROID_GRADLE_TOOLS_VERSION') ?: '4.1.0'
         try {
-            // Load configuration from install variables (package.json)
-            PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
-        } catch(Exception e) {
-            def WARNING_STYLE = "${(char)27}[33;49"+"m"
-            def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
-            print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)
-            // Load system enviroment defined values, or, if unavailable, plugin defaults
-            PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION = System.getenv('ANDROID_GRADLE_TOOLS_VERSION') ?: '4.1.0'
+            // Load configuration from install variables (package.json) two directories above
+            def PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
+            ANDROID_GRADLE_TOOLS_VERSION = PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION
+        } catch(Exception e0) {
+            try {
+                // Load configuration from install variables (package.json) three directories above
+                def PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
+                ANDROID_GRADLE_TOOLS_VERSION = PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION
+            } catch(Exception e1) {
+                def WARNING_STYLE = "${(char)27}[33;49"+"m"
+                def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
+                print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)                
+            }
         }
         // Override config with project values if available
-        PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION = rootProject.hasProperty('ANDROID_GRADLE_TOOLS_VERSION') ? rootProject.ext.ANDROID_GRADLE_TOOLS_VERSION : PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION
-        ext.gradleNumberVersion = PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION.substring(0, PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
+        ANDROID_GRADLE_TOOLS_VERSION = rootProject.hasProperty('ANDROID_GRADLE_TOOLS_VERSION') ? rootProject.ext.ANDROID_GRADLE_TOOLS_VERSION : ANDROID_GRADLE_TOOLS_VERSION
+        ext.gradleNumberVersion = ANDROID_GRADLE_TOOLS_VERSION.substring(0, ANDROID_GRADLE_TOOLS_VERSION.lastIndexOf(".")).toFloat()
     }
     repositories {
         mavenCentral()
@@ -24,24 +30,32 @@ buildscript {
         }
     }
     dependencies {
-        def PLUGIN_CONFIG = new Object()
+        // Load system enviroment defined values, or, if unavailable, plugin defaults
+        def ANDROID_GOOGLE_SERVICES_VERSION = System.getenv('ANDROID_GOOGLE_SERVICES_VERSION') ?: '4.3.4'
+        def ANDROID_GRADLE_TOOLS_VERSION = System.getenv('ANDROID_GRADLE_TOOLS_VERSION') ?: '4.1.0'      
         try {
-            // Load configuration from install variables (package.json)
-            PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
-        } catch(Exception e) {
-            def WARNING_STYLE = "${(char)27}[33;49"+"m"
-            def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
-            print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)
-            // Load system enviroment defined values, or, if unavailable, plugin defaults
-            PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION = System.getenv('ANDROID_GOOGLE_SERVICES_VERSION') ?: '4.3.4'
-            PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION = System.getenv('ANDROID_GRADLE_TOOLS_VERSION') ?: '4.1.0'
+            // Load configuration from install variables (package.json) two directories above
+            def PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
+            ANDROID_GOOGLE_SERVICES_VERSION = PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION
+            ANDROID_GRADLE_TOOLS_VERSION = PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION
+        } catch(Exception e0) {
+            try {
+                // Load configuration from install variables (package.json) three directories above
+                def PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
+                ANDROID_GOOGLE_SERVICES_VERSION = PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION
+                ANDROID_GRADLE_TOOLS_VERSION = PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION
+            } catch(Exception e1) {
+                def WARNING_STYLE = "${(char)27}[33;49"+"m"
+                def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
+                print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)                
+            }
         }
         // Override config with project values if available
-        PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION = rootProject.hasProperty('ANDROID_GOOGLE_SERVICES_VERSION') ? rootProject.ext.ANDROID_GOOGLE_SERVICES_VERSION : PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION
-        PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION = rootProject.hasProperty('ANDROID_GRADLE_TOOLS_VERSION') ? rootProject.ext.ANDROID_GRADLE_TOOLS_VERSION : PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION
+        ANDROID_GOOGLE_SERVICES_VERSION = rootProject.hasProperty('ANDROID_GOOGLE_SERVICES_VERSION') ? rootProject.ext.ANDROID_GOOGLE_SERVICES_VERSION : ANDROID_GOOGLE_SERVICES_VERSION
+        ANDROID_GRADLE_TOOLS_VERSION = rootProject.hasProperty('ANDROID_GRADLE_TOOLS_VERSION') ? rootProject.ext.ANDROID_GRADLE_TOOLS_VERSION : ANDROID_GRADLE_TOOLS_VERSION
         // Avoid use "GRADLE_VERSION" because jitpack sets this like a environment variable
-        classpath "com.android.tools.build:gradle:${PLUGIN_CONFIG.ANDROID_GRADLE_TOOLS_VERSION}"
-        classpath "com.google.gms:google-services:${PLUGIN_CONFIG.ANDROID_GOOGLE_SERVICES_VERSION}"
+        classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_TOOLS_VERSION}"
+        classpath "com.google.gms:google-services:${ANDROID_GOOGLE_SERVICES_VERSION}"
     }
 }
 repositories {
@@ -52,29 +66,42 @@ repositories {
     }
 }
 dependencies {
-    def PLUGIN_CONFIG = new Object()
+    // Load system enviroment defined values, or, if unavailable, plugin defaults
+    def ANDROID_FCM_VERSION = System.getenv('ANDROID_FCM_VERSION') ?: '21.0.0'
+    def ANDROID_FIREBASE_BOM_VERSION = System.getenv('ANDROID_FIREBASE_BOM_VERSION') ?: '26.0.0'
     try {
-        // Load configuration from install variables (package.json)
-        PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
-    } catch(Exception e) {
-        def WARNING_STYLE = "${(char)27}[33;49"+"m"
-        def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
-        print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)
-        // Load system enviroment defined values, or, if unavailable, plugin defaults
-        PLUGIN_CONFIG.ANDROID_FCM_VERSION = System.getenv('ANDROID_FCM_VERSION') ?: '21.0.0'
-        PLUGIN_CONFIG.ANDROID_FIREBASE_BOM_VERSION = System.getenv('ANDROID_FIREBASE_BOM_VERSION') ?: '26.0.0'
+        // Load configuration from install variables (package.json) two directories above
+        def PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
+        ANDROID_FCM_VERSION = PLUGIN_CONFIG.ANDROID_FCM_VERSION
+        ANDROID_FIREBASE_BOM_VERSION = PLUGIN_CONFIG.ANDROID_FIREBASE_BOM_VERSION
+    } catch(Exception e0) {
+        try {
+            // Load configuration from install variables (package.json) three directories above
+            def PLUGIN_CONFIG = new groovy.json.JsonSlurper().parseText(file("${projectDir}/../../../package.json").text).cordova.plugins['cordova-plugin-fcm-with-dependecy-updated']
+            ANDROID_FCM_VERSION = PLUGIN_CONFIG.ANDROID_FCM_VERSION
+            ANDROID_FIREBASE_BOM_VERSION = PLUGIN_CONFIG.ANDROID_FIREBASE_BOM_VERSION
+        } catch(Exception e1) {
+            def WARNING_STYLE = "${(char)27}[33;49"+"m"
+            def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
+            print(WARNING_STYLE+"FCMPlugin: Plugin install variables are not accessible, as package.json was unreachable/unreadable."+DEFAULT_STYLE)                
+        }
     }
     // Override config with project values if available
-    PLUGIN_CONFIG.ANDROID_FCM_VERSION = rootProject.hasProperty('ANDROID_FCM_VERSION') ? rootProject.ext.ANDROID_FCM_VERSION : PLUGIN_CONFIG.ANDROID_FCM_VERSION
-    PLUGIN_CONFIG.ANDROID_FIREBASE_BOM_VERSION = rootProject.hasProperty('ANDROID_FIREBASE_BOM_VERSION') ? rootProject.ext.ANDROID_FIREBASE_BOM_VERSION : PLUGIN_CONFIG.ANDROID_FIREBASE_BOM_VERSION
-    if (gradleNumberVersion >= 3.4f) {
-        implementation platform("com.google.firebase:firebase-bom:${PLUGIN_CONFIG.ANDROID_FIREBASE_BOM_VERSION}")
-        implementation "com.google.firebase:firebase-messaging"
-    } else {
+    ANDROID_FCM_VERSION = rootProject.hasProperty('ANDROID_FCM_VERSION') ? rootProject.ext.ANDROID_FCM_VERSION : ANDROID_FCM_VERSION
+    ANDROID_FIREBASE_BOM_VERSION = rootProject.hasProperty('ANDROID_FIREBASE_BOM_VERSION') ? rootProject.ext.ANDROID_FIREBASE_BOM_VERSION : ANDROID_FIREBASE_BOM_VERSION
+    if (gradleNumberVersion < 3.4f) {
         def WARNING_STYLE = "${(char)27}[33;49"+"m"
         def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
         print(WARNING_STYLE+"FCMPlugin: Support for Gradle v3.3 or lower is deprecated. Please upgrade to a newer version."+DEFAULT_STYLE)
-        compile "com.google.firebase:firebase-messaging:${PLUGIN_CONFIG.ANDROID_FCM_VERSION}"
+        compile "com.google.firebase:firebase-messaging:${ANDROID_FCM_VERSION}"
+    } else if (gradleNumberVersion < 5.0f) {
+        def WARNING_STYLE = "${(char)27}[33;49"+"m"
+        def DEFAULT_STYLE = "${(char)27}[39;49"+"m"
+        print(WARNING_STYLE+"FCMPlugin: Support for Gradle v4 or lower is deprecated. Please upgrade to a newer version."+DEFAULT_STYLE)
+        implementation "com.google.firebase:firebase-messaging:${ANDROID_FCM_VERSION}"
+    } else {
+        implementation platform("com.google.firebase:firebase-bom:${ANDROID_FIREBASE_BOM_VERSION}")
+        implementation "com.google.firebase:firebase-messaging"
     }
 }
 // apply plugin: 'com.google.gms.google-services'
