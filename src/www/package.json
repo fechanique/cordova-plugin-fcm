@@ -12,7 +12,7 @@
     "scripts": {
         "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
         "build:before": "rm -rf ../../www;mkdir -p ../../www",
-        "build:js": "tsc -p .;rollup -c rollup.config.js;npm run build:js:rm-exports;npm run build:js:add-default-export",
+        "build:js": "npx tsc -p .;npx rollup -c rollup.config.js;npm run build:js:rm-exports;npm run build:js:add-default-export",
         "build:js:rm-exports": "cd ../../www;cat FCMPlugin.js | grep -v exports > FCMPlugin.tmp.js;mv FCMPlugin.tmp.js FCMPlugin.js",
         "build:js:add-default-export": "cd ../../www;echo 'module.exports = FCM;' >> FCMPlugin.js",
         "build:dts": "./scripts/build.dts.sh",
@@ -42,9 +42,9 @@
     "englishdoc": "",
     "devDependencies": {
         "@types/cordova": "0.0.34",
-        "rollup": "^2.33.0",
+        "rollup": "^2.34.2",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-node-resolve": "^5.2.0",
-        "typescript": "^4.0.5"
+        "typescript": "^4.1.2"
     }
 }

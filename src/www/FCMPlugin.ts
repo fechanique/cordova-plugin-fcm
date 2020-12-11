@@ -5,6 +5,11 @@ import type { IDisposable } from './IDisposable'
 import { execAsPromise } from './execAsPromise'
 import { asDisposableListener } from './eventAsDisposable'
 import { bridgeNativeEvents } from './bridgeNativeEvents'
+declare var window: {
+    cordova: {
+        platformId: string
+    }
+}
 
 /**
  * @name FCM
