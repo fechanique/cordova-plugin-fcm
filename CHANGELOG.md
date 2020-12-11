@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### Version 7.6.1 (11/12/2020)
+
+Fixed auto install of ionic-specific dependencies on Windows
+
 ### Version 7.6.0 (08/11/2020)
 
 Added IOS_FIREBASE_MESSAGING_VERSION plugin variable to force a fixed Firebase/Messaging pod version.
