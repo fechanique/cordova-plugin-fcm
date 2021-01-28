@@ -1,10 +1,12 @@
-//
+//###########################################
 //  AppDelegate+FCMPlugin.m
-//  TestApp
 //
 //  Created by felipe on 12/06/16.
 //
+//  Modified by Gustavo Cortez (01/28/2021)
 //
+//###########################################
+
 #import "AppDelegate+FCMPlugin.h"
 #import "FCMPlugin.h"
 #import <objc/runtime.h>
@@ -34,6 +36,7 @@
 @implementation AppDelegate (MCPlugin)
 
 static NSData *lastPush;
+static FIRDynamicLink *lastLink;
 NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
 //Method swizzling
@@ -42,7 +45,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     Method original =  class_getInstanceMethod(self, @selector(application:didFinishLaunchingWithOptions:));
     Method custom =    class_getInstanceMethod(self, @selector(application:customDidFinishLaunchingWithOptions:));
     method_exchangeImplementations(original, custom);
-
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self swizzleMethod:@selector(application:openURL:options:)];
@@ -77,18 +80,19 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     // parse firebase dynamic link
     FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
     if (dynamicLink) {
-      if (dynamicLink.url) {
-        // Handle the deep link. For example, show the deep-linked content,
-        // apply a promotional offer to the user's account or show customized onboarding view.
-        // ...
-        [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
-      } else {
-        // Dynamic link has empty deep link. This situation will happens if
-        // Firebase Dynamic Links iOS SDK tried to retrieve pending dynamic link,
-        // but pending link is not available for this device/App combination.
-        // At this point you may display default onboarding view.
-      }
-      handled = TRUE;
+        if (dynamicLink.url) {
+            NSLog(@"FCM -> Found Dynamic Link (fresh install): %@", dynamicLink.url);
+            // Handle the deep link. For example, show the deep-linked content,
+            // apply a promotional offer to the user's account or show customized onboarding view.
+            // ...
+            [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
+        } else {
+            // Dynamic link has empty deep link. This situation will happens if
+            // Firebase Dynamic Links iOS SDK tried to retrieve pending dynamic link,
+            // but pending link is not available for this device/App combination.
+            // At this point you may display default onboarding view.
+        }
+        handled = TRUE;
     }
     return handled;
 }
@@ -98,32 +102,48 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 }
 
 - (BOOL)swizzled_application:(UIApplication *)app continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
-    // always call original method implementation first
-    BOOL handled = [self swizzled_application:app continueUserActivity:userActivity restorationHandler:restorationHandler];
-    // handle firebase dynamic link
-    return [[FIRDynamicLinks dynamicLinks]
-        handleUniversalLink:userActivity.webpageURL
-        completion:^(FIRDynamicLink * _Nullable dynamicLink, NSError * _Nullable error) {
-            // Try this method as some dynamic links are not recognize by handleUniversalLink
-            // ISSUE: https://github.com/firebase/firebase-ios-sdk/issues/743
-            dynamicLink = dynamicLink ? dynamicLink
-                : [[FIRDynamicLinks dynamicLinks]
-                   dynamicLinkFromUniversalLinkURL:userActivity.webpageURL];
-
-            if (dynamicLink) {
-                [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
+    
+    if ([userActivity webpageURL] != nil) {
+        NSString *incomingURL = [userActivity webpageURL].absoluteString;
+        NSLog(@"FCM -> Incoming URL is %@", incomingURL);
+        
+        BOOL handled = [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
+                                                                completion:^(FIRDynamicLink * _Nullable dynamicLink,
+                                                                             NSError * _Nullable error) {
+            if (error != nil) {
+                return NSLog(@"FCM -> Found an error! %@", error.localizedDescription);
             }
-        }] || handled;
+            
+            if (dynamicLink != nil && dynamicLink.url != nil) {
+                NSLog(@"FCM -> Found Dynamic Link: %@", dynamicLink.url);
+                lastLink = dynamicLink; // Store dynamic link (to user when cordova ready)
+                [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
+            } else {
+                NSLog(@"FCM -> This's weird. Dynamic link object has no url");
+            }
+        }];
+        
+        if (handled) {
+            return YES;
+        } else {
+            // may do other things with incoming URL
+            return NO;
+        }
+        
+    } else { return NO; }
 }
 
 // ------------ END DYNAMIC LINKS
 
 - (BOOL)application:(UIApplication *)application customDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
+    // [START configure_firebase]
+    [FIRApp configure];
+    // [END configure_firebase]
+    
     [self application:application customDidFinishLaunchingWithOptions:launchOptions];
-
-    NSLog(@"DidFinishLaunchingWithOptions");
- 
+    
+    NSLog(@"FCM -> DidFinishLaunchingWithOptions");
+    
     
     // Register for remote notifications. This shows a permission dialog on first run, to
     // show the dialog at a more appropriate time move this registration accordingly.
@@ -166,10 +186,8 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
         [[UIApplication sharedApplication] registerForRemoteNotifications];
         // [END register_for_notifications]
     }
-
-    // [START configure_firebase]
-    [FIRApp configure];
-    // [END configure_firebase]
+    
+    
     // Add observer for InstanceID token refresh callback.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenRefreshNotification:)
                                                  name:kFIRInstanceIDTokenRefreshNotification object:nil];
@@ -187,14 +205,15 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    NSLog(@"FCM -> receiving_message while app is in the foreground");
     // Print message ID.
     NSDictionary *userInfo = notification.request.content.userInfo;
     if (userInfo[kGCMMessageIDKey]) {
-        NSLog(@"Message ID 1: %@", userInfo[kGCMMessageIDKey]);
+        NSLog(@"FCM -> Message ID 1: %@", userInfo[kGCMMessageIDKey]);
     }
     
     // Print full message.
-    NSLog(@"%@", userInfo);
+    NSLog(@"FCM -> Full message: %@", userInfo);
     
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
@@ -211,27 +230,28 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
 didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void (^)())completionHandler {
+    NSLog(@"FCM -> receiving_message with completion handler");
     NSDictionary *userInfo = response.notification.request.content.userInfo;
     if (userInfo[kGCMMessageIDKey]) {
-        NSLog(@"Message ID 2: %@", userInfo[kGCMMessageIDKey]);
+        NSLog(@"FCM -> Message ID 2: %@", userInfo[kGCMMessageIDKey]);
     }
     
     // Print full message.
-    NSLog(@"aaa%@", userInfo);
+    NSLog(@"FCM -> Full Message (2): %@", userInfo);
     
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
     
-
-        NSLog(@"New method with push callback: %@", userInfo);
-        
-        [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
-                                                           options:0
-                                                             error:&error];
-        NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
-        lastPush = jsonData;
-
+    
+    NSLog(@"FCM -> New method with push callback: %@", userInfo);
+    
+    [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
+                                                       options:0
+                                                         error:&error];
+    NSLog(@"FCM -> APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+    lastPush = jsonData;
+    
     
     completionHandler();
 }
@@ -245,24 +265,25 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    NSLog(@"FCM -> receiving_message in background iOS < 10");
     // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
     if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
         return;
     }
-
-    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
+    
+    NSLog(@"FCM -> Message ID: %@", userInfo[@"gcm.message_id"]);
     
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
     
     if (application.applicationState != UIApplicationStateActive) {
-        NSLog(@"New method with push callback: %@", userInfo);
+        NSLog(@"FCM -> New method with push callback: %@", userInfo);
         
         [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
                                                            options:0
                                                              error:&error];
-        NSLog(@"APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
+        NSLog(@"FCM -> APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
         lastPush = jsonData;
     }
 }
@@ -272,49 +293,50 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    NSLog(@"FCM -> receiving_message iOS < 10");
     // Short-circuit when actually running iOS 10+, let notification centre methods handle the notification.
     if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
         return;
     }
-
+    
     // If you are receiving a notification message while your app is in the background,
     // this callback will not be fired till the user taps on the notification launching the application.
     // TODO: Handle data of notification
-
+    
     // Print message ID.
-    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
-
+    NSLog(@"FCM -> Message ID: %@", userInfo[@"gcm.message_id"]);
+    
     // Pring full message.
-    NSLog(@"%@", userInfo);
+    NSLog(@"FCM -> Full message: %@", userInfo);
     NSError *error;
-
+    
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
-
+    
     // Has user tapped the notificaiton?
     // UIApplicationStateActive   - app is currently active
     // UIApplicationStateInactive - app is transitioning from background to
     //                              foreground (user taps notification)
-
+    
     UIApplicationState state = application.applicationState;
     if (application.applicationState == UIApplicationStateActive
         || application.applicationState == UIApplicationStateInactive) {
         [userInfoMutable setValue:@(NO) forKey:@"wasTapped"];
-        NSLog(@"app active");
+        NSLog(@"FCM -> App active");
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
                                                            options:0
                                                              error:&error];
         [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-
-    // app is in background
+        
+        // app is in background
     }
-
+    
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
 // [END message_handling]
 
 - (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)fcmToken {
-    NSLog(@"FCM registration token: %@", fcmToken);
+    NSLog(@"FCM -> Registration token: %@", fcmToken);
     // Notify about received token.
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:fcmToken forKey:@"token"];
     [[NSNotificationCenter defaultCenter] postNotificationName:
@@ -327,15 +349,15 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)tokenRefreshNotification:(NSNotification *)notification
 {
     [[FIRInstanceID instanceID] instanceIDWithHandler:^(FIRInstanceIDResult * _Nullable result,
-                                                    NSError * _Nullable error) {
-    if (error != nil) {
-        NSLog(@"Error fetching remote instance ID: %@", error);
-    } else {
-        NSLog(@"Remote instance ID token REFRESH ##### : %@", result.token);
-        [FCMPlugin.fcmPlugin notifyOfTokenRefresh:result.token];
-        // Connect to FCM since connection may have failed when attempted before having a token.
-        [self connectToFcm];
-    }
+                                                        NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"FCM -> Error fetching remote instance ID: %@", error);
+        } else {
+            NSLog(@"FCM -> Remote instance ID token (refresh): %@", result.token);
+            [FCMPlugin.fcmPlugin notifyOfTokenRefresh:result.token];
+            // Connect to FCM since connection may have failed when attempted before having a token.
+            [self connectToFcm];
+        }
     }];
 }
 // [END refresh_token]
@@ -344,21 +366,21 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)connectToFcm
 {
     [[FIRInstanceID instanceID] instanceIDWithHandler:^(FIRInstanceIDResult * _Nullable result,
-                                                    NSError * _Nullable error) {
-    if (error != nil) {
-        NSLog(@"Error fetching remote instance ID: %@", error);
-    } else {
-        NSLog(@"Remote instance ID token: %@", result.token);
-        [[FIRMessaging messaging] subscribeToTopic:@"ios"];
-        [[FIRMessaging messaging] subscribeToTopic:@"all"];
-    }
+                                                        NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"FCM -> Error fetching remote instance ID: %@", error);
+        } else {
+            NSLog(@"FCM -> Remote instance ID token: %@", result.token);
+            [[FIRMessaging messaging] subscribeToTopic:@"ios"];
+            [[FIRMessaging messaging] subscribeToTopic:@"all"];
+        }
     }];
 }
 // [END connect_to_fcm]
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    NSLog(@"app become active");
+    NSLog(@"FCM -> App become active");
     [FCMPlugin.fcmPlugin appEnterForeground];
     [self connectToFcm];
 }
@@ -366,9 +388,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 // [START disconnect_from_fcm]
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    NSLog(@"app entered background");
+    NSLog(@"FCM -> App entered background");
     [FCMPlugin.fcmPlugin appEnterBackground];
-    NSLog(@"Disconnected from FCM");
+    lastLink = nil; // Clear active link
+    NSLog(@"FCM -> Disconnected from FCM");
 }
 // [END disconnect_from_fcm]
 
@@ -379,5 +402,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     return returnValue;
 }
 
++getLastLink
+{
+    FIRDynamicLink *returnLink = lastLink;
+    lastLink = nil;
+    return returnLink;
+}
 
 @end

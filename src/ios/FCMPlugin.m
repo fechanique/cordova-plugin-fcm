@@ -1,3 +1,10 @@
+//###########################################
+//  FCMPlugin.m
+//
+//  Modified by Gustavo Cortez (01/28/2021)
+//
+//###########################################
+
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
@@ -41,7 +48,7 @@ static FCMPlugin *fcmPluginInstance;
 // GET TOKEN //
 - (void) getToken:(CDVInvokedUrlCommand *)command 
 {
-    NSLog(@"get Token");
+    NSLog(@"FCM -> Get Token");
     [self.commandDelegate runInBackground:^{
         // NSString* token = [[FIRInstanceID instanceID] token];
         NSString* token = [FIRMessaging messaging].FCMToken;
@@ -55,7 +62,7 @@ static FCMPlugin *fcmPluginInstance;
 - (void) subscribeToTopic:(CDVInvokedUrlCommand *)command 
 {
     NSString* topic = [command.arguments objectAtIndex:0];
-    NSLog(@"subscribe To Topic %@", topic);
+    NSLog(@"FCM -> subscribe To Topic %@", topic);
     [self.commandDelegate runInBackground:^{
         if(topic != nil)[[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"%@", topic]];
         CDVPluginResult* pluginResult = nil;
@@ -67,7 +74,7 @@ static FCMPlugin *fcmPluginInstance;
 - (void) unsubscribeFromTopic:(CDVInvokedUrlCommand *)command 
 {
     NSString* topic = [command.arguments objectAtIndex:0];
-    NSLog(@"unsubscribe From Topic %@", topic);
+    NSLog(@"FCM -> unsubscribe From Topic %@", topic);
     [self.commandDelegate runInBackground:^{
         if(topic != nil)[[FIRMessaging messaging] unsubscribeFromTopic:[NSString stringWithFormat:@"%@", topic]];
         CDVPluginResult* pluginResult = nil;
@@ -78,7 +85,7 @@ static FCMPlugin *fcmPluginInstance;
 
 - (void) registerNotification:(CDVInvokedUrlCommand *)command
 {
-    NSLog(@"view registered for notifications");
+    NSLog(@"FCM -> view registered for notifications");
     
     notificatorReceptorReady = YES;
     NSData* lastPush = [AppDelegate getLastPush];
@@ -95,7 +102,7 @@ static FCMPlugin *fcmPluginInstance;
 {
     NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, JSONString];
-    NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
+    NSLog(@"FCM -> stringByEvaluatingJavaScriptFromString %@", notifyJS);
     
     if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
         [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
@@ -107,7 +114,7 @@ static FCMPlugin *fcmPluginInstance;
 -(void) notifyOfTokenRefresh:(NSString *)token
 {
     NSString * notifyJS = [NSString stringWithFormat:@"%@('%@');", tokenRefreshCallback, token];
-    NSLog(@"stringByEvaluatingJavaScriptFromString %@", notifyJS);
+    NSLog(@"FCM -> stringByEvaluatingJavaScriptFromString %@", notifyJS);
     
     if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
         [(UIWebView *)self.webView stringByEvaluatingJavaScriptFromString:notifyJS];
@@ -118,13 +125,13 @@ static FCMPlugin *fcmPluginInstance;
 
 -(void) appEnterBackground
 {
-    NSLog(@"Set state background");
+    NSLog(@"FCM -> Set state background");
     appInForeground = NO;
 }
 
 -(void) appEnterForeground
 {
-    NSLog(@"Set state foreground");
+    NSLog(@"FCM -> Set state foreground");
     NSData* lastPush = [AppDelegate getLastPush];
     if (lastPush != nil) {
         [FCMPlugin.fcmPlugin notifyOfMessage:lastPush];
@@ -135,36 +142,36 @@ static FCMPlugin *fcmPluginInstance;
 // Firebase Analytics
 
 - (void) logEvent: (CDVInvokedUrlCommand *)command {
-    NSLog(@"logEvent");
-
+    NSLog(@"FCM -> logEvent");
+    
     NSString* name = [command.arguments objectAtIndex:0];
     NSDictionary* parameters = [command.arguments objectAtIndex:1];
-
+    
     [FIRAnalytics logEventWithName:name parameters:parameters];
-
+    
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)setUserId:(CDVInvokedUrlCommand *)command {
-    NSLog(@"setUserId");
-
+    NSLog(@"FCM -> setUserId");
+    
     NSString* id = [command.arguments objectAtIndex:0];
-
+    
     [FIRAnalytics setUserID:id];
-
+    
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)setUserProperty:(CDVInvokedUrlCommand *)command {
-    NSLog(@"setUserProperty");
-
+    NSLog(@"FCM -> setUserProperty");
+    
     NSString* name = [command.arguments objectAtIndex:0];
     NSString* value = [command.arguments objectAtIndex:1];
-
+    
     [FIRAnalytics setUserPropertyString:value forName:name];
-
+    
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -173,7 +180,7 @@ static FCMPlugin *fcmPluginInstance;
 - (void) clearAllNotifications: (CDVInvokedUrlCommand *)command {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-
+    
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -182,32 +189,41 @@ static FCMPlugin *fcmPluginInstance;
 
 - (void)getDynamicLink:(CDVInvokedUrlCommand *)command {
     self.dynamicLinkCallbackId = command.callbackId;
-
+    NSLog(@"FCM -> getDynamicLink - lastDynamicLinkData: %@", self.lastDynamicLinkData);
+    
+    FIRDynamicLink *lastLink = [AppDelegate getLastLink];
+    NSLog(@"FCM -> getDynamicLink - lastLink (closed app): %@", lastLink);
+    if (lastLink != nil) {
+        [FCMPlugin.fcmPlugin postDynamicLink:lastLink];
+        lastLink = nil;
+        return;
+    }
+    
     if (self.lastDynamicLinkData) {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:self.lastDynamicLinkData];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
-
+        
         self.lastDynamicLinkData = nil;
     }
 }
 
 - (void)onDynamicLink:(CDVInvokedUrlCommand *)command {
-  self.dynamicLinkCallbackId = command.callbackId;
+    self.dynamicLinkCallbackId = command.callbackId;
 }
 
 - (void)createDynamicLink:(CDVInvokedUrlCommand *)command {
     NSDictionary* params = [command.arguments objectAtIndex:0];
     int linkType = [[command.arguments objectAtIndex:1] intValue];
     FIRDynamicLinkComponents *linkBuilder = [self createDynamicLinkBuilder:params];
-
+    
     if (linkType == 0) {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:linkBuilder.url.absoluteString];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     } else {
         linkBuilder.options = [[FIRDynamicLinkComponentsOptions alloc] init];
         linkBuilder.options.pathLength = linkType;
-
+        
         [linkBuilder shortenWithCompletion:^(NSURL * _Nullable shortURL,
                                              NSArray<NSString *> * _Nullable warnings,
                                              NSError * _Nullable error) {
@@ -230,7 +246,7 @@ static FCMPlugin *fcmPluginInstance;
     if (!domainUriPrefix) {
         domainUriPrefix = self.domainUriPrefix;
     }
-
+    
     FIRDynamicLinkComponents *linkBuilder = [[FIRDynamicLinkComponents alloc]
                                              initWithLink:link domainURIPrefix:domainUriPrefix];
     NSDictionary* androidInfo = params[@"androidInfo"];
@@ -265,7 +281,7 @@ static FCMPlugin *fcmPluginInstance;
 
 - (FIRDynamicLinkAndroidParameters*) getAndroidParameters:(NSDictionary*) androidInfo {
     FIRDynamicLinkAndroidParameters* result = [[FIRDynamicLinkAndroidParameters alloc]
-                                     initWithPackageName:androidInfo[@"androidPackageName"]];
+                                               initWithPackageName:androidInfo[@"androidPackageName"]];
     NSNumber* minimumVersion = androidInfo[@"androidMinPackageVersionCode"];
     if (minimumVersion) {
         result.minimumVersion = [minimumVersion intValue];
@@ -279,7 +295,7 @@ static FCMPlugin *fcmPluginInstance;
 
 - (FIRDynamicLinkIOSParameters*) getIosParameters:(NSDictionary*) iosInfo {
     FIRDynamicLinkIOSParameters* result = [[FIRDynamicLinkIOSParameters alloc]
-                                 initWithBundleID:iosInfo[@"iosBundleId"]];
+                                           initWithBundleID:iosInfo[@"iosBundleId"]];
     result.appStoreID = iosInfo[@"iosAppStoreId"];
     result.iPadBundleID = iosInfo[@"iosIpadBundleId"];
     result.minimumAppVersion = iosInfo[@"iosMinPackageVersion"];
@@ -337,11 +353,12 @@ static FCMPlugin *fcmPluginInstance;
     NSString* absoluteUrl = dynamicLink.url.absoluteString;
     NSString* minimumAppVersion = dynamicLink.minimumAppVersion;
     BOOL weakConfidence = (dynamicLink.matchType == FIRDLMatchTypeWeak);
-
+    
     [data setObject:(absoluteUrl ? absoluteUrl : @"") forKey:@"deepLink"];
     [data setObject:(minimumAppVersion ? minimumAppVersion : @"") forKey:@"minimumAppVersion"];
     [data setObject:(weakConfidence ? @"Weak" : @"Strong") forKey:@"matchType"];
-
+    NSLog(@"FCM -> Sent to View: %@", data);
+    
     if (self.dynamicLinkCallbackId) {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
         [pluginResult setKeepCallbackAsBool:YES];

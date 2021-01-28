@@ -1,10 +1,11 @@
-//
+//###########################################
 //  AppDelegate+FCMPlugin.h
-//  TestApp
 //
 //  Created by felipe on 12/06/16.
 //
+//  Modified by Gustavo Cortez (01/28/2021)
 //
+//###########################################
 
 #import "AppDelegate.h"
 #import <UIKit/UIKit.h>
@@ -13,5 +14,6 @@
 @interface AppDelegate (FCMPlugin)
 
 + (NSData*)getLastPush;
++ getLastLink;
 
 @end
