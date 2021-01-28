@@ -19,7 +19,7 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm-ng"
-      version="8.2.0">
+      version="8.3.0">
     <name>FCMPluginNG</name>
     <description>Cordova FCM Plugin NG</description>
     <license>Apache 2.0</license>

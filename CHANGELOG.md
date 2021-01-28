@@ -1,5 +1,12 @@
 # Changelog
 
+### Version 8.3.0 (28/01/2021)
+- Fix Dynamic Link on iOS (when app is closed)
+- Refactor on Dynamic Link handler
+- Add FCM tag to identify logs
+- Code indent
+
+
 ### Version 8.2.0 (10/12/2020)
 - Fixed Dynamic Link. New function getDynamicLink. Fixed open link on
   background, foreground and non-installed app

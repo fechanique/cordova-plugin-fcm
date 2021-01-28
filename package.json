@@ -1,5 +1,5 @@
 {
-  "version": "8.2.0",
+  "version": "8.3.0",
   "name": "cordova-plugin-fcm-ng",
   "cordova_name": "Cordova FCM Push Plugin NG",
   "description": "Google Firebase Cloud Messaging Cordova Plugin",
