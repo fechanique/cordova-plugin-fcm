@@ -141,12 +141,12 @@ static FCMPlugin *fcmPluginInstance;
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             return;
         }
-        NSString *strISOLatin = [[NSString alloc] initWithData:dataPayload encoding:NSISOLatin1StringEncoding];
-        NSData *dataPayloadUTF8 = [strISOLatin dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *strUTF8 = [[NSString alloc] initWithData:dataPayload encoding:NSUTF8StringEncoding];
+        NSData *dataPayloadUTF8 = [strUTF8 dataUsingEncoding:NSUTF8StringEncoding];
         NSError* error = nil;
         NSDictionary *payloadDictionary = [NSJSONSerialization JSONObjectWithData:dataPayloadUTF8 options:0 error:&error];
         if (error) {
-            NSString* errorMessage = [NSString stringWithFormat:@"%@ => '%@'", [error localizedDescription], strISOLatin];
+            NSString* errorMessage = [NSString stringWithFormat:@"%@ => '%@'", [error localizedDescription], strUTF8];
             NSLog(@"getInitialPushPayload error: %@", errorMessage);
             CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:errorMessage];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
