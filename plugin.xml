@@ -80,7 +80,7 @@
 
 	<!-- IOS CONFIGURATION -->
 	<platform name="ios">
-		<preference name="IOS_FIREBASE_MESSAGING_VERSION" default="~> 7.0.0" />
+		<preference name="IOS_FIREBASE_MESSAGING_VERSION" default="~> 7.4.0" />
 		<config-file target="config.xml" parent="/*">
 			<feature name="FCMPlugin">
 				<param name="ios-package" value="FCMPlugin"/>
