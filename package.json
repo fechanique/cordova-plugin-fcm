@@ -13,7 +13,9 @@
         "build": "npm run build:www;npm run build:ionic",
         "build:www": "cd ./src/www;npm run build",
         "build:ionic": "cd ./src/ionic;npm run build",
-        "prettier": "find ./src/ -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | grep -v node_modules |xargs npx prettier --write",
+        "prettier-src": "find ./src/ -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | grep -v node_modules | xargs npx prettier --write",
+        "prettier-scripts": "find ./scripts -name '*.js' | xargs npx prettier --write",
+        "prettier": "npm run prettier-src;npm run prettier-scripts",
         "tslint": "npx tslint -p ./src/www --fix;npx tslint -p ./src/ionic --fix"
     },
     "repository": {

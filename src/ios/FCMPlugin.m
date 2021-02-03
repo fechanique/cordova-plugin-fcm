@@ -59,12 +59,26 @@ static FCMPlugin *fcmPluginInstance;
 
 - (void)getToken:(CDVInvokedUrlCommand *)command {
     NSLog(@"get Token");
-    [self.commandDelegate runInBackground:^{
+    [self returnTokenOrRetry:^(NSString* fcmToken){
         CDVPluginResult* pluginResult = nil;
-        NSString* fcmToken = [AppDelegate getFCMToken];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:fcmToken];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
+}
+
+- (void)returnTokenOrRetry:(void (^)(NSString* fcmToken))onSuccess {
+    NSString* fcmToken = [AppDelegate getFCMToken];
+    if(fcmToken != nil) {
+        onSuccess(fcmToken);
+        return;
+    }
+    SEL thisMethodSelector = NSSelectorFromString(@"returnTokenOrRetry:");
+    NSLog(@"FCMToken unavailable, it'll retry in one second");
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:thisMethodSelector]];
+    [invocation setSelector:thisMethodSelector];
+    [invocation setTarget:self];
+    [invocation setArgument:&(onSuccess) atIndex:2]; //arguments 0 and 1 are self and _cmd respectively, automatically set by NSInvocationion
+    [NSTimer scheduledTimerWithTimeInterval:1 invocation:invocation repeats:NO];
 }
 
 - (void)getAPNSToken:(CDVInvokedUrlCommand *)command  {

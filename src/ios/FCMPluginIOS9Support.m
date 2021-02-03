@@ -57,18 +57,18 @@ static void (^requestPushPermissionCallback)(BOOL yesOrNo, NSError* _Nullable er
             return;
         }
         SEL thisMethodSelector = NSSelectorFromString(@"waitForUserDecision:withInterval:");
-        if([self respondsToSelector:thisMethodSelector]) {
-            float remainingTimeout = timeout - interval;
-            float givenInterval = interval;
-            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:thisMethodSelector]];
-            [invocation setSelector:thisMethodSelector];
-            [invocation setTarget:self];
-            [invocation setArgument:&(remainingTimeout) atIndex:2]; //arguments 0 and 1 are self and _cmd respectively, automatically set by NSInvocationion
-            [invocation setArgument:&(givenInterval) atIndex:3];
-            [NSTimer scheduledTimerWithTimeInterval:interval invocation:invocation repeats:NO];
+        if(![self respondsToSelector:thisMethodSelector]) {
+            NSLog(@"waitForUserDecision:withInterval: selector not found in FCMPluginIOS9Support");
             return;
         }
-        NSLog(@"waitForUserDecision:withInterval: selector not found in FCMPluginIOS9Support");
+        float remainingTimeout = timeout - interval;
+        float givenInterval = interval;
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:thisMethodSelector]];
+        [invocation setSelector:thisMethodSelector];
+        [invocation setTarget:self];
+        [invocation setArgument:&(remainingTimeout) atIndex:2]; //arguments 0 and 1 are self and _cmd respectively, automatically set by NSInvocationion
+        [invocation setArgument:&(givenInterval) atIndex:3];
+        [NSTimer scheduledTimerWithTimeInterval:interval invocation:invocation repeats:NO];
     }];
 }
 
