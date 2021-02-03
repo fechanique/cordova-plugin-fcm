@@ -68,7 +68,7 @@ export declare class FCMPlugin {
      */
     getToken(): Promise<string>;
     /**
-     * Checking for permissions on iOS. On android, it always returns `true`.
+     * Checking for permissions.
      *
      * @returns {Promise<boolean | null>} Returns a Promise of:
      * - true: push was allowed (or platform is android)
