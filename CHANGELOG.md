@@ -2,6 +2,13 @@
 
 ## Version 7
 
+### Version 7.8.0 (03/02/2020)
+
+- IOS_FIREBASE_MESSAGING_VERSION upgraded to 7.4.0;
+- FCM.hasPermission now supports Android;
+- On iOS, getToken will now wait until fcm token is defined to return it;
+- FCM.getInitialPushPayload now uses UTF8 instead of ISOLatin;
+
 ### Version 7.7.0 (11/12/2020)
 
 Downgraded Cordova and Cordova-Android minimal required versions.
