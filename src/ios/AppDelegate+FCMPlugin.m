@@ -118,7 +118,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
             if([incomingURL containsString:@"bitpay"]) {
                 lastUniversalLink = incomingURL;
-                [FCMPlugin.fcmPlugin postBitPayUrl:incomingURL];
+                [FCMPlugin.fcmPlugin postUniversalLink:incomingURL];
                 NSLog(@"FCM -> Universal Link %@", incomingURL);
                 return;
             }

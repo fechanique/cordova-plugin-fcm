@@ -195,7 +195,8 @@ static FCMPlugin *fcmPluginInstance;
     NSString *lastUniversalLink = [AppDelegate getLastUniversalLink];
     NSLog(@"FCM -> getlastUniversalLink - lastLink (closed app): %@", lastUniversalLink);
     if (lastUniversalLink != nil) {
-        [FCMPlugin.fcmPlugin postUniversalLink:lastUniversalLink];
+        NSString *link = [lastUniversalLink stringByAppendingString:@"?defer"];
+        [FCMPlugin.fcmPlugin postUniversalLink:link];
         lastUniversalLink = nil;
         return;
     }
@@ -217,7 +218,10 @@ static FCMPlugin *fcmPluginInstance;
     }
 
     if (self.lastUniversalLinkData) {
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:self.lastUniversalLinkData];
+
+        NSString *link = [self.lastUniversalLinkData stringByAppendingString:@"?defer"];
+
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:link];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
 
