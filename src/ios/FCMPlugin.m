@@ -190,7 +190,16 @@ static FCMPlugin *fcmPluginInstance;
 - (void)getDynamicLink:(CDVInvokedUrlCommand *)command {
     self.dynamicLinkCallbackId = command.callbackId;
     NSLog(@"FCM -> getDynamicLink - lastDynamicLinkData: %@", self.lastDynamicLinkData);
-    
+    NSLog(@"FCM -> getlastUniversalLink - getlastUniversalLinkData: %@", self.lastUniversalLinkData);
+
+    NSString *lastUniversalLink = [AppDelegate getLastUniversalLink];
+    NSLog(@"FCM -> getlastUniversalLink - lastLink (closed app): %@", lastUniversalLink);
+    if (lastUniversalLink != nil) {
+        [FCMPlugin.fcmPlugin postUniversalLink:lastUniversalLink];
+        lastUniversalLink = nil;
+        return;
+    }
+
     FIRDynamicLink *lastLink = [AppDelegate getLastLink];
     NSLog(@"FCM -> getDynamicLink - lastLink (closed app): %@", lastLink);
     if (lastLink != nil) {
@@ -206,6 +215,15 @@ static FCMPlugin *fcmPluginInstance;
         
         self.lastDynamicLinkData = nil;
     }
+
+    if (self.lastUniversalLinkData) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:self.lastUniversalLinkData];
+        [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
+
+        self.lastUniversalLinkData = nil;
+    }
+
 }
 
 - (void)onDynamicLink:(CDVInvokedUrlCommand *)command {
@@ -369,12 +387,15 @@ static FCMPlugin *fcmPluginInstance;
 }
 
 - (void)postUniversalLink:(NSString*) universalLink {
-    NSLog(@"FCM -> Sent to View: %@", universalLink);
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:universalLink];
-    [pluginResult setKeepCallbackAsBool:YES];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
+  NSLog(@"FCM -> Sent to View: %@", universalLink);
+  if (self.dynamicLinkCallbackId) {
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:universalLink];
+      [pluginResult setKeepCallbackAsBool:YES];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
+  } else {
+      self.lastUniversalLinkData = universalLink;
+  }
 }
-
 
 
 @end

@@ -37,6 +37,7 @@
 
 static NSData *lastPush;
 static FIRDynamicLink *lastLink;
+static NSString *lastUniversalLink;
 NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
 //Method swizzling
@@ -116,8 +117,10 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             
 
             if([incomingURL containsString:@"bitpay"]) {
+                lastUniversalLink = incomingURL;
                 [FCMPlugin.fcmPlugin postBitPayUrl:incomingURL];
-                return NSLog(@"FCM -> Universal Link %@", incomingURL);
+                NSLog(@"FCM -> Universal Link %@", incomingURL);
+                return;
             }
 
             if (dynamicLink != nil && dynamicLink.url != nil) {
@@ -396,7 +399,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     NSLog(@"FCM -> App entered background");
     [FCMPlugin.fcmPlugin appEnterBackground];
-    lastLink = nil; // Clear active link
+    lastLink = nil;
+    lastUniversalLink = nil;// Clear active link
     NSLog(@"FCM -> Disconnected from FCM");
 }
 // [END disconnect_from_fcm]
@@ -412,6 +416,14 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     FIRDynamicLink *returnLink = lastLink;
     lastLink = nil;
+    lastUniversalLink = nil;
+    return returnLink;
+}
+
++getLastUniversalLink
+{
+    NSString *returnLink = lastUniversalLink;
+    lastUniversalLink = nil;
     return returnLink;
 }
 
