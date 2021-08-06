@@ -114,6 +114,12 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
                 return NSLog(@"FCM -> Found an error! %@", error.localizedDescription);
             }
             
+
+            if([incomingURL containsString:@"bitpay"]) {
+                [FCMPlugin.fcmPlugin postBitPayUrl:incomingURL];
+                return NSLog(@"FCM -> Universal Link %@", incomingURL);
+            }
+
             if (dynamicLink != nil && dynamicLink.url != nil) {
                 NSLog(@"FCM -> Found Dynamic Link: %@", dynamicLink.url);
                 lastLink = dynamicLink; // Store dynamic link (to user when cordova ready)

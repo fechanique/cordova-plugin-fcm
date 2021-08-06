@@ -368,5 +368,13 @@ static FCMPlugin *fcmPluginInstance;
     }
 }
 
+- (void)postUniversalLink:(NSString*) universalLink {
+    NSLog(@"FCM -> Sent to View: %@", universalLink);
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:universalLink];
+    [pluginResult setKeepCallbackAsBool:YES];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.dynamicLinkCallbackId];
+}
+
+
 
 @end
