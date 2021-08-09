@@ -15,5 +15,5 @@
 
 + (NSData*)getLastPush;
 + getLastLink;
-
++ getLastUniversalLink;
 @end
