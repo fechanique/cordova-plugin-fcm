@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 8.4.0 (08/09/2021)
+- Adds Universal Link support
+
 ### Version 8.3.0 (28/01/2021)
 - Fix Dynamic Link on iOS (when app is closed)
 - Refactor on Dynamic Link handler

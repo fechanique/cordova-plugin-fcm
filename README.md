@@ -165,6 +165,14 @@ Only works on iOS
 FCMPluginNG.onDynamicLink();
 ```
 
+## Universal Links
+
+### postUniversalLink
+
+```js
+FCMPluginNG.postUniversalLink(string);
+```
+
 ## License
 ```
 The MIT License
