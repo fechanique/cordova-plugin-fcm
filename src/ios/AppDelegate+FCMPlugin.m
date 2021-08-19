@@ -116,20 +116,20 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
             }
             
 
-            if([incomingURL containsString:@"bitpay"]) {
-                lastUniversalLink = incomingURL;
-                [FCMPlugin.fcmPlugin postUniversalLink:incomingURL];
-                NSLog(@"FCM -> Universal Link %@", incomingURL);
-                return;
-            }
 
-            if (dynamicLink != nil && dynamicLink.url != nil) {
-                NSLog(@"FCM -> Found Dynamic Link: %@", dynamicLink.url);
-                lastLink = dynamicLink; // Store dynamic link (to user when cordova ready)
-                [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
-            } else {
-                NSLog(@"FCM -> This's weird. Dynamic link object has no url");
-            }
+               if([incomingURL containsString:@"bitpay"]) {
+                    lastUniversalLink = incomingURL;
+                    [FCMPlugin.fcmPlugin postUniversalLink:incomingURL];
+                    NSLog(@"FCM -> Universal Link %@", incomingURL);
+                } else {
+                    if (dynamicLink != nil && dynamicLink.url != nil) {
+                        NSLog(@"FCM -> Found Dynamic Link: %@", dynamicLink.url);
+                        lastLink = dynamicLink; // Store dynamic link (to user when cordova ready)
+                        [FCMPlugin.fcmPlugin postDynamicLink:dynamicLink];
+                    } else {
+                        NSLog(@"FCM -> This's weird. Dynamic link object has no url");
+                    }
+                }
         }];
         
         if (handled) {
