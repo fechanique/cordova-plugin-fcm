@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 8.5.0 (08/20/2021)
+- Fix Universal Link when the app is closed
+
 ### Version 8.4.0 (08/09/2021)
 - Adds Universal Link support
 
