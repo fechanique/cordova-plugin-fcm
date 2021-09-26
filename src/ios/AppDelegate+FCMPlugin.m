@@ -43,10 +43,7 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 //Method swizzling
 + (void)load
 {
-    Method original =  class_getInstanceMethod(self, @selector(application:didFinishLaunchingWithOptions:));
-    Method custom =    class_getInstanceMethod(self, @selector(application:customDidFinishLaunchingWithOptions:));
-    method_exchangeImplementations(original, custom);
-    
+    [FIRApp configure];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self swizzleMethod:@selector(application:openURL:options:)];
@@ -103,18 +100,17 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
 }
 
 - (BOOL)swizzled_application:(UIApplication *)app continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
-    
+
     if ([userActivity webpageURL] != nil) {
         NSString *incomingURL = [userActivity webpageURL].absoluteString;
         NSLog(@"FCM -> Incoming URL is %@", incomingURL);
-        
+
         BOOL handled = [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
                                                                 completion:^(FIRDynamicLink * _Nullable dynamicLink,
                                                                              NSError * _Nullable error) {
             if (error != nil) {
                 return NSLog(@"FCM -> Found an error! %@", error.localizedDescription);
             }
-            
 
 
                if([incomingURL hasPrefix:@"https"]) {
@@ -131,77 +127,18 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
                     }
                 }
         }];
-        
+
         if (handled) {
             return YES;
         } else {
             // may do other things with incoming URL
             return NO;
         }
-        
+
     } else { return NO; }
 }
 
 // ------------ END DYNAMIC LINKS
-
-- (BOOL)application:(UIApplication *)application customDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // [START configure_firebase]
-    [FIRApp configure];
-    // [END configure_firebase]
-    
-    [self application:application customDidFinishLaunchingWithOptions:launchOptions];
-    
-    NSLog(@"FCM -> DidFinishLaunchingWithOptions");
-    
-    
-    // Register for remote notifications. This shows a permission dialog on first run, to
-    // show the dialog at a more appropriate time move this registration accordingly.
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
-        // iOS 7.1 or earlier. Disable the deprecation warnings.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        UIRemoteNotificationType allNotificationTypes =
-        (UIRemoteNotificationTypeSound |
-         UIRemoteNotificationTypeAlert |
-         UIRemoteNotificationTypeBadge);
-        [application registerForRemoteNotificationTypes:allNotificationTypes];
-#pragma clang diagnostic pop
-    } else {
-        // iOS 8 or later
-        // [START register_for_notifications]
-        if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
-            UIUserNotificationType allNotificationTypes =
-            (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-            UIUserNotificationSettings *settings =
-            [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
-            [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-        } else {
-            // iOS 10 or later
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            UNAuthorizationOptions authOptions =
-            UNAuthorizationOptionAlert
-            | UNAuthorizationOptionSound
-            | UNAuthorizationOptionBadge;
-            [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            }];
-            
-            // For iOS 10 display notification (sent via APNS)
-            [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-            // For iOS 10 data message (sent via FCM)
-            [FIRMessaging messaging].delegate = self;
-#endif
-        }
-        
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-        // [END register_for_notifications]
-    }
-    
-    
-    // Add observer for InstanceID token refresh callback.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenRefreshNotification:)
-                                                 name:kFIRInstanceIDTokenRefreshNotification object:nil];
-    return YES;
-}
 
 // [START message_handling]
 // Receive displayed notifications for iOS 10 devices.
@@ -220,17 +157,17 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     if (userInfo[kGCMMessageIDKey]) {
         NSLog(@"FCM -> Message ID 1: %@", userInfo[kGCMMessageIDKey]);
     }
-    
+
     // Print full message.
     NSLog(@"FCM -> Full message: %@", userInfo);
-    
+
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
                                                        options:0
                                                          error:&error];
     [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-    
+
     // Change this to your preferred presentation option
     completionHandler(UNNotificationPresentationOptionNone);
 }
@@ -244,24 +181,24 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     if (userInfo[kGCMMessageIDKey]) {
         NSLog(@"FCM -> Message ID 2: %@", userInfo[kGCMMessageIDKey]);
     }
-    
+
     // Print full message.
     NSLog(@"FCM -> Full Message (2): %@", userInfo);
-    
+
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
-    
+
+
     NSLog(@"FCM -> New method with push callback: %@", userInfo);
-    
+
     [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
                                                        options:0
                                                          error:&error];
     NSLog(@"FCM -> APP WAS CLOSED DURING PUSH RECEPTION Saved data: %@", jsonData);
     lastPush = jsonData;
-    
-    
+
+
     completionHandler();
 }
 #endif
@@ -279,15 +216,15 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
         return;
     }
-    
+
     NSLog(@"FCM -> Message ID: %@", userInfo[@"gcm.message_id"]);
-    
+
     NSError *error;
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
+
     if (application.applicationState != UIApplicationStateActive) {
         NSLog(@"FCM -> New method with push callback: %@", userInfo);
-        
+
         [userInfoMutable setValue:@(YES) forKey:@"wasTapped"];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfoMutable
                                                            options:0
@@ -307,25 +244,25 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_9_x_Max) {
         return;
     }
-    
+
     // If you are receiving a notification message while your app is in the background,
     // this callback will not be fired till the user taps on the notification launching the application.
     // TODO: Handle data of notification
-    
+
     // Print message ID.
     NSLog(@"FCM -> Message ID: %@", userInfo[@"gcm.message_id"]);
-    
+
     // Pring full message.
     NSLog(@"FCM -> Full message: %@", userInfo);
     NSError *error;
-    
+
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
+
     // Has user tapped the notificaiton?
     // UIApplicationStateActive   - app is currently active
     // UIApplicationStateInactive - app is transitioning from background to
     //                              foreground (user taps notification)
-    
+
     UIApplicationState state = application.applicationState;
     if (application.applicationState == UIApplicationStateActive
         || application.applicationState == UIApplicationStateInactive) {
@@ -335,10 +272,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
                                                            options:0
                                                              error:&error];
         [FCMPlugin.fcmPlugin notifyOfMessage:jsonData];
-        
+
         // app is in background
     }
-    
+
     completionHandler(UIBackgroundFetchResultNoData);
 }
 // [END receive_message iOS < 10]
