@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 9.0.0 (09/27/2021)
+- New Braze support
+
 ### Version 8.5.0 (08/20/2021)
 - Fix Universal Link when the app is closed
 
