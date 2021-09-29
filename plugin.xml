@@ -19,7 +19,7 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm-ng"
-      version="9.0.0">
+      version="9.0.1">
     <name>FCMPluginNG</name>
     <description>Cordova FCM Plugin NG</description>
     <license>Apache 2.0</license>
@@ -144,9 +144,9 @@
         <source url="https://github.com/CocoaPods/Specs.git"/>
 			</config>
 			<pods>
-				<pod name="Firebase/Analytics" spec=">= 7.1.0" />
-				<pod name="Firebase/Messaging" spec=">= 7.1.0" />
-				<pod name="Firebase/DynamicLinks" spec=">= 7.1.0" />
+				<pod name="Firebase/Analytics" spec="= 7.11.0" />
+				<pod name="Firebase/Messaging" spec="= 7.11.0" />
+				<pod name="Firebase/DynamicLinks" spec="= 7.11.0" />
 			</pods>
 		</podspec>
 

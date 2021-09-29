@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 9.0.1 (09/29/2021)
+- Fixed Firebase version to 7.11.0
+
 ### Version 9.0.0 (09/27/2021)
 - New Braze support
 
