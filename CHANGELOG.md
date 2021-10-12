@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 9.0.2 (10/12/2021)
+- Removed push overrides
+
 ### Version 9.0.1 (09/29/2021)
 - Fixed Firebase version to 7.11.0
 
