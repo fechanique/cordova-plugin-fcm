@@ -1,0 +1,52 @@
+{
+  "version": "7.8.0",
+  "name": "cordova-plugin-fcm-with-dependecy-updated",
+  "cordova_name": "Cordova FCM Push Plugin",
+  "description": "Google Firebase Cloud Messaging Cordova Push Plugin fork with dependecy updated",
+  "license": "MIT",
+  "main": "./FCMPluginOnIonic.js",
+  "repo": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated",
+  "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
+  "author": "André Augusto Tissot",
+  "scripts": {
+    "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
+    "build:before": "rm -rf ../../ionic;mkdir -p ../../ionic/ngx;mkdir -p ../../ionic/v4",
+    "build:js": "./scripts/build.js.sh",
+    "build:dts": "./scripts/build.dts.sh",
+    "build:after": "cd ../../ionic;rm -rf ionic;rm -rf www",
+    "tsc": "npx tsc -p . --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "notifications",
+    "push",
+    "firebase",
+    "fcm",
+    "ios",
+    "android",
+    "cordova",
+    "ionic"
+  ],
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "dependencies": {
+    "@angular/core": "^11.0.4",
+    "@ionic-native/core": "^5.30.0",
+    "rxjs": "^6.6.3"
+  },
+  "devDependencies": {
+    "@types/cordova": "0.0.34",
+    "prettier": "^2.2.1",
+    "tslint": "^6.1.3",
+    "tslint-microsoft-contrib": "^6.2.0",
+    "typescript": "^4.1.2"
+  }
+}

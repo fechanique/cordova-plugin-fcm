@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "lib": ["dom", "es5", "es2015.promise"],
+    "module": "es2015",
+    "outDir": "../../www/tmp",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "removeComments": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "target": "es5"
+  },
+  "include": ["./*.ts"],
+  "exclude": ["node_modules"]
+}

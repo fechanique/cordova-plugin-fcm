@@ -1,0 +1,36 @@
+{
+    "defaultSeverity": "warning",
+    "extends": ["tslint:recommended"],
+    "rules": {
+        "semicolon": [true, "never"],
+        "arrow-parens": [true, "always"],
+        "typedef": [
+            true,
+            "call-signature",
+            "parameter",
+            "arrow-parameter",
+            "property-declaration",
+            "member-variable-declaration"
+        ],
+        "align": [true, "elements", "members", "parameters", "statements"],
+        "trailing-comma": [
+            true,
+            {
+                "multiline": {
+                    "objects": "always",
+                    "arrays": "always",
+                    "functions": "never",
+                    "typeLiterals": "ignore"
+                },
+                "esSpecCompliant": true
+            }
+        ],
+        "newline-before-return": true,
+        "no-relative-imports": false,
+        "no-inner-html": false,
+        "prefer-type-cast": false,
+        "no-console": [true, ["warning", "error"]],
+        "no-namespace": false
+    },
+    "rulesDirectory": ["node_modules/tslint-microsoft-contrib"]
+}

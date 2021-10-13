@@ -10,13 +10,14 @@
     "issue": "https://github.com/andrehtissot/cordova-plugin-fcm-with-dependecy-updated/issues",
     "author": "André Augusto Tissot",
     "scripts": {
-        "build": "npm run build:www;npm run build:ionic",
-        "build:www": "cd ./src/www;npm run build",
-        "build:ionic": "cd ./src/ionic;npm run build",
-        "prettier-src": "find ./src/ -name '*.js' -or -name '*.ts' -or -name '*.tsx' -or -name '*.scss' | grep -v node_modules | xargs npx prettier --write",
-        "prettier-scripts": "find ./scripts -name '*.js' | xargs npx prettier --write",
-        "prettier": "npm run prettier-src;npm run prettier-scripts",
-        "tslint": "npx tslint -p ./src/www --fix;npx tslint -p ./src/ionic --fix"
+        "build": "npm run build:before;npm run build:dts;npm run build:js;npm run build:after",
+        "build:before": "rm -rf ../../www;mkdir -p ../../www",
+        "build:js": "npx tsc -p .;npx rollup -c rollup.config.js;npm run build:js:rm-exports;npm run build:js:add-default-export",
+        "build:js:rm-exports": "cd ../../www;cat FCMPlugin.js | grep -v exports > FCMPlugin.tmp.js;mv FCMPlugin.tmp.js FCMPlugin.js",
+        "build:js:add-default-export": "cd ../../www;echo 'module.exports = FCM;' >> FCMPlugin.js",
+        "build:dts": "./scripts/build.dts.sh",
+        "build:after": "rm -rf ../../www/tmp",
+        "tsc": "npx tsc -p . --noEmit"
     },
     "repository": {
         "type": "git",
@@ -40,11 +41,10 @@
     ],
     "englishdoc": "",
     "devDependencies": {
-        "prettier": "^2.2.1",
-        "tslint": "^6.1.3",
-        "tslint-microsoft-contrib": "^6.2.0"
-    },
-    "dependencies": {
-        "typescript": "^4.1.3"
+        "@types/cordova": "0.0.34",
+        "rollup": "^2.34.2",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "typescript": "^4.1.2"
     }
 }
