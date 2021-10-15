@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 10.0.0 (10/12/2021)
+- Support API Level 30. Removed google-services dependencies.
+
 ### Version 9.0.2 (10/12/2021)
 - Removed push overrides
 
