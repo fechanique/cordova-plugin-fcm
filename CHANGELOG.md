@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 10.0.1 (10/18/2021)
+- Fix run-time error (Android)
+
 ### Version 10.0.0 (10/12/2021)
 - Support API Level 30. Removed google-services dependencies.
 
