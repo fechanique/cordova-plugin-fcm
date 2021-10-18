@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 10.0.2 (10/18/2021)
+- Updates google-services
+
 ### Version 10.0.1 (10/18/2021)
 - Fix run-time error (Android)
 
