@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 10.0.3 (10/19/2021)
+- Adds new Google repository
+
 ### Version 10.0.2 (10/18/2021)
 - Updates google-services
 
