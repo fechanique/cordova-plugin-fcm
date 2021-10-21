@@ -36,12 +36,49 @@ FCMPlugin.prototype.onTokenRefreshReceived = function(token){
 	console.log("Received token refresh")
 	console.log(token)
 }
+
+// Analytics Plugin
+FCMPlugin.prototype.clearAllNotifications = function(success, error){
+  exec(success, error, 'FCMPlugin', 'clearAllNotifications', []);
+}
+
+// Analytics Plugin
+
+FCMPlugin.prototype.logEvent = function(eventName, eventParams, success, error){
+  exec(success, error, 'FCMPlugin', 'logEvent', [eventName, eventParams || {}]);
+}
+
+FCMPlugin.prototype.setUserId = function(userId, success, error){
+  exec(success, error, 'FCMPlugin', 'setUserId', [userId]);
+}
+
+FCMPlugin.prototype.setUserProperty = function(name, value, success, error){
+  exec(success, error, 'FCMPlugin', 'setUserProperty', [name, value]);
+}
+
+// Dynamic Link Plugin
+
+// GET DYNAMIC LINK CALLBACK //
+FCMPlugin.prototype.getDynamicLink = function(callback, success, error){
+	FCMPlugin.prototype.getDynamicLinkReceived = callback;
+	exec(success, error, "FCMPlugin", 'getDynamicLink',[]);
+}
+// DEFAULT GET DYNAMIC LINK CALLBACK //
+FCMPlugin.prototype.getDynamicLinkReceived = function(payload){
+	console.log("Received dynamic link")
+	console.log(payload)
+}
+
+FCMPlugin.prototype.createDynamicLink = function(params, success, error) {
+  exec(success, error, 'FCMPlugin', 'createDynamicLink', [params, 0]);
+}
+
+FCMPlugin.prototype.onDynamicLink = function(success, error) {
+  exec(success, error, 'FCMPlugin', 'getDynamicLink', []);
+}
+
 // FIRE READY //
-exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
-
-
-
-
+exec(function(result){ console.log("FCMPlugin NG Ready OK") }, function(result){ console.log("FCMPlugin Ready ERROR") }, "FCMPlugin",'ready',[]);
 
 var fcmPlugin = new FCMPlugin();
 module.exports = fcmPlugin;

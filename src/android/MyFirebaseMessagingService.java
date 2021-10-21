@@ -53,6 +53,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getData());
     }
     // [END receive_message]
+    
+    /**
+     * Called if InstanceID token is updated. This may occur if the security of
+     * the previous token had been compromised. Note that this is called when the InstanceID token
+     * is initially generated so this is where you would retrieve the token.
+     */
+    @Override
+    public void onNewToken(String refreshedToken) {
+        super.onNewToken(refreshedToken);
+        Log.e("NEW_TOKEN",refreshedToken);
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        FCMPlugin.sendTokenRefresh(refreshedToken);
+    }
 
     /**
      * Create and show a simple notification containing the received FCM message.
